@@ -1,0 +1,277 @@
+# =============================================
+# ATHENA - Automated Tool for Hardware EvaluatioN.
+# Copyright © 2009 - 2014 CERG at George Mason University <cryptography.gmu.edu>.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, see http://www.gnu.org/licenses
+# or write to the Free Software Foundation,Inc., 51 Franklin Street,
+# Fifth Floor, Boston, MA 02110-1301  USA.
+# =============================================
+
+#####################################################################################
+# This file was generated using xilinx_device_extractor script located under
+# /bin/utils folder. The information contained in this library come from
+# Xilinx's partgen.exe tool.
+#
+# Supported families for this library file are :
+# aspartan3,aspartan3a, aspartan3adsp , aspartan3e , aspartan6
+# spartan3 ,spartan3a , spartan3adsp  , spartan3e  , spartan6   , spartan6l
+# qvirtex4 ,qrvirtex4 , qspartan6     ,qspartan6l  , qvirtex5   , qvirtex6
+# virtex4  ,virtex5   , virtex6	      , virtex6l
+# Xilinx Design Suite 12.3
+#####################################################################################
+
+VENDOR = Xilinx
+#Device, Total Slices, Block RAMs, DSP, Dedicated Multipliers, Maximum User I/O
+
+
+ITEM_ORDER = SLICE, BRAM, DSP, MULT, IO
+
+FAMILY = aspartan3
+xa3s50pqg208-4, 768, 4, 0, 4, 124
+xa3s200ftg256-4, 1920, 12, 0, 12, 173
+xa3s400fgg456-4, 3584, 16, 0, 16, 264
+xa3s1000fgg456-4, 7680, 24, 0, 24, 333
+xa3s1500fgg676-4, 13312, 32, 0, 32, 487
+END_FAMILY
+
+FAMILY = aspartan3a
+xa3s200aftg256-4, 1792, 16, 0, 16, 195
+xa3s400afgg400-4, 3584, 20, 0, 20, 311
+xa3s700afgg484-4, 5888, 20, 0, 20, 372
+xa3s1400afgg484-4, 11264, 32, 0, 32, 375
+END_FAMILY
+
+FAMILY = aspartan3adsp
+xa3sd1800afgg676-4, 16640, 84, 84, 0, 519
+xa3sd3400afgg676-4, 23872, 126, 126, 0, 469
+END_FAMILY
+
+FAMILY = aspartan3e
+xa3s100etqg144-4, 960, 4, 0, 4, 108
+xa3s250eftg256-4, 2448, 12, 0, 12, 172
+xa3s500eftg256-4, 4656, 20, 0, 20, 190
+xa3s1200efgg400-4, 8672, 28, 0, 28, 304
+xa3s1600efgg484-4, 14752, 36, 0, 36, 376
+END_FAMILY
+
+FAMILY = aspartan6
+xa6slx4csg225-3, 600, 36, 8, 0, 132
+xa6slx9csg324-3, 1428, 96, 16, 0, 200
+xa6slx16csg324-3, 2276, 96, 32, 0, 232
+xa6slx25fgg484-3, 3756, 156, 38, 0, 266
+xa6slx25tfgg484-3, 3756, 156, 38, 0, 250
+xa6slx45fgg484-3, 6820, 348, 58, 0, 316
+xa6slx45tfgg484-3, 6820, 348, 58, 0, 296
+xa6slx75fgg484-3, 11660, 516, 132, 0, 280
+xa6slx75tfgg484-3, 11660, 516, 132, 0, 268
+END_FAMILY
+
+FAMILY = qrvirtex4
+xqr4vsx55cf1140-10, 24576, 320, 512, 0, 640
+xqr4vfx60cf1144-10, 25280, 232, 128, 0, 576
+xqr4vfx140cf1509-10, 63168, 552, 192, 0, 768
+xqr4vlx200cf1509-10, 89088, 336, 96, 0, 960
+END_FAMILY
+
+FAMILY = qspartan6
+xq6slx75cs484-2, 11660, 516, 132, 0, 328
+xq6slx75tfgg676-3, 11660, 516, 132, 0, 348
+xq6slx150cs484-2, 23036, 804, 180, 0, 338
+xq6slx150tfgg676-3, 23036, 804, 180, 0, 396
+END_FAMILY
+
+FAMILY = qspartan6l
+xq6slx75lcs484-1, 11660, 516, 132, 0, 328
+xq6slx150lcs484-1, 23036, 804, 180, 0, 338
+END_FAMILY
+
+FAMILY = qvirtex4
+xq4vlx25ff668-10, 10752, 72, 48, 0, 448
+xq4vsx55ff1148-10, 24576, 320, 512, 0, 640
+xq4vfx60ef672-10, 25280, 232, 128, 0, 352
+xq4vlx60ff1148-10, 26624, 160, 64, 0, 640
+xq4vfx100ff1152-10, 42176, 376, 160, 0, 576
+xq4vlx100ff1148-10, 49152, 240, 96, 0, 768
+xq4vlx160ff1148-10, 67584, 288, 96, 0, 768
+END_FAMILY
+
+FAMILY = qvirtex5
+xq5vlx30tff323-2, 4800, 36, 32, 0, 172
+xq5vsx50tef665-2, 8160, 132, 288, 0, 360
+xq5vfx70tef1136-2, 11200, 148, 128, 0, 640
+xq5vlx85ef676-2, 12960, 96, 48, 0, 440
+xq5vsx95tef1136-1, 14720, 244, 640, 0, 640
+xq5vfx100tef1738-2, 16000, 228, 256, 0, 680
+xq5vlx110ef1153-2, 17280, 128, 64, 0, 800
+xq5vlx110tef1136-2, 17280, 148, 64, 0, 640
+xq5vfx130tef1738-2, 20480, 298, 320, 0, 840
+xq5vlx155tef1136-2, 24320, 212, 128, 0, 640
+xq5vfx200tff1738-1, 30720, 456, 384, 0, 960
+xq5vlx220tef1738-1, 34560, 212, 128, 0, 680
+xq5vsx240tff1738-1, 37440, 516, 1056, 0, 960
+xq5vlx330tef1738-1, 51840, 324, 192, 0, 960
+END_FAMILY
+
+FAMILY = qvirtex6
+xq6vlx130trf1156-2, 20000, 792, 480, 0, 600
+xq6vlx240trf1759-2, 37680, 1248, 768, 0, 720
+xq6vsx315trf1759-2, 49200, 2112, 1344, 0, 720
+xq6vsx475trf1759-1, 74400, 3192, 2016, 0, 840
+xq6vlx550trf1759-1, 85920, 1896, 864, 0, 840
+END_FAMILY
+
+FAMILY = spartan3
+xc3s50pq208-5, 768, 4, 0, 4, 124
+xc3s200ft256-5, 1920, 12, 0, 12, 173
+xc3s400fg456-5, 3584, 16, 0, 16, 264
+xc3s1000fg676-5, 7680, 24, 0, 24, 391
+xc3s1000lfg456-4, 7680, 24, 0, 24, 333
+xc3s1500fg676-5, 13312, 32, 0, 32, 487
+xc3s1500lfg676-4, 13312, 32, 0, 32, 487
+xc3s2000fg900-5, 20480, 40, 0, 40, 565
+xc3s4000fg1156-5, 27648, 96, 0, 96, 712
+xc3s4000lfg900-4, 27648, 96, 0, 96, 633
+xc3s5000fg1156-5, 33280, 104, 0, 104, 784
+END_FAMILY
+
+FAMILY = spartan3a
+xc3s50aft256-5, 704, 3, 0, 3, 144
+xc3s50antqg144-5, 704, 3, 0, 3, 108
+xc3s200afg320-5, 1792, 16, 0, 16, 248
+xc3s200anftg256-5, 1792, 16, 0, 16, 195
+xc3s400afg400-5, 3584, 20, 0, 20, 311
+xc3s400anfgg400-5, 3584, 20, 0, 20, 311
+xc3s700afg484-5, 5888, 20, 0, 20, 372
+xc3s700anfgg484-5, 5888, 20, 0, 20, 372
+xc3s1400afg676-5, 11264, 32, 0, 32, 502
+xc3s1400anfgg676-5, 11264, 32, 0, 32, 502
+END_FAMILY
+
+FAMILY = spartan3adsp
+xc3sd1800afg676-5, 16640, 84, 84, 0, 519
+xc3sd3400afg676-5, 23872, 126, 126, 0, 469
+END_FAMILY
+
+FAMILY = spartan3e
+xc3s100etq144-5, 960, 4, 0, 4, 108
+xc3s250eft256-5, 2448, 12, 0, 12, 172
+xc3s500efg320-5, 4656, 20, 0, 20, 232
+xc3s1200efg400-5, 8672, 28, 0, 28, 304
+xc3s1600efg484-5, 14752, 36, 0, 36, 376
+END_FAMILY
+
+FAMILY = spartan6
+xc6slx4csg225-3, 600, 36, 8, 0, 132
+xc6slx9csg324-3, 1428, 96, 16, 0, 200
+xc6slx16csg324-3, 2276, 96, 32, 0, 232
+xc6slx25fgg484-3, 3756, 156, 38, 0, 266
+xc6slx25tfgg484-3, 3756, 156, 38, 0, 250
+xc6slx45fgg676-3, 6820, 348, 58, 0, 358
+xc6slx45tfgg484-3, 6820, 348, 58, 0, 296
+xc6slx75fgg676-3, 11660, 516, 132, 0, 408
+xc6slx75tfgg676-3, 11660, 516, 132, 0, 348
+xc6slx100fgg676-3, 15820, 804, 180, 0, 480
+xc6slx100tfgg900-3, 15820, 804, 180, 0, 498
+xc6slx150fgg900-3, 23036, 804, 180, 0, 576
+xc6slx150tfgg900-3, 23036, 804, 180, 0, 540
+END_FAMILY
+
+FAMILY = spartan6l
+xc6slx4lcsg225-1, 600, 36, 8, 0, 132
+xc6slx9lcsg324-1, 1428, 96, 16, 0, 200
+xc6slx16lcsg324-1, 2276, 96, 32, 0, 232
+xc6slx25lfgg484-1, 3756, 156, 38, 0, 266
+xc6slx45lfgg676-1, 6820, 348, 58, 0, 358
+xc6slx75lfgg676-1, 11660, 516, 132, 0, 408
+xc6slx100lfgg676-1, 15820, 804, 180, 0, 480
+xc6slx150lfgg900-1, 23036, 804, 180, 0, 576
+END_FAMILY
+
+FAMILY = virtex4
+xc4vfx12ff668-12, 5472, 36, 32, 0, 320
+xc4vlx15ff676-12, 6144, 48, 32, 0, 320
+xc4vfx20ff672-12, 8544, 68, 32, 0, 320
+xc4vlx25ff676-12, 10752, 72, 48, 0, 448
+xc4vsx25ff668-12, 10240, 128, 128, 0, 320
+xc4vsx35ff668-12, 15360, 192, 192, 0, 448
+xc4vfx40ff1152-12, 18624, 144, 48, 0, 448
+xc4vlx40ff1148-12, 18432, 96, 64, 0, 640
+xc4vsx55ff1148-12, 24576, 320, 512, 0, 640
+xc4vfx60ff1152-12, 25280, 232, 128, 0, 576
+xc4vlx60ff1148-12, 26624, 160, 64, 0, 640
+xc4vlx80ff1148-12, 35840, 200, 80, 0, 768
+xc4vfx100ff1517-12, 42176, 376, 160, 0, 768
+xc4vlx100ff1513-12, 49152, 240, 96, 0, 960
+xc4vfx140ff1517-11, 63168, 552, 192, 0, 768
+xc4vlx160ff1513-12, 67584, 288, 96, 0, 960
+xc4vlx200ff1513-11, 89088, 336, 96, 0, 960
+END_FAMILY
+
+FAMILY = virtex5
+xc5vlx30ff676-3, 4800, 32, 32, 0, 400
+xc5vfx30tff665-3, 5120, 68, 64, 0, 360
+xc5vlx30tff665-3, 4800, 36, 32, 0, 360
+xc5vsx35tff665-3, 5440, 84, 192, 0, 360
+xc5vlx50ff1153-3, 7200, 48, 48, 0, 560
+xc5vlx50tff1136-3, 7200, 60, 48, 0, 480
+xc5vsx50tff1136-3, 8160, 132, 288, 0, 480
+xc5vfx70tff1136-3, 11200, 148, 128, 0, 640
+xc5vlx85ff1153-3, 12960, 96, 48, 0, 560
+xc5vlx85tff1136-3, 12960, 108, 48, 0, 480
+xc5vsx95tff1136-2, 14720, 244, 640, 0, 640
+xc5vfx100tff1738-3, 16000, 228, 256, 0, 680
+xc5vlx110ff1760-3, 17280, 128, 64, 0, 800
+xc5vlx110tff1738-3, 17280, 148, 64, 0, 680
+xc5vfx130tff1738-3, 20480, 298, 320, 0, 840
+xc5vtx150tff1759-2, 23200, 228, 80, 0, 680
+xc5vlx155ff1760-3, 24320, 192, 128, 0, 800
+xc5vlx155tff1738-3, 24320, 212, 128, 0, 680
+xc5vfx200tff1738-2, 30720, 456, 384, 0, 960
+xc5vlx220ff1760-2, 34560, 192, 128, 0, 800
+xc5vlx220tff1738-2, 34560, 212, 128, 0, 680
+xc5vsx240tff1738-2, 37440, 516, 1056, 0, 960
+xc5vtx240tff1759-2, 37440, 324, 96, 0, 680
+xc5vlx330ff1760-2, 51840, 288, 192, 0, 1200
+xc5vlx330tff1738-2, 51840, 324, 192, 0, 960
+END_FAMILY
+
+FAMILY = virtex6
+xc6vlx75tff784-3, 11640, 468, 288, 0, 360
+xc6vlx130tff1156-3, 20000, 792, 480, 0, 600
+xc6vlx195tff1156-3, 31200, 1032, 640, 0, 600
+xc6vlx240tff1759-3, 37680, 1248, 768, 0, 720
+xc6vhx250tff1154-3, 39360, 1512, 576, 0, 320
+xc6vhx255tff1923-3, 39600, 1548, 576, 0, 480
+xc6vsx315tff1759-3, 49200, 2112, 1344, 0, 720
+xc6vlx365tff1759-3, 56880, 1248, 576, 0, 720
+xc6vhx380tff1924-3, 59760, 2304, 864, 0, 640
+xc6vsx475tff1759-2, 74400, 3192, 2016, 0, 840
+xc6vlx550tff1760-2, 85920, 1896, 864, 0, 1200
+xc6vhx565tff1924-2, 88560, 2736, 864, 0, 640
+xc6vlx760ff1760-2, 118560, 2160, 864, 0, 1200
+END_FAMILY
+
+FAMILY = virtex6l
+xc6vlx75tlff784-1, 11640, 468, 288, 0, 360
+xc6vlx130tlff1156-1, 20000, 792, 480, 0, 600
+xc6vlx195tlff1156-1, 31200, 1032, 640, 0, 600
+xc6vlx240tlff1759-1, 37680, 1248, 768, 0, 720
+xc6vsx315tlff1759-1, 49200, 2112, 1344, 0, 720
+xc6vlx365tlff1759-1, 56880, 1248, 576, 0, 720
+xc6vsx475tlff1759-1, 74400, 3192, 2016, 0, 840
+xc6vlx550tlff1760-1, 85920, 1896, 864, 0, 1200
+xc6vlx760lff1760-1, 118560, 2160, 864, 0, 1200
+END_FAMILY
+
+END_VENDOR

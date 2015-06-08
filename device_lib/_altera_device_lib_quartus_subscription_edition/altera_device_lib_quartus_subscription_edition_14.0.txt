@@ -1,0 +1,226 @@
+# =============================================
+# ATHENA - Automated Tool for Hardware EvaluatioN.
+# Copyright © 2009 - 2014 CERG at George Mason University <cryptography.gmu.edu>.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, see http://www.gnu.org/licenses
+# or write to the Free Software Foundation,Inc., 51 Franklin Street,
+# Fifth Floor, Boston, MA 02110-1301  USA.
+# =============================================
+
+#####################################################################################
+# Currently Supported Families: Cyclone I, II, III, IV GX, V GT, V GX
+#                               Stratix I, II, III, IV GX, IV E, IV GT, V GX, V GS, V GT
+#
+# Source of data:   <http://www.altera.com/products/devices/dev-index.jsp>
+#<http://www.altera.com/products/devices/stratix-fpgas/about/dsp/stx-dsp-block.html>
+#
+# Altera Quartus II Subscription Edition v.14.0
+#####################################################################################
+
+VENDOR = Altera
+#Device, Total Logic Elements, Total Memory Bits, DSP,  Multipliers, Maximum User I/O
+# (*)
+
+ITEM_ORDER = 			LE   , MEMORY  , DSP , MULT  , IO
+
+
+FAMILY = Arria GX
+# has ALUTs and no LE
+ITEM_ORDER = 	LOGIC, MEMORY, 	DSP, 	MULT, 	IO
+ep1agx20cf484c6  ,		17264, 1229184 ,  10 ,  40   , 255
+ep1agx20cf484i6  ,              17264, 1229184 ,  10 ,  40   , 255
+ep1agx20cf780c6	 ,		17264, 1229184 ,  10 ,  40   , 366
+ep1agx20cf780i6  ,		17264, 1229184 ,  10 ,  40   , 366
+ep1agx35cf484c6  ,		29816, 1348416 ,  14 ,  56   , 255
+ep1agx35cf484i6  ,		29816, 1348416 ,  14 ,  56   , 255
+ep1agx35df780c6  ,              29816, 1348416 ,  14 ,  56   , 386
+ep1agx35df780i6  ,		29816, 1348416 ,  14 ,  56   , 386
+ep1agx50cf484c6  ,		40128, 2475072 ,  26 ,  104  , 254
+ep1agx50cf484i6	 , 		40128, 2475072 ,  26 ,  104  , 254
+ep1agx50df780c6  ,		40128, 2475072 ,  26 ,  104  , 395
+ep1agx50df780i6  ,              40128, 2475072 ,  26 ,  104  , 395
+ep1agx50df1152c6 ,              40128, 2475072 ,  26 ,  104  , 563
+ep1agx50df1152i6 ,              40128, 2475072 ,  26 ,  104  , 563
+ep1agx60cf484c6  ,		48080, 2528640 ,  32 ,  128  , 254
+ep1agx60cf484i6  ,              48080, 2528640 ,  32 ,  128  , 254
+ep1agx60df780c6  ,              48080, 2528640 ,  32 ,  128  , 395
+ep1agx60df780i6  ,              48080, 2528640 ,  32 ,  128  , 395
+ep1agx60ef1152c6 , 		48080, 2528640 ,  32 ,  128  , 583
+ep1agx60ef1152i6 ,		48080, 2528640 ,  32 ,  128  , 583
+ep1agx90ef1152c6 ,              72176, 4477824 ,  44 ,  176  , 607
+ep1agx90ef1152i6 ,		72176, 4477824 ,  44 ,  176  , 607
+END_FAMILY
+
+FAMILY = Arria II GX
+# CONTAINS ALUTs NOT LEs
+ITEM_ORDER = 	LOGIC, MEMORY, 	DSP, 	MULT, 	IO
+ep2agx45df29c6  ,		36100	,2939904, 29	, 232	,404
+ep2agx65df29c6	,		50600	,4561920, 39	, 312	,404
+ep2agx95ef35c6  ,		74940	,5640192, 56	, 448	,512
+ep2agx125ef35c6 ,		99280	,6727680, 72	, 576	,512
+ep2agx190ff35c6 ,		152240	,7741440, 82	, 656	,692
+ep2agx260ff35c6 ,		205200  ,8755200, 92	, 736	,692
+END_FAMILY
+
+
+FAMILY = Cyclone
+ep1c3t144c6,            2910,  59904,  0,0, 104
+ep1c4f400c6,            4000,  78336,  0,0,301
+ep1c6f256c6,            5980,  92160,  0,0, 185
+ep1c12f324c6,           12060, 239616,  0,0, 249
+ep1c20f400c6,           20060, 294912,  0,0, 301
+END_FAMILY
+
+FAMILY = Cyclone II
+ep2c5f256c6,            4608,  119808,  0,13,  158
+ep2c8f256c6,            8256,  165888,  0,18,  182
+ep2c15af484c6,          14448, 239616,  0,26,  315
+ep2c20f484c6,          18752, 239616,  0,26,  315
+ep2c35f672c6,          33216, 483840, 0,35,  475
+ep2c50f672c6,          50528, 594432, 0,86,  450
+ep2c70f896c6,             68416, 1152000, 0,150, 622
+END_FAMILY
+
+
+FAMILY = Cyclone III
+ep3c5f256c6,           5136,  423936,   0,23, 182
+ep3c10f256c6,              10320, 423936,   0,23, 182
+ep3c16f484c6,           15408, 516096,   0,56, 346
+ep3c25f324c6,           24624, 608256,0,66,215
+ep3c40f780c6,           39600,1161216,0,126,536
+ep3c55f780c6,           55856,2396160,0,156,378
+ep3c80f780c6,           81264,2810880,0,244,430
+ep3c120f780c7,           119088,3981312,0,288,532
+END_FAMILY
+
+FAMILY = Cyclone IV GX
+ep4cgx15bf14c6,  14400,  552960 ,0, 0,72
+ep4cgx22cf19c6,  21280,  774144 ,0,40,150
+ep4cgx30cf19c6,  29440,  1105920,0,80,150
+ep4cgx50df27c6,  48888,  2562048,0,140,310
+ep4cgx75df27c6,  73920,  4257792,0,198,310
+ep4cgx110df31c7, 109424, 5621760,0,280,475
+ep4cgx150df31c7, 149760, 6635520,0,360,475
+END_FAMILY
+
+FAMILY = Cyclone V GX
+ITEM_ORDER = 	LOGIC, MEMORY, 	DSP, 	MULT, 	IO
+5CGXBC3B6U19C7, 13460,1382400,57,0,222
+5CGXBC4C6F27C7, 18860,2560000,70,0,364
+5CGXBC5C6F27C7, 29080,4567040,150,0,364
+5CGXBC7D6F31C7, 56480,7024640,156,0,522
+5CGXBC9E6F35C7, 113560,12492800,342,0,616
+END_FAMILY
+
+FAMILY = Cyclone V GT
+ITEM_ORDER = 	LOGIC, MEMORY, 	DSP, 	MULT, 	IO
+5CGTFD5C5F27C7, 29080,4567040,150,0,364
+5CGTFD7D5F31C7, 56480,7024640,156,0,522
+5CGTFD9E5F35C7, 113560,12492800,342,0,616
+END_FAMILY
+
+FAMILY = Stratix
+ITEM_ORDER = 	LOGIC, MEMORY, 	DSP, 	MULT, 	IO
+ep1s10f780c5,           10570,920448,48,0,426
+ep1s20f780c6, 			18460,1669248,80,0,586
+ep1s25f1020c6,			25660,1944576,80,0,706
+ep1s30f1020c6,			32470,3317184,96,0,726
+ep1s40f1508c7,			41250,3423744,112,0,822
+ep1s60f1508c6,			57120,5215104,144,0,1022
+ep1s80f1508c6,			79040,7427520,176,0,1238
+END_FAMILY
+
+FAMILY = Stratix II
+ITEM_ORDER = 	LOGIC, MEMORY, 	DSP, 	MULT, 	IO
+ep2s15f672c3,           15600,419328,48,0,366
+ep2s30f672c3,           33880,1369728,64,0,500
+ep2s60f1020c3,          60440,2544192,144,0,718
+ep2s90f1508c3,          90960,4520488,192,0,902
+ep2s130f1508c3,         132540,6747840,252,0,1126
+ep2s180f1508c3,         179400, 9383040,384,0,1170
+END_FAMILY
+
+FAMILY = Stratix II GX
+ITEM_ORDER = 	LOGIC, MEMORY, 	DSP, 	MULT, 	IO
+ep2sgx30df780c3,        27104   ,1369728,64, 0, 406
+ep2sgx60ef1152c3,		48352	,2544192,144, 0, 603
+ep2sgx90ef1508c3,		72768	,4520448,192,0,739
+ep2sgx130gf1508c3,		106032	,6747840,252, 0, 843
+END_FAMILY
+
+#logic rich
+FAMILY = Stratix III
+ITEM_ORDER = 	LOGIC, MEMORY, 	DSP, 	MULT, 	IO
+ep3sl50f780c2  ,38000 ,  1880064 , 216,0, 296
+ep3sl70f780c2 ,54000 ,  2267136 , 288,0, 488
+ep3sl110f1152c2,106500,  4203000 , 288,0, 744
+ep3sl150f1152c2,142000,  5499000 , 384,0, 744
+ep3sl200f1517c2,198900,  9396000 , 576,0, 976
+ep3sl340f1760c2,338000,  16272000, 576,0, 1120
+END_FAMILY
+
+FAMILY = Stratix IV GX
+ITEM_ORDER = 	LOGIC, MEMORY, 	DSP, 	MULT, 	IO
+ep4sgx70hf35c2 , 58080,  6617088 , 384,  0  ,412
+ep4sgx110hf35c2, 84480, 8441856 , 512,  0  ,584
+ep4sgx230kf40c2, 182400, 14625792, 1288, 0 ,888
+ep4sgx290nf45c2, 232960, 13934592, 832, 0  ,1112
+ep4sgx360nf45c2, 282880, 18579456, 1024, 0 ,1112
+ep4sgx530nf45c2, 424960, 21233664, 1024, 0 ,1112
+END_FAMILY
+
+FAMILY = Stratix IV E
+ITEM_ORDER = 	LOGIC, MEMORY, 	DSP, 	MULT, 	IO
+ep4se230f29c2,182400, 17544192,1288,0,488
+ep4se360f35c2,282880, 23105536,1040,0,744
+ep4se530f43c2,424960, 28033024,1024,0,976
+ep4se820f43c3,650440, 34093056,960,0,1120
+END_FAMILY
+
+FAMILY = Stratix IV GT
+ITEM_ORDER = 	LOGIC, MEMORY, 	DSP, 	MULT, 	IO
+ep4s40g2f40c2es1,182400,  14625792,1288,0,798
+ep4s40g5h40c2es1,424960,  21233664,1024,0,798
+ep4s100g3f45i1,232960, 13934592,832,0,973
+ep4s100g4f45i1,282880, 18579456,1024,0,973
+ep4s100g5f45c2es1,424960,21233664 ,1024,0,798
+END_FAMILY
+
+FAMILY = Stratix V GS
+ITEM_ORDER = 	LOGIC, MEMORY, 	DSP, 	MULT, 	IO
+5SGSMD3H1F35C1, 89000,  14090240,600,0,544
+5SGSMD4K1F40C1, 135840, 19599360,1044,0,864
+5SGSMD5K1F40C1, 172600, 41246720,1590,0,864
+5SGSMD6N1F45C2, 220000, 47513600,1775,0,1064
+5SGSMD8N1F45C2, 262400, 52572160,1963,0,1064
+END_FAMILY
+
+FAMILY = Stratix V GX
+ITEM_ORDER = 	LOGIC, MEMORY, 	DSP, 	MULT, 	IO
+5SGXMA3K1F40C1, 128300,19599360,256,0,864
+5SGXMA4K1F40C1, 158500,38912000,256,0,864
+5SGXMA5N1F45C1, 185000,47185920,256,0,1064
+5SGXMB6R1F43C1, 225400,54476800,399,0,908
+5SGXMA7N1F45C1, 234720,52428800,256,0,1064
+5SGXMA9N1F45C2, 317000,54067200,352,0,1064
+5SGXMABN1F45C2, 359200,54067200,352,0,1064
+END_FAMILY
+
+FAMILY = Stratix V GX
+ITEM_ORDER = 	LOGIC, MEMORY, 	DSP, 	MULT, 	IO
+5SGTMC5K2F40C1, 160400,47185920,256,0,776
+5SGTMC7K2F40C1, 234720,52428800,256,0,776
+END_FAMILY
+
+END_VENDOR

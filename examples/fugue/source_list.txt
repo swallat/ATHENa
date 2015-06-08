@@ -1,0 +1,43 @@
+# =============================================
+# SHA3 source code
+# Copyright © 2009 - 2014 CERG at George Mason University <cryptography.gmu.edu>.
+#
+# This source code is free; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+#
+# This source code is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this source code; if not, see http://www.gnu.org/licenses
+# or write to the Free Software Foundation,Inc., 51 Franklin Street,
+# Fifth Floor, Boston, MA 02110-1301  USA.
+# =============================================
+
+
+# List of source files in the order of synthesis. 
+# Low level modules first, top level entity last
+
+sha3_pkg.vhd
+fugue_pkg.vhd
+d_ff.vhd
+piso.vhd
+regn.vhd
+countern.vhd
+aes_sbox_logic.vhd
+aes_sbox.vhd
+aes_mul.vhd
+fugue_cmix.vhd
+fugue_padding.vhd
+fugue_smix.vhd
+fugue_state.vhd
+fugue_tix.vhd
+fugue_round.vhd
+fugue_control.vhd
+fugue_datapath.vhd
+fugue_top.vhd
+#EOF

@@ -1,0 +1,266 @@
+-- copyright Marcin Rogawski 2001
+
+FUNCTION 3des_key_shift_left_one (in[55..0])
+	RETURNS (out[55..0]);
+
+FUNCTION 3des_key_shift_left_two (in[55..0])
+	RETURNS (out[55..0]);
+
+FUNCTION 3des_key_shift_right_one (in[55..0])
+	RETURNS (out[55..0]);
+
+FUNCTION 3des_key_shift_right_two (in[55..0])
+	RETURNS (out[55..0]);
+
+FUNCTION 3des_key_compresion (WE[55..0])
+	RETURNS (WY[47..0]);
+
+
+subdesign 3des_key_shifts
+(
+	state[7..0]			:input;
+	in[167..0]			:input;
+	pkl[47..0]			:output;
+	out[167..0]			:output;
+)
+variable
+	ksla[1..0]			:3des_key_shift_left_one;
+	kslb[1..0]			:3des_key_shift_left_two;
+	ksr1				:3des_key_shift_right_one;
+	ksr2				:3des_key_shift_right_two;
+	ks				:3des_key_compresion;
+begin
+
+	ksla[1].in[] = in[167..112];
+	kslb[1].in[] = in[167..112];
+	ksr1.in[] = in[111..56];
+	ksr2.in[] = in[111..56];
+	ksla[0].in[] = in[55..0];
+	kslb[0].in[] = in[55..0];
+	
+	
+
+
+	CASE state[7..0] IS
+		WHEN H"1" => ks.WE[] = ksla[1].out[];
+			out[167..112] = ksla[1].out[];
+			out[111..0] = in[111..0];
+
+		WHEN H"2" => ks.WE[] = ksla[1].out[];
+			out[167..112] = ksla[1].out[];
+			out[111..0] = in[111..0];
+
+		WHEN H"3" => ks.WE[] = kslb[1].out[];
+			out[167..112] = kslb[1].out[];
+			out[111..0] = in[111..0];
+
+		WHEN H"4" => ks.WE[] = kslb[1].out[];
+			out[167..112] = kslb[1].out[];
+			out[111..0] = in[111..0];
+
+		WHEN H"5" => ks.WE[] = kslb[1].out[];
+			out[167..112] = kslb[1].out[];
+			out[111..0] = in[111..0];
+
+		WHEN H"6" => ks.WE[] = kslb[1].out[];
+			out[167..112] = kslb[1].out[];
+			out[111..0] = in[111..0];
+
+		WHEN H"7" => ks.WE[] = kslb[1].out[];
+			out[167..112] = kslb[1].out[];
+			out[111..0] = in[111..0];
+
+		WHEN H"8" => ks.WE[] = kslb[1].out[];
+			out[167..112] = kslb[1].out[];
+			out[111..0] = in[111..0];
+
+		WHEN H"9" => ks.WE[] = ksla[1].out[];
+			out[167..112] = ksla[1].out[];
+			out[111..0] = in[111..0];
+
+		WHEN H"a" => ks.WE[] = kslb[1].out[];
+			out[167..112] = kslb[1].out[];
+			out[111..0] = in[111..0];
+
+		WHEN H"b" => ks.WE[] = kslb[1].out[];
+			out[167..112] = kslb[1].out[];
+			out[111..0] = in[111..0];
+
+		WHEN H"c" => ks.WE[] = kslb[1].out[];
+			out[167..112] = kslb[1].out[];
+			out[111..0] = in[111..0];
+
+		WHEN H"d" => ks.WE[] = kslb[1].out[];
+			out[167..112] = kslb[1].out[];
+			out[111..0] = in[111..0];
+
+		WHEN H"e" => ks.WE[] = kslb[1].out[];
+			out[167..112] = kslb[1].out[];
+			out[111..0] = in[111..0];
+
+		WHEN H"f" => ks.WE[] = kslb[1].out[];
+			out[167..112] = kslb[1].out[];
+			out[111..0] = in[111..0];
+
+		WHEN H"10" => ks.WE[] = ksla[1].out[];
+			out[167..112] = ksla[1].out[];
+			out[111..0] = in[111..0];
+
+
+
+		WHEN H"11" => --ks.WE[] = ksr1.out[];
+			--out[167..112] = in[167..112];
+			--out[111..56] = ksr1.out[];
+			--out[55..0] = in[55..0];
+			ks.WE[] = in[111..56];
+			out[] = in[];
+
+		WHEN H"12" => ks.WE[] = ksr1.out[];
+			out[167..112] = in[167..112];
+			out[111..56] = ksr1.out[];
+			out[55..0] = in[55..0];
+
+		WHEN H"13" => ks.WE[] = ksr2.out[];
+			out[167..112] = in[167..112];
+			out[111..56] = ksr2.out[];
+			out[55..0] = in[55..0];
+
+		WHEN H"14" => ks.WE[] = ksr2.out[];
+			out[167..112] = in[167..112];
+			out[111..56] = ksr2.out[];
+			out[55..0] = in[55..0];
+
+		WHEN H"15" => ks.WE[] = ksr2.out[];
+			out[167..112] = in[167..112];
+			out[111..56] = ksr2.out[];
+			out[55..0] = in[55..0];
+
+		WHEN H"16" => ks.WE[] = ksr2.out[];
+			out[167..112] = in[167..112];
+			out[111..56] = ksr2.out[];
+			out[55..0] = in[55..0];
+
+		WHEN H"17" => ks.WE[] = ksr2.out[];
+			out[167..112] = in[167..112];
+			out[111..56] = ksr2.out[];
+			out[55..0] = in[55..0];
+
+		WHEN H"18" => ks.WE[] = ksr2.out[];
+			out[167..112] = in[167..112];
+			out[111..56] = ksr2.out[];
+			out[55..0] = in[55..0];
+
+		WHEN H"19" => ks.WE[] = ksr1.out[];
+			out[167..112] = in[167..112];
+			out[111..56] = ksr1.out[];
+			out[55..0] = in[55..0];
+
+		WHEN H"1a" => ks.WE[] = ksr2.out[];
+			out[167..112] = in[167..112];
+			out[111..56] = ksr2.out[];
+			out[55..0] = in[55..0];
+
+		WHEN H"1b" => ks.WE[] = ksr2.out[];
+			out[167..112] = in[167..112];
+			out[111..56] = ksr2.out[];
+			out[55..0] = in[55..0];
+
+		WHEN H"1c" => ks.WE[] = ksr2.out[];
+			out[167..112] = in[167..112];
+			out[111..56] = ksr2.out[];
+			out[55..0] = in[55..0];
+
+		WHEN H"1d" => ks.WE[] = ksr2.out[];
+			out[167..112] = in[167..112];
+			out[111..56] = ksr2.out[];
+			out[55..0] = in[55..0];
+
+		WHEN H"1e" => ks.WE[] = ksr2.out[];
+			out[167..112] = in[167..112];
+			out[111..56] = ksr2.out[];
+			out[55..0] = in[55..0];
+
+		WHEN H"1f" => ks.WE[] = ksr2.out[];
+			out[167..112] = in[167..112];
+			out[111..56] = ksr2.out[];
+			out[55..0] = in[55..0];
+
+		WHEN H"20" => ks.WE[] = ksr1.out[];
+			out[167..112] = in[167..112];
+			out[111..56] = ksr1.out[];
+			out[55..0] = in[55..0];
+
+
+
+		WHEN H"21" => ks.WE[] = ksla[0].out[];
+			out[167..56] = in[167..56];
+			out[55..0] = ksla[0].out[];
+
+		WHEN H"22" => ks.WE[] = ksla[0].out[];
+			out[167..56] = in[167..56];
+			out[55..0] = ksla[0].out[];
+
+		WHEN H"23" => ks.WE[] = kslb[0].out[];
+			out[167..56] = in[167..56];
+			out[55..0] = kslb[0].out[];
+
+		WHEN H"24" => ks.WE[] = kslb[0].out[];
+			out[167..56] = in[167..56];
+			out[55..0] = kslb[0].out[];
+
+		WHEN H"25" => ks.WE[] = kslb[0].out[];
+			out[167..56] = in[167..56];
+			out[55..0] = kslb[0].out[];
+
+		WHEN H"26" => ks.WE[] = kslb[0].out[];
+			out[167..56] = in[167..56];
+			out[55..0] = kslb[0].out[];
+
+		WHEN H"27" => ks.WE[] = kslb[0].out[];
+			out[167..56] = in[167..56];
+			out[55..0] = kslb[0].out[];
+
+		WHEN H"28" => ks.WE[] = kslb[0].out[];
+			out[167..56] = in[167..56];
+			out[55..0] = kslb[0].out[];
+
+		WHEN H"29" => ks.WE[] = ksla[0].out[];
+			out[167..56] = in[167..56];
+			out[55..0] = ksla[0].out[];
+
+		WHEN H"2a" => ks.WE[] = kslb[0].out[];
+			out[167..56] = in[167..56];
+			out[55..0] = kslb[0].out[];
+
+		WHEN H"2b" => ks.WE[] = kslb[0].out[];
+			out[167..56] = in[167..56];
+			out[55..0] = kslb[0].out[];
+
+		WHEN H"2c" => ks.WE[] = kslb[0].out[];
+			out[167..56] = in[167..56];
+			out[55..0] = kslb[0].out[];
+
+		WHEN H"2d" => ks.WE[] = kslb[0].out[];
+			out[167..56] = in[167..56];
+			out[55..0] = kslb[0].out[];
+
+		WHEN H"2e" => ks.WE[] = kslb[0].out[];
+			out[167..56] = in[167..56];
+			out[55..0] = kslb[0].out[];
+
+		WHEN H"2f" => ks.WE[] = kslb[0].out[];
+			out[167..56] = in[167..56];
+			out[55..0] = kslb[0].out[];
+
+		WHEN H"30" => ks.WE[] = ksla[0].out[];
+			out[167..56] = in[167..56];
+			out[55..0] = ksla[0].out[];
+
+
+	END CASE;
+
+	
+
+	pkl[] = ks.WY[];
+
+end;

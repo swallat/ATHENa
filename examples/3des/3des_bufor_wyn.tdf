@@ -1,0 +1,30 @@
+-- copyright Marcin Rogawski 2001
+
+SUBDESIGN 3des_bufor_wyn
+(	
+	clk					:input;
+	hreset_in			:input;
+	WE[63..0]			:input;
+	ZAP					:input;
+	WY[63..0]			:output;
+)
+VARIABLE
+	REJ[63..0]			:DFFe;
+	hr_reg				:dff;
+	hreset				:dff;
+begin
+
+	hr_reg.clk = clk;
+	hr_reg.d =  hreset_in;
+	hreset.clk = clk;
+	hreset.d = hr_reg;
+
+
+	REJ[].CLK = clk;
+	REJ[].D = WE[];
+	REJ[].clrn = hreset;
+	REJ[].ena = ZAP;
+
+	WY[] = REJ[];
+END;
+

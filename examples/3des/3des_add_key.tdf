@@ -1,0 +1,12 @@
+-- copyright Marcin Rogawski 2001
+
+subdesign 3des_add_key
+(
+	WE[47..0]	:input;
+	KEY[47..0]	:input;
+	WY[47..0]	:output;
+)
+
+begin
+	WY[47..0] = (WE[47..0] $ KEY[47..0]);
+end;

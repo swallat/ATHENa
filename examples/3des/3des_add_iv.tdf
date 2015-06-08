@@ -1,0 +1,14 @@
+-- copyright Marcin Rogawski 2001
+
+subdesign 3des_add_iv
+(
+	mode		:input;
+	cbc_enable	:input;
+	iv[63..0]	:input;
+	newiv[63..0]	:input;
+	data[63..0]	:input;
+	out[63..0]	:output;
+)
+begin
+	out[] = (!mode & data[]) # (mode & ((!cbc_enable & (iv[] $ data[])) # (cbc_enable & (newiv[] $ data[]))) );
+end;

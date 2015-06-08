@@ -1,0 +1,29 @@
+-- copyright Marcin Rogawski 2001
+
+subdesign 3des_buf_pkl
+(
+	clk					:input;
+	zapis				:input;
+	hreset_in			:input;	
+	pkl[47..0]			:input;
+	podklucz[47..0]		:output;
+)
+variable
+	reg[47..0]			:dffe;
+
+	hr_reg				:dff;
+	hreset				:dff;
+begin
+
+	hr_reg.clk = clk;
+	hr_reg.d =  hreset_in;
+	hreset.clk = clk;
+	hreset.d = hr_reg;
+
+	reg[].clk = clk;
+	reg[].d = pkl[];
+	reg[].clrn = hreset;
+	reg[].ena = zapis;
+
+	podklucz[] = reg[];
+end;

@@ -1,0 +1,96 @@
+# =============================================
+# ATHENA - Automated Tool for Hardware EvaluatioN.
+# Copyright © 2009 - 2014 CERG at George Mason University <cryptography.gmu.edu>.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, see http://www.gnu.org/licenses
+# or write to the Free Software Foundation,Inc., 51 Franklin Street,
+# Fifth Floor, Boston, MA 02110-1301  USA.
+# =============================================
+
+#####################################################################################
+# Currently Supported Families: Cyclone I, II, III, IV GX
+#                               Stratix I, II, II GX, III, 
+#
+# Source of data:   <http://www.altera.com/products/devices/dev-index.jsp>
+#<http://www.altera.com/products/devices/stratix-fpgas/about/dsp/stx-dsp-block.html>
+#
+# Altera Quartus II Web Edition v.9.0sp2
+#####################################################################################
+
+VENDOR = Altera
+#Device, Total Logic Elements/ALUTs, Total Memory Bits, DSP,  Multipliers, Maximum User I/O
+# (*)
+
+ITEM_ORDER = LE, MEMORY, DSP, MULT, IO
+
+FAMILY = Cyclone
+ep1c3t144c6,            2910,  59904,  0,0, 104
+ep1c4f400c6,            4000,  78336,  0,0,301
+ep1c6f256c6,            5980,  92160,  0,0, 185
+ep1c12f324c6,           12060, 239616,  0,0, 249 
+ep1c20f400c6,           20060, 294912,  0,0, 301
+END_FAMILY
+
+FAMILY = Cyclone II
+ep2c5f256c6,            4608,  119808,  0,13,  158 
+ep2c8f256c6,            8256,  165888,  0,18,  182
+ep2c15af484c6,          14448, 239616,  0,26,  315
+ep2c20f484c6,          18752, 239616,  0,26,  315
+ep2c35f672c6,          33216, 483840, 0,35,  475
+ep2c50f672c6,          50528, 594432, 0,86,  450
+ep2c70f896c6,             68416, 1152000, 0,150, 622
+END_FAMILY
+
+
+FAMILY = Cyclone III
+ep3c5f256c6,           5136,  423936,   0,23, 182
+ep3c10f256c6,              10320, 423936,   0,23, 182 
+ep3c16f484c6,           15408, 516096,   0,56, 346 
+ep3c25f324c6,           24624, 608256,0,66,215
+ep3c40f780c6,           39600,1161216,0,126,536
+ep3c55f780c6,           55856,2396160,0,156,378
+ep3c80f780c6,           81264,2810880,0,244,430
+ep3c120f780c7,           119088,3981312,0,288,531
+END_FAMILY
+
+FAMILY = Cyclone IV GX
+ep4cgx15bf14c6,		14400,552960,0,0,72
+ep4cgx22cf19c6,		21280,  774144,0,40,150
+ep4cgx30cf19c6,		29440,  1105920,0,80,150
+END_FAMILY
+
+
+
+FAMILY = Stratix
+ITEM_ORDER = 	LOGIC, MEMORY, 	DSP, 	MULT, 	IO
+ep1s10f780c5,           10570,920448,48,0,426
+END_FAMILY
+
+FAMILY = Stratix II	
+ITEM_ORDER = 	LOGIC, MEMORY, 	DSP, 	MULT, 	IO
+ep2s15f672c3,           15600,419328,48,0,366
+END_FAMILY
+
+FAMILY = Stratix II GX
+ITEM_ORDER = 	LOGIC, MEMORY, 	DSP, 	MULT, 	IO
+ep2sgx30df780c3, 27104,1369728,16,0,406
+END_FAMILY
+
+FAMILY = Stratix III	
+ITEM_ORDER = 	LOGIC, MEMORY, 	DSP, 	MULT, 	IO
+ep3sl50f780c2  ,38000 ,  1880064 , 216,0, 296
+
+END_FAMILY
+
+END_VENDOR

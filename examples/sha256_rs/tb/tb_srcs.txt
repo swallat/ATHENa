@@ -1,0 +1,8 @@
+# test bench files
+tb_pkg.vhd
+fifo.vhd
+fifo_ram.vhd
+sha_tb.vhd
+# test vectors
+PAD_SHA-2_datain_h256_w32.txt 
+PAD_SHA-2_dataout_h256_w32.txt

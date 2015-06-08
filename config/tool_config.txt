@@ -1,0 +1,3 @@
+xilinx[imp][1][13.2 64-bit][D:\pawel\ISE\14.7\ISE_DS\ISE\bin\nt\][system][selected]
+xilinx[sim][1][modelsim][D:\Xilinx\modelsim\win32xoem][6.4b][selected]
+CORE[10][10]

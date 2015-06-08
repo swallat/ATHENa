@@ -1,0 +1,29 @@
+-- copyright Marcin Rogawski 2001
+
+FUNCTION 3des_key_reg64256 (WE[63..0])
+	RETURNS (WY[55..0], temp[7..0]);
+
+subdesign 3des_permutated_choice_one
+(
+	in[191..0]		:input;
+	out[167..0]		:output;
+	temp[23..0]		:output;
+)
+variable
+	kr[2..0]	:3des_key_reg64256;
+
+begin
+	
+	kr[2].WE[] = in[191..128];
+	kr[1].WE[] = in[127..64];
+	kr[0].WE[] = in[63..0];
+
+	out[167..112] = kr[2].WY[];
+	out[111..56] = kr[1].WY[];
+	out[55..0] = kr[0].WY[];
+
+	temp[23..16] = kr[2].temp[];
+	temp[15..8] = kr[1].temp[];
+	temp[7..0] = kr[0].temp[];
+
+end;

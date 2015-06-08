@@ -1,0 +1,57 @@
+-- copyright Marcin Rogawski 2001
+
+SUBDESIGN 3des_rejestr_kl
+(
+	clk					:input;
+	hreset_in				:input;
+	K112b				:input;
+	K168b				:input;
+	WORK				:input;
+	ZAPKLUCZ			:input;
+	ZAPKZRUND			:input;
+	rotkey[167..0]		:input;
+	WEKLUCZ[167..0]		:input;
+	WY[167..0]			:output;
+)
+VARIABLE
+	REJA[55..0]			:DFFe;
+	REJB[55..0]			:DFFe;
+	REJC[55..0]			:DFFe;
+	hr_reg				:dff;
+	hreset				:dff;
+begin
+
+	hr_reg.clk = clk;
+	hr_reg.d =  hreset_in;
+	hreset.clk = clk;
+	hreset.d = hr_reg;
+
+
+	REJA[55..0].clrn = hreset;
+	REJB[55..0].clrn = hreset;
+	REJC[55..0].clrn = hreset;
+
+
+	REJA[].CLK = clk;--(!WORK & ZAPKLUCZ) # (WORK & ZAPKZRUND);
+	REJA[] = ((WEKLUCZ[111..56]) & (!WORK & K112b)) # ((WEKLUCZ[167..112]) & (!WORK & K168b))
+	# ((rotkey[167..112]) & WORK); 
+	REJA[].ena = (!WORK & ZAPKLUCZ) # (WORK & ZAPKZRUND);
+	
+	REJB[].CLK = clk;--(!WORK & ZAPKLUCZ) # (WORK & ZAPKZRUND);
+	REJB[] = ((WEKLUCZ[55..0]) & (!WORK & K112b)) # ((WEKLUCZ[111..56]) & (!WORK & K168b))
+	# ((rotkey[111..56]) & WORK); 
+	REJB[].ena = (!WORK & ZAPKLUCZ) # (WORK & ZAPKZRUND);
+	
+	REJC[].CLK = clk;--(!WORK & ZAPKLUCZ) # (WORK & ZAPKZRUND);
+	REJC[] = ((WEKLUCZ[111..56]) & (!WORK & K112b)) # ((WEKLUCZ[55..0]) & (!WORK & K168b))
+	# ((rotkey[55..0]) & WORK); 
+	REJC[].ena = (!WORK & ZAPKLUCZ) # (WORK & ZAPKZRUND);
+
+	
+
+	WY[167..112] = REJA[];
+	WY[111..56] = REJB[];
+	WY[55..0] = REJC[];
+
+END;
+

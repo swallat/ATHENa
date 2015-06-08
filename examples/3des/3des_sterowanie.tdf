@@ -1,0 +1,118 @@
+-- copyright Marcin Rogawski 2001
+
+subdesign 3des_sterowanie
+(	
+	hreset_in			:input;
+	3des				:input;
+	clk					:input;
+	cbc					:input;
+	start				:input;
+	work				:output;
+	zap_data			:output;
+	zap_key				:output;
+	zap_zrundy			:output;
+	zap_kzrundy			:output;
+	wynik				:output;
+	state_out[7..0]		:output;
+	next_move			:output;
+	cbc_enable			:output;
+)
+variable
+	state[7..0]			:dffe;
+	work				:dffe;
+	preset				:dff;
+	cbc_enable			:dffe;
+	a_reg				:dff;
+	b_reg				:dff;
+	c_reg				:dff;
+	d_reg				:dff;
+	e_reg				:dff;
+
+	start_reg			:dff;
+	start2_reg			:dff;
+	nm					:dff;
+
+	hr_reg				:dff;
+	hreset				:dff;
+
+	prst_reg			:dff;
+	preset_reg			:dff;
+begin
+
+	hr_reg.clk = clk;
+	hr_reg.d =  3des & hreset_in;
+	hreset.clk = clk;
+	hreset.d = hr_reg;
+
+	prst_reg.clk = clk;
+	prst_reg.d =  hreset_in & preset;
+	preset_reg.clk = clk;
+	preset_reg.d = prst_reg;
+
+
+	
+	start_reg.clk = clk;
+	start_reg.d = start;
+	start_reg.clrn = hreset;	
+
+	start2_reg.clk = clk;
+	start2_reg.d = start_reg;
+	start2_reg.clrn = hreset;	
+
+	a_reg.clk = clk;
+	a_reg.d = (work & start2_reg) # (work & b_reg);
+	a_reg.clrn = hreset;
+
+	b_reg.clk = clk;
+	b_reg.d = a_reg;
+	b_reg.clrn = hreset;
+		
+	c_reg.clk = clk;
+	c_reg.d = b_reg;
+	c_reg.clrn = hreset;
+		
+	d_reg.clk = clk;
+	d_reg.d = c_reg;
+	d_reg.clrn = hreset;
+		
+	e_reg.clk = clk;
+	e_reg.d = d_reg;
+	e_reg.clrn = hreset;
+
+
+	
+	state[].clk = clk;
+	state[] = state[] + 1;
+	state[].clrn = preset_reg;
+	state[].ena = c_reg & work;
+
+	state_out[] = state[];
+	
+	work.clk = clk;--start2_reg;
+	work.d = VCC;
+	work.clrn = preset_reg;
+	work.ena = start_reg;
+	
+	preset.clk = clk;
+	preset.d = !(state[]==H"32");
+	preset.clrn = hreset;
+	
+
+	zap_key	= start_reg & 3des & !work;
+	zap_data = b_reg & (state[] == H"1") & work;
+
+	zap_zrundy	= work & b_reg & (!(state[] == H"0") & !(state[] == H"1")  & !(state[] == H"31") & !(state[] == H"32")) & !(state[] == H"33");
+	zap_kzrundy	= work & b_reg & !(state[] == H"0")  & !(state[] == H"31")& !(state[] == H"32") & !(state[] == H"33");
+	wynik  = work & b_reg & (state[] == H"31");
+
+	nm.clk = clk;
+	nm.d = b_reg & (state[] == H"32");
+	next_move = nm;
+
+
+	cbc_enable.clk =  clk;
+	cbc_enable.d = cbc;
+	cbc_enable.clrn = hreset;
+    cbc_enable.ena = work & b_reg & (state[] == H"31");
+
+end;

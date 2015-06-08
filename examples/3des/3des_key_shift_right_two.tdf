@@ -1,0 +1,15 @@
+-- copyright Marcin Rogawski 2001
+
+subdesign 3des_key_shift_right_two
+(
+	in[55..0]	:input;
+	out[55..0]	:output;
+)
+begin
+
+	out[27..26] = in[1..0];
+	out[25..0] = in[27..2];
+
+	out[55..54] = in[29..28];
+	out[53..28] = in[55..30];
+end;

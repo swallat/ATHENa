@@ -1,0 +1,46 @@
+-- copyright Marcin Rogawski 2001
+
+subdesign 3des_fperm
+(
+	WE[31..0]	:input;
+	WY[31..0]	:output;
+)
+
+begin
+	WY[31] = WE[16];
+	WY[30] = WE[25];
+	WY[29] = WE[12];
+	WY[28] = WE[11];
+	WY[27] = WE[3];
+	WY[26] = WE[20];
+	WY[25] = WE[4];
+	WY[24] = WE[15];
+
+	WY[23] = WE[31];
+	WY[22] = WE[17];
+	WY[21] = WE[9];
+	WY[20] = WE[6];
+	WY[19] = WE[27];
+	WY[18] = WE[14];
+	WY[17] = WE[1];
+	WY[16] = WE[22];
+
+	WY[15] = WE[30];
+	WY[14] = WE[24];
+	WY[13] = WE[8];
+	WY[12] = WE[18];
+	WY[11] = WE[0];
+	WY[10] = WE[5];
+	WY[9] = WE[29];
+	WY[8] = WE[23];
+
+	WY[7] = WE[13];
+	WY[6] = WE[19];
+	WY[5] = WE[2];
+	WY[4] = WE[26];
+	WY[3] = WE[10];
+	WY[2] = WE[21];
+	WY[1] = WE[28];
+	WY[0] = WE[7];
+
+end;

@@ -1,0 +1,27 @@
+-- copyright Marcin Rogawski 2001
+
+FUNCTION 3des_sb4 (in_1, in_2, in_3, in_4, in_5, in_6)
+	RETURNS (out_1, out_2, out_3, out_4);
+
+SUBDESIGN 3des_sbox4
+(
+	WE[5..0]	:input;
+	WY[3..0]	:output;
+)
+variable 
+	s4		:3des_sb4;
+begin
+
+	s4.in_1	=	WE[5];
+	s4.in_2	=	WE[4];
+	s4.in_3	=	WE[3];
+	s4.in_4	=	WE[2];
+	s4.in_5	=	WE[1];
+	s4.in_6	=	WE[0];
+	WY[3]	=	s4.out_1;
+	WY[2]	=	s4.out_2;
+	WY[1]	=	s4.out_3;
+	WY[0]	=	s4.out_4;
+end;
+
+

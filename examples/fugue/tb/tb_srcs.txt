@@ -1,0 +1,8 @@
+# test bench files
+tb_pkg.vhd
+fifo.vhd
+fifo_ram.vhd
+sha_tb.vhd
+# test vectors
+random_split_nopad_fugue_datain_h256_w32.txt
+random_split_nopad_fugue_dataout_h256_w32.txt

@@ -1,0 +1,13 @@
+-- copyright Marcin Rogawski 2001
+
+subdesign 3des_xored
+(
+	L[31..0]	:input;
+	R[31..0]	:input;
+	WY[31..0]	:output;
+)
+
+begin
+	WY[31..0] = (L[31..0] $ R[31..0]);
+end;
+

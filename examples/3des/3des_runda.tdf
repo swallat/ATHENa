@@ -1,0 +1,99 @@
+-- copyright Marcin Rogawski 2001
+
+FUNCTION 3des_sbox8 (WE[5..0])
+	RETURNS (WY[3..0]);
+
+FUNCTION 3des_sbox7 (WE[5..0])
+	RETURNS (WY[3..0]);
+
+FUNCTION 3des_sbox6 (WE[5..0])
+	RETURNS (WY[3..0]);
+
+FUNCTION 3des_sbox5 (WE[5..0])
+	RETURNS (WY[3..0]);
+
+FUNCTION 3des_sbox4 (WE[5..0])
+	RETURNS (WY[3..0]);
+
+FUNCTION 3des_sbox3 (WE[5..0])
+	RETURNS (WY[3..0]);
+
+FUNCTION 3des_sbox2 (WE[5..0])
+	RETURNS (WY[3..0]);
+
+FUNCTION 3des_sbox1 (WE[5..0])
+	RETURNS (WY[3..0]);
+
+FUNCTION 3des_extend (WE[31..0])
+	RETURNS (WY[47..0]);
+	
+FUNCTION 3des_add_key (WE[47..0], KEY[47..0])
+	RETURNS (WY[47..0]);
+
+FUNCTION 3des_fperm (WE[31..0])
+	RETURNS (WY[31..0]);
+
+FUNCTION 3des_xored (L[31..0], R[31..0])
+	RETURNS (WY[31..0]);	
+
+subdesign 3des_runda
+(
+	STATE[7..0]		:input;
+	WE[63..0]		:input;
+	KEY[47..0]		:input;
+	WY[63..0]		:output;
+)
+variable
+	ext		:3des_extend;
+	ak		:3des_add_key;
+	sb1		:3des_sbox1;
+	sb2		:3des_sbox2;
+	sb3		:3des_sbox3;
+	sb4		:3des_sbox4;
+	sb5		:3des_sbox5;
+	sb6		:3des_sbox6;
+	sb7		:3des_sbox7;
+	sb8		:3des_sbox8;
+	fp 		:3des_fperm; 
+	xr		:3des_xored;
+begin
+
+	ext.WE[31..0] = WE[31..0];
+	ak.WE[47..0] = ext.WY[47..0];
+	ak.KEY[47..0] = KEY[47..0];
+
+	sb1.WE[5..0] = ak.WY[47..42];
+	sb2.WE[5..0] = ak.WY[41..36];
+	sb3.WE[5..0] = ak.WY[35..30];
+	sb4.WE[5..0] = ak.WY[29..24];
+	sb5.WE[5..0] = ak.WY[23..18];
+	sb6.WE[5..0] = ak.WY[17..12];
+	sb7.WE[5..0] = ak.WY[11..6];
+	sb8.WE[5..0] = ak.WY[5..0];
+
+	fp.WE[31..28] = sb1.WY[3..0];
+	fp.WE[27..24] = sb2.WY[3..0];
+	fp.WE[23..20] = sb3.WY[3..0];
+	fp.WE[19..16] = sb4.WY[3..0];
+	fp.WE[15..12] = sb5.WY[3..0];
+	fp.WE[11..8] = sb6.WY[3..0];
+	fp.WE[7..4] = sb7.WY[3..0];
+	fp.WE[3..0] = sb8.WY[3..0];
+
+
+
+	xr.L[31..0] = fp.WY[31..0];
+	xr.R[31..0] = WE[63..32];
+
+	--WY[31..0] = xr.WY[31..0];
+	--WY[63..32] = WE[31..0];
+
+	WY[31..0] = ((xr.WY[31..0]) & (!(state[]==H"11") & !(state[]==H"21") & !(state[]==H"31"))) 
+	# ((WE[31..0]) & ((state[]==H"11") # (state[]==H"21") # (state[]==H"31")));
+
+	WY[63..32] = ((WE[31..0]) & (!(state[]==H"11") & !(state[]==H"21") &!(state[]==H"31")))
+	# ((xr.WY[31..0]) & ((state[]==H"11") # (state[]==H"21") # (state[]==H"31")));
+
+
+end;
+
