@@ -89,7 +89,8 @@ sub xilinx_implementation{
 		#___ added xdl generation support
 		printOut("Performing xdl extraction...");
 		my $XDL_FLAGS = prepare_XdlFlags();
-		printOut("Generating xdl file\n");
+		#printOut("Generating xdl file\n");
+		printOut("Executing: $XXDL $XDL_FLAGS\n");
 		$tr = system("\"$XXDL\" $XDL_FLAGS");
 		if ($tr == 0){ printOut("[ok]\n");}
 		else {return $tr;}
@@ -97,10 +98,20 @@ sub xilinx_implementation{
 		#___ added netgen generation support
 		printOut("Performing vhd macro generation...");
 		my $VHD_FLAGS = prepare_NetgenFlags();
-		printOut("Generating vhdl macro file\n");
+		#printOut("Generating vhdl macro file\n");
+		printOut("Executing: $XNETGEN $VHD_FLAGS\n");
 		$tr = system("\"$XNETGEN\" $VHD_FLAGS");
 		if ($tr == 0){ printOut("[ok]\n");}
 		else {return $tr;}
+
+		#___ added bitgen generation support
+        printOut("Performing bitgen generation...");
+        my $BITGEN_FLAGS = prepare_BitgenFlags();
+        #printOut("Generating bitstream\n");
+        printOut("Executing: $XBITGEN $BITGEN_FLAGS\n");
+        $tr = system("\"$XBITGEN\" $BITGEN_FLAGS");
+        if ($tr == 0){ printOut("[ok]\n");}
+        else {return $tr;}
 			
 	}
 	else{ #sinplify pro
@@ -144,6 +155,7 @@ sub set_ImplementationFilenames{
 	$PAR_FILE = "${PROJECT_NAME}_${FAMILY}_${DEVICE}_${OPTIMIZATION_TARGET}.ncd"; #___ 
 	$XDL_FILE = "${PROJECT_NAME}_${FAMILY}_${DEVICE}_${OPTIMIZATION_TARGET}.xdl"; #___
 	$VHD_FILE = "${PROJECT_NAME}_${FAMILY}_${DEVICE}_${OPTIMIZATION_TARGET}.vhd"; #___
+	$BIT_FILE = "${PROJECT_NAME}_${FAMILY}_${DEVICE}_${OPTIMIZATION_TARGET}.bit"; #___
 	
 	$TWR_FILE = $XILINX_TRACE_REPORT;
 
@@ -238,6 +250,16 @@ sub prepare_XdlFlags{
 #####################################################################
 sub prepare_NetgenFlags{
 	my $FLAGS = "-ofmt vhdl $PAR_FILE $VHD_FILE";
+	return $FLAGS;
+}
+
+#___
+#####################################################################
+# Prepare bitgen flags
+#####################################################################
+sub prepare_BitgenFlags{
+    my $FLAGS = "-intstyle ise $PAR_FILE";
+    
 	return $FLAGS;
 }
 

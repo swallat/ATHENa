@@ -66,7 +66,7 @@ $XILINX_SYNTHESIS_CONSTRAINTS_FILE_NAME = "synth.xcf";
 $XILINX_IMPLEMENTATION_CONSTRAINTS_FILE_NAME = "impl.ucf";
 
 $OPTION_LOG_FILE_NAME = "option_log.txt";
-$LOCAL_CMD_LOG_FILE_NAME = "athena_log.txt";
+$LOCAL_CMD_LOG_FILE_NAME = "athena_log.txt.call";
 $LOCAL_TEMP_PROGRESS_LOG_FILE_NAME = "local_run_progress.txt";
 $LOCAL_PROGRESS_LOG_FILE_NAME = "run_progress.txt";
 

@@ -1357,7 +1357,7 @@ sub trim {
 	my ($directory, $mode, $zipped_name) = @_;
 	### form ignore expressions
 	#my @ignore_list = qw{txt twr log rpt zip bat scr prj xcf ucf qsf ncd};
-	my @ignore_list = qw{ncd vhd xdl}; #___
+	my @ignore_list = qw{ncd vhd xdl bit call}; #___
 	#my @exclude_list = qw{obj pm pl};
 	my @exclude_list = qw{obj pm pl txt}; #___
 	$directory =~ s/\\\\/\//i; 
@@ -1451,7 +1451,7 @@ sub trim {
 	   
     #___ copy results to directory
     foreach $file (@files) {
-		if (($file =~ /.*.ncd/) or ($file =~ /.*.xdl/) or ($file =~ /.*.vhd/)) {
+		if (($file =~ /.*.ncd/) or ($file =~ /.*.xdl/) or ($file =~ /.*.vhd/) or ($file =~ /.*.bit/) or ($file =~ /.*.call/)) {
 			if (!($file =~ /.*_map.ncd/)) {
 				my $src_file_path = "$directory\/$file";	
 				my $dst_file_path = "";
@@ -1463,6 +1463,12 @@ sub trim {
 					$dst_file_path = "$fpga_opt_target\/$file";		
 				}
 				elsif($file =~ /.*.vhd/){
+					$dst_file_path = "$fpga_opt_target\/$file";	
+				}
+				elsif($file =~ /.*.bit/){
+					$dst_file_path = "$fpga_opt_target\/$file";	
+				}
+				elsif($file =~ /.*.call/){
 					$dst_file_path = "$fpga_opt_target\/$file";	
 				}
 				

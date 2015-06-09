@@ -36,7 +36,7 @@ $TEMP_DIR = "" unless defined $TEMP_DIR;
 #####################################################################
 # constants are pre declared
 # Xilinx
-$XST, $XNGDBUILD, $XMAP , $XPAR, $XTRACE, $XPARTGEN, $XXDL, $XNETGEN; #___ add xdl,netgen support
+$XST, $XNGDBUILD, $XMAP , $XPAR, $XTRACE, $XPARTGEN, $XXDL, $XNETGEN, XBITGEN; #___ add xdl,netgen support
 $ISE_VERSION, $ISE_TYPE;
 # Altera
 $QMAP, $QFIT, $QASM, $QTAN, $QSTA, $QPOW;
