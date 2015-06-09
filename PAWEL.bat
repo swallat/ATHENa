@@ -3,7 +3,7 @@ echo off
 
 set XILINX=D:\pawel\ISE\14.7\ISE_DS\ISE\bin\nt
 set QUARTUS_ROOTDIR=
-
+set ATHENa_workspace=ATHENa_workspace
 cd bin
 
 set designs=(RSA_textbook_shift_key_bits_1bit.txt)
@@ -20,4 +20,5 @@ for %%d in %designs% do (
 		)
 	)
 )
-pause
+
+RMDIR /S /Q ATHENa_workspace

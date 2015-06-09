@@ -147,9 +147,9 @@ sub run{
 	#check if source files in the source folder match the ones provided
 	printError("ERROR: Dispatch - Source file mismatch! \n Please check the sources!\n", 1) unless(identify_sources("sources", $SOURCE_DIR, $SOURCE_LIST_FILE) == 0);
 	
-	my $db = "$ROOT_DIR\\db";
-    my $design_name = "$db\\$PROJECT_NAME";
-    my $design_rtl = "$design_name\\design_rtl";
+	my $db = "$ROOT_DIR/db";
+    my $design_name = "$db/$PROJECT_NAME";
+    my $design_rtl = "$design_name/design_rtl";
 
     printf "$db\n";
     printf "$design_name\n";
@@ -168,7 +168,7 @@ sub run{
 		}
 	}
 	$srcfile = "$SOURCE_LIST_FILE";
-	$dstfile = "$design_rtl/source_list.txt";
+	$dstfile = "$design_rtl\/source_list.txt";
 	printf "Copy file $srcfile to $dstfile\n";
 	copy("$srcfile","$dstfile");
 
