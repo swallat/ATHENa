@@ -6,7 +6,7 @@ use File::Path qw(remove_tree rmtree);
 use strict;
 use warnings;
 
-my $filename = '..\\config\\design.config.txt';
+my $filename = '../config/design.config.txt';
 my $data = read_file($filename);
 
 if($data =~ /SOURCE_DIR = <(.*)>/){

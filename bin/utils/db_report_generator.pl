@@ -35,7 +35,7 @@ use Cwd;
 use File::Path;
 use Archive::Zip qw( :ERROR_CODES :CONSTANTS );	
 
-$CONSTANT_FILE_NAME = "constants.pl"; $BIN_DIR_NAME = "bin";		$REGEX_FILE_NAME = "regex.pl";
+$CONSTANT_FILE_NAME = "constants.pl"; $BIN_DIR_NAME = "bin"; $REGEX_FILE_NAME = "regex.pl";
 $UTILS_DIR_NAME = "utils"; 		$CONFIG_DIR = "config"; 
 $ROOT_DIR = cwd; $ROOT_DIR =~ s/\/$BIN_DIR_NAME\/$UTILS_DIR_NAME//;
 
@@ -1676,10 +1676,10 @@ system( clear );
 #	print "\n\n";
 #	print "Please select one of the following applications :\n\n";
 #	foreach my $app (keys %data) {
-#		$i++;
+#		$i++;s``````
 #		print "$i.\t$app\n";
 #		$option[$i] = $app;
-3		$last_option = $i;
+#		$last_option = $i;
 #	}
 #
 #	print "\n(e)\tExit\n\n";

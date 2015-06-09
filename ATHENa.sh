@@ -1,12 +1,29 @@
-#!/usr/bin/enc bash
-export XILINX=/opt/Xilinx/14.7/ISE_DS/ISE/bin/lin64
-export QUARTUS_ROOTDIR=
-export PATH=/opt/Xilinx/14.7/ISE_DS/ISE/bin/lin64:/opt/Xilinx/14.7/ISE_DS/ISE/sysgen/util:/opt/Xilinx/14.7/ISE_DS/ISE/sysgen/bin:/opt/Xilinx/14.7/ISE_DS/ISE/../../../DocNav:/opt/Xilinx/14.7/ISE_DS/PlanAhead/bin:/opt/Xilinx/14.7/ISE_DS/EDK/bin/lin64:/opt/Xilinx/14.7/ISE_DS/EDK/gnu/microblaze/lin/bin:/opt/Xilinx/14.7/ISE_DS/EDK/gnu/powerpc-eabi/lin/bin:/opt/Xilinx/14.7/ISE_DS/EDK/gnu/arm/lin/bin:/opt/Xilinx/14.7/ISE_DS/EDK/gnu/microblaze/linux_toolchain/lin64_be/bin:/opt/Xilinx/14.7/ISE_DS/EDK/gnu/microblaze/linux_toolchain/lin64_le/bin:/opt/Xilinx/14.7/ISE_DS/common/bin/lin64:$PATH
+#!/bin/bash
+###########################
+#Shell Script to Run ATHENa
+###########################
+#Function to Simulate 'Pause' as in Windows
+pause()
+{
+	read -s -n 1 -p "ATHENa Execution Completed. Press any key to continue . . ."
+	echo
+	}
+#Setting Path Variables
+export XILINX="/opt/Xilinx/14.7/ISE_DS/ISE/bin/lin64"
+export QUARTUS_ROOTDIR=""
+export PATH=":/opt/Xilinx/14.7/ISE_DS/ISE/bin/lin64:$PATH"
 
+#Starting ATHENa
 cd bin
-main.pl $1
-if [[ "$1" -ne "nopause" ]]; then
-	read -p "Press [Enter] key"
+perl main.pl $1
+if [ "$1" = "nopause" ] ; then #Req. for ATHENa Spooler
+	echo done
+	cd ..
+else					         #ATHENa Execution Complete
+
+	pause
+
+
+	cd ..
 fi
-echo "done"
-cd ..
+#EOF

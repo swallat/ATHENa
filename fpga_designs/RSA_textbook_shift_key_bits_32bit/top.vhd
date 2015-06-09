@@ -5,7 +5,7 @@ use IEEE.math_real."floor";
 use IEEE.math_real."log2";
 
 entity top is
-  generic(bitLen : integer := 3072);
+  generic(bitLen : integer := 128);
   port(
     clk		: in  std_logic;
     reset	: in  std_logic;

@@ -450,6 +450,7 @@ sub configureISE{
     
     $XXDL = $ISE_INSTALL_FOLDER."xdl"; #___ add xdl support
     $XNETGEN = $ISE_INSTALL_FOLDER."netgen"; #___ add netgen support
+    $XBITGEN = $ISE_INSTALL_FOLDER."bitgen"; #__ add bitgen support
 	
 	return 0;
 }

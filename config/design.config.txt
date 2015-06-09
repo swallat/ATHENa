@@ -1,6 +1,6 @@
 # =============================================
 # ATHENA - Automated Tool for Hardware EvaluatioN.
-# Copyright © 2009 - 2014 CERG at George Mason University <cryptography.gmu.edu>.
+# Copyright \xA9 2009 - 2014 CERG at George Mason University <cryptography.gmu.edu>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@
 WORK_DIR = <ATHENa_workspace>
 
 # directory containing synthesizable source files for the project
-SOURCE_DIR = <fpga_designs/RSA_textbook_shift_key_bits_32bit>
+SOURCE_DIR = <fpga_designs/RSA_textbook_shift_key_bits_1bit>
 
 # A file list containing list of files in the order suitable for synthesis and implementation
 # low level modules first, top level entity last
@@ -36,7 +36,7 @@ SOURCE_LIST_FILE = source_list.txt
 
 # project name
 # it will be used in the names of result directories
-PROJECT_NAME = RSA_textbook_shift_key_bits_32bit_3072
+PROJECT_NAME = RSA_textbook_shift_key_bits_1bit_128
 
 # =============================================
 # =============================================
@@ -100,8 +100,8 @@ THROUGHPUT = 512/(TCLK*65)
 # determine which top level script is called,
 # and which options are used.
 
-# OPTIMIZATION_TARGET = speed | area | balanced
-OPTIMIZATION_TARGET = balanced
+# OPTIMIZATION_TARGET = speed
+OPTIMIZATION_TARGET = speed
 
 # OPTIONS = default | user
 OPTIONS = default
@@ -176,6 +176,7 @@ DB_QUERY_MODE = overall
 # DB_CRITERIA = throughput | throughput_area | area | latency | latency_area
 
 DB_CRITERIA = throughput_area
+
 
 # =============================================================
 # the list of all FPGA devices targeted by a given application

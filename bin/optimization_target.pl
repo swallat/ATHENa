@@ -38,7 +38,7 @@ print "ARG1 = $SYNTHESIS_OPTION :: ARG2 = $BITSIZE\n";
 
 # SETUP OPTIMIZATION_TARGET
 # SETUP PROJECT NAME WITH BITSIZE
-my $filename = '..\\config\\design.config.txt';
+my $filename = '../config/design.config.txt';
 my $design_config = read_file($filename);
 my $work_around = $design_config;
   
