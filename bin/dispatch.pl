@@ -147,6 +147,31 @@ sub run{
 	#check if source files in the source folder match the ones provided
 	printError("ERROR: Dispatch - Source file mismatch! \n Please check the sources!\n", 1) unless(identify_sources("sources", $SOURCE_DIR, $SOURCE_LIST_FILE) == 0);
 	
+	my $db = "$ROOT_DIR\\db";
+    my $design_name = "$db\\$PROJECT_NAME";
+    my $design_rtl = "$design_name\\design_rtl";
+
+    printf "$db\n";
+    printf "$design_name\n";
+    printf "$design_rtl\n";
+
+    mkdir $db;
+    mkdir $design_name;
+    mkdir $design_rtl;
+
+    foreach $file (  @SOURCE_FILES ) {
+		if ( $file =~ /.txt$|.v$|.vhd$|.vhdl$/i ) {
+			$srcfile = "$SOURCE_DIR\/$file";		
+			$dstfile = "$design_rtl\/$file";	
+			printf "Copy file $srcfile to $dstfile\n";
+			copy("$srcfile","$dstfile");
+		}
+	}
+	$srcfile = "$SOURCE_LIST_FILE";
+	$dstfile = "$design_rtl/source_list.txt";
+	printf "Copy file $srcfile to $dstfile\n";
+	copy("$srcfile","$dstfile");
+
 	my $req1 = lc($VENDOR)."_synthesis.pl";
 	my $req2 = lc($VENDOR)."_implementation.pl";
 	my $req3 = "$LOCAL_APPLICATION.pl";
