@@ -1,4 +1,4 @@
-# =============================================
+# ===========================================
 # ATHENA - Automated Tool for Hardware EvaluatioN.
 # Copyright © 2009 - 2014 CERG at George Mason University <cryptography.gmu.edu>.
 # 
@@ -91,7 +91,7 @@ my %project = %{&extract_project_data($PROJECTFOLDER)};
 my %best = %{&extract_best_result(\%project, "normal")};
 
 	## Printing best result based on best over all result
-my %best_result = %{&print_best_result(\%project, \%best, \@BEST_CRITERIAN, "best_overall")};
+my %best_result = %{&print_best_result(\%project, \%best, \@BEST_CRITERIAN, "best_per_generic")};
 
 	############################################
 	########## BEST RESULT OBTAINED ############
@@ -121,6 +121,7 @@ $report_timing .= "$best_result{THROUGHPUT}";
 $report_timing .= "$best_result{THROUGHPUT_AREA}";
 $report_timing .= "$best_result{LATENCY}";
 $report_timing .= "$best_result{LATENCY_AREA}";
+
 	######################################################################################
 	######################## END OF TABLE GENERATION #####################################
 	######################################################################################
@@ -139,8 +140,8 @@ foreach $vendor ( keys  %project ) {
 		
 		my @device_list;
 		# get a list of unique devices
-		foreach $gid ( keys %{$project{$vendor}{$family}} ) {
-			foreach $device ( keys %{$project{$vendor}{$family}{$gid}} ) {
+		foreach $gid ( keys %{$project{$vendor}{$family}} ) {            
+			foreach $device ( keys %{$project{$vendor}{$family}{$gid}} ) {                
 				my $add = 1;
 				if ( $device =~ /generic|best_match/i ) { $add = 0; }
 				foreach $dev ( @device_list ) {

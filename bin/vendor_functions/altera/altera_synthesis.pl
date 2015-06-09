@@ -118,10 +118,10 @@ sub create_prj{
 	my $generics = $_[4];
 	
 	my $output = "";
-
-	$output .= "set_global_assignment -name TOP_LEVEL_ENTITY $PRJ_NAME\n";		
-	if ($FAMILY =~ /stratix iv/i) { $FAMILY = "stratix iv";}
-	if ($FAMILY =~ /stratix v/i) { $FAMILY = "stratix v";}
+	
+	$output .= "set_global_assignment -name TOP_LEVEL_ENTITY $PRJ_NAME\n";	
+	if ($FAMILY =~ /stratix iv/i ) { $FAMILY = "stratix iv"; }
+	if ($FAMILY =~ /stratix v/i ) { $FAMILY = "stratix v"; }
 	$output .= "set_global_assignment -name FAMILY \"$FAMILY\"\n";		
 	$output .= "set_global_assignment -name DEVICE $DEVICE\n";
 	
@@ -138,7 +138,7 @@ sub create_prj{
 		$output .= "set_global_assignment -name AUTO_SHIFT_REGISTER_RECOGNITION OFF\n";
 	}
 	
-	# source files
+	# source files	
 	foreach $file(@SOURCE_FILES) {
 		if ( $file =~ m/.v$/i ) {
 			my $dest_dir_text = "set_global_assignment -name VERILOG_FILE \"$SOURCE_DIR/";		

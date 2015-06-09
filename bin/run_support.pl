@@ -34,24 +34,11 @@ use Thread;
 #####################################################################
 sub executeRun{
 	my ($directory) = @_;
-	#print "directory = $directory\n\n";
 	$directory =~ s/\\/\//gi;
 	$directory .= "\/" unless($directory =~ m/\/$/gi);
-	#print "directory = $directory\n\n";
-	my $script = $directory."run.sh";
+	my $script = $directory."run.bat";
 	#my $script = $directory."dispatch.pl"; #<== wont work because it doesnot change the CWD, so devobject is not found.
-	#print "\nscript== $script\n";
-	#print "\n starting script run.sh\n";
-	system ("chmod +x '$script'");
-	if (system("\"$script\"") == 0)
-	{
-		#print "Called script..\n";
-	}
-	else
-	{
-		print"Could Not Execute run.sh..\n";
-
-		}
+	system($script);
 }
 
 #####################################################################
@@ -236,7 +223,7 @@ sub DisplayProgress{
 	
 	if (( $PREV_OUTPUT ne $output ) or ( $LAST_REFRESH > 120 ) or ($force == 1)){
 		$PREV_OUTPUT = $output;		
-		system(clear);
+		system(cls);
 		print "\n Athena Progress : \t";				
 		print "(Elapsed time : $elapsed_time)\n";		
 		print "\tGathering Information \n\tPlease wait...\n" if (length($output) < 1);

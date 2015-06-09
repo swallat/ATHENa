@@ -1,4 +1,0 @@
-xilinx[imp][1][14.7 64-bit][/opt/Xilinx/14.7/ISE_DS/ISE/bin/lin64][designsuite][]
-xilinx[imp][2][14.7 64-bit][/opt/Xilinx/14.7/ISE_DS/ISE/bin/lin64][designsuite][selected]
-CORE[2][2]
-OS_INFO[linux][64]

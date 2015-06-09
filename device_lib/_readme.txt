@@ -21,7 +21,7 @@ Files:
   xilinx_device_lib_webpack_14.7.txt
   xilinx_device_lib_webpack_14.6.txt
   xilinx_device_lib_webpack_14.5.txt
-  xilinx_device_lib_webpack_14.4.txt
+  xilinx_device_lib_webpack_14.4.txt  
   xilinx_device_lib_webpack_14.3.txt
   xilinx_device_lib_webpack_14.2.txt
   xilinx_device_lib_webpack_14.1.txt
@@ -45,7 +45,7 @@ Files:
   xilinx_device_lib_designsuite_14.7.txt
   xilinx_device_lib_designsuite_14.6.txt
   xilinx_device_lib_designsuite_14.5.txt
-  xilinx_device_lib_designsuite_14.4.txt
+  xilinx_device_lib_designsuite_14.4.txt  
   xilinx_device_lib_designsuite_14.3.txt
   xilinx_device_lib_designsuite_14.2.txt
   xilinx_device_lib_designsuite_14.1.txt

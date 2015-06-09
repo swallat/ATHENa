@@ -1,6 +1,6 @@
 # =============================================
 # ATHENA - Automated Tool for Hardware EvaluatioN.
-# Copyright © 2009 - 2014 CERG at George Mason University <cryptography.gmu.edu>.
+# Copyright © 2009 - 2012 CERG at George Mason University <cryptography.gmu.edu>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -211,7 +211,7 @@ GLOBAL_GENERICS_BEGIN
 	# Memory type: 0 = MEM_DISTRIBUTED, 1= MEM_EMBEDDED
         mem_type = 0, 1
 	# Adder type:       0 = ADD_SCCA_BASED (Simple Carry Chain Adder, "+" in VHDL), 1 = ADD_DSP_BASED
-	# Multiplier type:  0 = MUL_LOGIC_BASED (multiplier based on configurable logic), 1 = MUL_DEDICATED		
+	# Multiplier type:  0 = MUL_LOGIC_BASED (multiplier based on configurable logic), 1 = MUL_DSP_BASED		
 	# Allowed combinations of adder and multiplier types
 		(adder_type, multiplier_type) = (0, 0),(1, 1)
 GLOBAL_GENERICS_END
@@ -224,7 +224,7 @@ FPGA_VENDOR = xilinx
 	
 		GENERICS_BEGIN
 		 # FPGA vendor:  0 = XILINX, 1 = ALTERA
-         vendor = 0
+         	vendor = 0
         GENERICS_END
 
 		FPGA_DEVICES = best_match
@@ -242,7 +242,7 @@ FPGA_VENDOR = xilinx
 	
 		GENERICS_BEGIN
 		 # FPGA vendor:  0 = XILINX, 1 = ALTERA
-         vendor = 0
+         	vendor = 0
         GENERICS_END
 
 		FPGA_DEVICES = best_match
@@ -267,7 +267,7 @@ FPGA_VENDOR = altera
 		 # Memory block size: 0 = M512, 1 = M4K, 2 = M9K, 3 = M20K, 4 = MLAB, 5 = MRAM, 6 = M144K
 		 mem_block_size = 1
 	 	 # FPGA vendor:  0 = XILINX, 1 = ALTERA
-         vendor = 1
+         	vendor = 1
         GENERICS_END
 
 		FPGA_DEVICES = best_match
@@ -288,7 +288,7 @@ FPGA_VENDOR = altera
 		 # Memory block size: 0 = M512, 1 = M4K, 2 = M9K, 3 = M20K, 4 = MLAB, 5 = MRAM, 6 = M144K
 		 mem_block_size = 2
 	 	 # FPGA vendor:  0 = XILINX, 1 = ALTERA
-         vendor = 1
+         	vendor = 1
         GENERICS_END
 
 		FPGA_DEVICES = best_match

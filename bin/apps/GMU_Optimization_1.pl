@@ -47,7 +47,7 @@ sub application{
 	my (@DIRECTORY_LIST);
 	my $RUNNO = 1;
 	my $ClkNet = &get_ClkName();
-	my $CONFIG_FILE = "$CONFIG_DIR/GMU_Optimization_1.txt";
+	my $CONFIG_FILE = "$CONFIG_DIR/GMU_optimization_1.txt";
 	my @investigated_strategies = ("area", "speed", "balanced");
 	if( $VENDOR =~ /xilinx/i ) {
 		my ($Improvement, $CurrentFreq, $NextReqFreq, $ReqFreq);
@@ -86,7 +86,6 @@ sub application{
 				$NEWDEV_OBJ->setRequestedFreqs($ReqFreq, $ReqFreq);				
 				if ( $state =~ m/^HIGH_EFFORT_WITH_PLACEMENT_SEARCH$/i ) {
 					$NEWDEV_OBJ->setPlacementLocation( $placement_location );
-
 				}				
 				my $deviceDir = dispatchDevice(\$NEWDEV_OBJ);
 				push(@DIRECTORY_LIST,$deviceDir);

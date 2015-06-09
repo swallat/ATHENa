@@ -42,19 +42,13 @@ $ROOT_DIR = cwd;
 
 $ROOT_DIR =~ s/\/$BIN_DIR_NAME\/$UTILS_DIR_NAME//;
 
-
 $SPOOL_DIR_NAME = "spool";
 $SPOOL_DIR = "$ROOT_DIR/$CONFIG_DIR_NAME/$SPOOL_DIR_NAME";
-
 $PROCESSING_DIR = "$ROOT_DIR/$CONFIG_DIR_NAME/$SPOOL_DIR_NAME/processing";
-
 $COMPLETED_DIR = "$ROOT_DIR/$CONFIG_DIR_NAME/$SPOOL_DIR_NAME/completed";
-
 $CONFIG_DIR = "$ROOT_DIR/$CONFIG_DIR_NAME";
-
-$ATHENA = "$ROOT_DIR/ATHENa.sh";
+$ATHENA = "\"$ROOT_DIR/ATHENa.bat\" nopause";
 $DESIGN_CONFIG = "$CONFIG_DIR/design.config.txt";
-
 
 #####################################################################
 # list all the directories in a folder
@@ -88,9 +82,8 @@ while ( $file ne "" ) {
 	copy("$SPOOL_DIR/$file", $DESIGN_CONFIG );
 	print "\n\n ============== \n RUNNING ==> $file\n ==============\n";
 	move("$SPOOL_DIR/$file", "$PROCESSING_DIR/$file" );
-	sleep( 3 ); 
-	system ("chmod +x $ATHENA");	
-	$result = system( "\"$ATHENA\" nopause");
+	sleep( 3 ); 	
+	$result = system( "$ATHENA" );	
 	move("$PROCESSING_DIR/$file", "$COMPLETED_DIR/$file" );
 	$file = &get_design_config();
 }

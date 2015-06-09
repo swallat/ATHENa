@@ -31,7 +31,6 @@
 #=========================================================================================
 
 use Storable qw(dclone);
-use Config;
 
 
 #####################################################################
@@ -40,7 +39,7 @@ use Config;
 sub getdirs{
   my $dir = shift;
   my $curdir = getcwd;
-  
+
   opendir(DIR,$dir) or die "Can't open the current directory: $!\n";
   my @names = readdir(DIR);
   closedir(DIR);
@@ -81,19 +80,7 @@ sub switch_version {
 	print "Error{switch_version}!!\n\nUNSUPPORTED VENDOR!!! Program terminating.\n"; system( pause );
 	exit;	
 }
-#####################################################################
-# Flags when no tool is detected
-#####################################################################
-sub any_tool_install_detect {
-	
-		my $string = shift();
-		my $pat = "Not detected";
-		my $tool_flag =0;
-        while ($string =~m/$pat/g) {
-         $tool_flag++;
-        }
-		return $tool_flag ;
-		}
+
 
 
 #####################################################################
@@ -158,7 +145,7 @@ sub configure_library{
 			while( 1 ){
 				my $input;
 				while ( 1 ) {
-					system( clear );
+					system( cls );
 					print "\n\n";
 					print "================================================================================\n";
 					print "'$vendor' library version '$lib_ver' is missing from device_lib folder.\n";
@@ -214,7 +201,7 @@ sub print_data {
 	my $display_type = shift();
 
 	my @types;	
-	if ( $display_type =~ m/all/i ) { 
+	if ( $display_type =~ m/all/i ) {
 		@types = ( "sim", "imp", "syn" );
 	} else {
 		@types = $display_type;
@@ -249,8 +236,6 @@ $DATA_FILE = "$ROOT_DIR/$CONFIG_DIR_NAME/$TOOL_DATA_FILE";
 $REGEX_TOOL_INFO = qr/([\w]*)\[([\w\s]*)]\[(\d*)\]\[([\w\d.\s-]*)\]\[([\s\:\d\w.\\\/ ()-]*)\]\[([\w\d.]*)\]\[(\w*)\]/i;
 	# CORE [ MAX_USAGE ][ AVAILABLE ]
 $REGEX_CORE_INFO = qr/CORE\[(\d*)\]\[(\d*)\]/;
-	# OS_INFO [ OS ][ SYSTEM ARCHITECTURE ]
-$REGEX_OS_INFO = qr/OS_INFO\[(\w*)\]\[(\d*)\]/;
 
 sub load_tool_data {
 	my %data;
@@ -263,20 +248,15 @@ sub load_tool_data {
 		%data = %{&get_toolinfo_from_possible_locations(\%data)};
 		$data{core}{available} = &get_coreinfo_from_env();
 		$data{core}{max_usage} = $data{core}{available};
-		my %os_data = &get_os_info();#raj
-		$data{'os'} = $os_data{'os'};#raj
-		$data{'os_arch'} = $os_data{'os_arch'};#raj
 		my %new_data = %{ dclone(\%data) };
 
 		&set_latest_tool_settings(\%new_data);
 		my $str = get_current_settings(\%new_data);
 		
-		#my $tool_check = any_tool_install_detect($str);
-		#print "Tool check == $tool_check\n";
 
 
 		while ( 1 ) {
-			system ( clear );
+			system ( cls );
 			print "\n\n\tWelcome to Automated Tool for Hardware EvaluatioN (ATHENa)!\n\n";
 			print " \n\tIt seems that this is your first time in running ATHENa.\n";
 			print "\tATHENa has Automatically selected the following settings for you :\n\n$str\n";
@@ -291,14 +271,8 @@ sub load_tool_data {
 				&set_manual($location, \%data, 1);
 			} else {
 				print "Invalid input, please try again\n";
-			}
-
-		
-
-
-
-			
-	    }
+			}				
+		}
 	}
 
 	return (\%data);
@@ -326,7 +300,7 @@ sub get_coreinfo_from_data_file {
 	} elsif ( $infotype =~ m/available/i ) {
 		return $core{avilable};
 	} else {
-		print "tool_support.pl : Error!! Invalid Logical Processor info type `$infotype`\n"; exit;
+		print "tool_support.pl : Error!! Invalid  logical processor info type `$infotype`\n"; exit;
 	}	
 }
 
@@ -342,7 +316,7 @@ sub get_info_from_data_file {
 				$data{$1}{$2}{choice_list}{$3}{version_name} = $4;
 				$data{$1}{$2}{choice_list}{$3}{root_dir} = $5;
 				$data{$1}{$2}{choice_list}{$3}{version_type} = $6;
-				if ( $7 eq "selected" ) { 
+				if ( $7 eq "selected" ) {
 					$data{$1}{$2}{selected_choice} = $3;
 				}				
 			}
@@ -350,11 +324,6 @@ sub get_info_from_data_file {
 				# CORE[$max_usage][$avilable]
 				$data{core}{max_usage} = $1;
 				$data{core}{available} = $2;				
-			}
-			if ( $record =~ /$REGEX_OS_INFO/) {
-				# OS_INFO[OS][OS_ARCH]
-				$data{'os'} = $1;
-				$data{'os_arch'} = $2;				
 			}	
 		}
 	close ("inf");
@@ -366,16 +335,13 @@ sub get_info_from_data_file {
 # Get coreinfo from ENV
 #####################################################################
 sub get_coreinfo_from_env {
-	#my $core = $ENV{"NUMBER_OF_PROCESSORS"};
-	 my $core = &no_of_processors();
-	if ( $core < 1 ) { 
-		print "\tError!!! Unable to detect the number of your Logical Processors\n\n";
+	my $core = $ENV{"NUMBER_OF_PROCESSORS"};
+	if ( $core < 1 ) {
+		print "\tError!!! Unable to detect the number of your logical processors\n\n";
 		print "\tWindows User:\n\tPlease check if the environmental variable \"NUMBER_OF_PROCESSORS\" is set.\n";
 		print "\tThis value should be bigger than 0. You can check the variable by typing \"echo %NUMBER_OF_PROCESSORS%\"\n";
 		print "\tin command prompt.\n\n";
-		print "\tLinux User:Please check Number of Processors in your system by typing \"cat /proc/cpuinfo\"\n";
-		print "\tin the terminal.\n";
-		print "\tFor now, ATHENa will assume that your computer contains only single logical processor\n";
+		print "\tFor now, ATHENa will assume that your computer contains only a single logical processor\n";
 		system( pause );
 		$core = 1;
 	}
@@ -411,13 +377,12 @@ sub get_toolinfo_from_possible_locations {
 	# ------
 	my $static_path = "C:\\Xilinx";
 		#check for subdirectory ( should contain version )
-	#my @possible_xilinx_paths = ("\\ise\\bin", "\\ise_ds\\ise\\bin" );
-	my @possible_xilinx_paths = ("/ise/bin", "/ise_ds/ise/bin" );
+	my @possible_xilinx_paths = ("\\ise\\bin", "\\ise_ds\\ise\\bin" );
 	if ( -d $static_path ) {
-		@dirs = &getdirs( $static_path ); 
+		@dirs = &getdirs( $static_path );
 		foreach $dir ( @dirs ) {
 			foreach $extension ( @possible_xilinx_paths ) {
-				my $p = "${static_path}/${dir}$extension";	
+				my $p = "${static_path}\\${dir}$extension";	
 				my @t = &check_and_add_path("any", "any", $p, \%data);		
 				%data = %{$t[1]};
 			}			
@@ -425,51 +390,7 @@ sub get_toolinfo_from_possible_locations {
 	}
 	return (\%data);
 }
-#####################################################################
-# ROUTINE TO GET SYSTEM ARCHITECTURE--os info
-#####################################################################
-sub get_os_info {
 
-#####################################################################
-# OS Hash
-#####################################################################
-my  %os_hash =(os => "",os_arch => "",);
-#####################################################################
-$os_hash{'os'} = $Config{osname};
-$os_hash{'os_arch'} = $Config{archname};
-my $i=0;
-my $len =0;
-my @var = split("-", $os_hash{'os_arch'});
-my $len = scalar(@var);
-while($i < $len)
-{		
-	if ($var[$i] =~ /86_64/ ){
-	$os_hash{'os_arch'} = 64;} elsif ($var[$i] =~ /86/ ){
-	$os_hash{'os_arch'} = 32;}
-	$i++;
-		}
-
-return %os_hash;
-}
-#####################################################################
-# ROUTINE TO GET NUMBER OF PROCESSORS -USED IN LINUX AND CYGWIN
-#####################################################################
-
-sub no_of_processors {
-        $no_of_proc = 0;
-my $i=0;
-my $len =0;
-        @cpu_info = `cat /proc/cpuinfo`;
-        $len = scalar(@cpu_info);
-        while($i < $len)
-        {
-                if ($cpu_info[$i] =~ m/processor/ )
-                        { $no_of_proc++;
-                                }
-                $i++;
-                }
-        return $no_of_proc;
-}
 
 #####################################################################
 # Overwriting tool_data file
@@ -500,7 +421,7 @@ sub update_tool_data_file {
 		foreach $type ( keys ( %{$data{$vendor}} ) ) {
 			foreach $i ( sort( keys %{$data{$vendor}{$type}{choice_list}} ) ) {
 				print outf "$vendor\[$type\]\[$i\]";		# vendor [ type ] [ choice ]
-				print outf "[$data{$vendor}{$type}{choice_list}{$i}{version_name}]"; 
+				print outf "[$data{$vendor}{$type}{choice_list}{$i}{version_name}]";
 				print outf "[$data{$vendor}{$type}{choice_list}{$i}{root_dir}]";
 				print outf "[$data{$vendor}{$type}{choice_list}{$i}{version_type}]";
 				
@@ -513,7 +434,6 @@ sub update_tool_data_file {
 		}
 	}		
 	print outf "CORE[$data{core}{max_usage}][$data{core}{available}]\n";
-	print outf "OS_INFO[$data{os}][$data{os_arch}]\n";
 	close (outf);
 	print "[DONE]\n";
 }
@@ -550,7 +470,7 @@ sub set_latest_tool_settings {
 sub get_new_path {
 	my %data = %{shift()};
 	my ($xilinx_rootdir, $xilinx_path, $altera_rootdir, $altera_path);
-    
+
 	my $path = "";
     foreach $vendor ( @VENDOR_LIST ) {			
         my $choice = $data{$vendor}{imp}{selected_choice};
@@ -558,46 +478,39 @@ sub get_new_path {
             $xilinx_rootdir = $data{$vendor}{imp}{choice_list}{$choice}{root_dir};
 			#$xilinx_rootdir = $xilinx_rootdir.$STR_ISE;
             $xilinx_path = $xilinx_rootdir;
-			$xilinx_path1 = $xilinx_path;
 			#print "path = $xilinx_path\n";
-			if ( $xilinx_path =~ /(bin[\w\d\D\\\/]+)/i ) {
+			if ( $xilinx_path =~ /(\\bin[\w\d\D\\\/]+)/i ) {
 				print "Found - $1!\n";
 				$temp = $1;
 				$temp =~ s/\\/\\\\/g;
-				#print "path1 = $temp\n";
-				$xilinx_path1 =~ s/${temp}//i;
-				#print "path1 = $xilinx_path1\n";
+				$xilinx_path =~ s/${temp}//i;
 			}
-            
-			$path .= "export XILINX=\"$xilinx_path\"\n";
+
+			$path .= "set XILINX=$xilinx_rootdir\n";
         } elsif ( $vendor =~ /altera/i ) {
             $altera_rootdir = $data{$vendor}{imp}{choice_list}{$choice}{root_dir};
             #$altera_rootdir = $altera_rootdir.$STR_QUARTUS;
-
+			#print "root --> $altera_rootdir\n"; system( pause );
             $altera_path = $altera_rootdir;
-			$altera_path =~ s/\\bin//i;
-            
-			$path .= "export QUARTUS_ROOTDIR=\"$altera_path\"\n";
-        }	
-    }
-    $xilinx_rootdir = $xilinx_rootdir.":";
-	$altera_rootdir = $altera_rootdir.":";
+			$altera_path =~ s/\\bin.*//i;
 
-	#$path .= "export PATH=\"/usr/local/bin:/usr/bin:/bin:$altera_rootdir:$xilinx_rootdir:$PATH_ENV\"\n";
-	$path .= "export PATH=\"$altera_rootdir$xilinx_rootdir\$PATH\"\n";
-	#$path .= "source ".$xilinx_path1."settings$data{'os_arch'}.sh\n";
+			$path .= "set QUARTUS_ROOTDIR=$altera_rootdir\n";
+        }
+    }
+    
+	$path .= "PATH=$altera_rootdir;$xilinx_rootdir;$PATH_ENV\n";
 	return $path;
 }
 
 #####################################################################
-# overwrite and update the shell file
+# overwrite and update the batch file
 #####################################################################
 sub update_bat_file {
 	
-	print "Generating new ATHENa.sh...\t";
+	print "Generating new ATHENa.bat...\t";
 
 	my %data = %{shift()};
-	open ( shell_file , "> $ROOT_DIR/ATHENa.sh" )  || die "could'nt overwrite ATHENa.bat\n";
+	open ( batch_file , "> $ROOT_DIR\\ATHENa.bat" )  || die "could'nt overwrite ATHENa.bat\n";
 	
     my $path = &get_new_path ( \%data );
 	
@@ -607,38 +520,18 @@ sub update_bat_file {
 	#print batch_file "cd ..\n";
 	#print batch_file "pause";
 	
-print shell_file <<SHELL;
-#!/bin/bash
-###########################
-#Shell Script to Run ATHENa
-###########################
-#Function to Simulate 'Pause' as in Windows
-pause()
-{
-	read -s -n 1 -p "ATHENa Execution Completed. Press any key to continue . . ."
-	echo
-	}
-#Setting Path Variables
+print batch_file <<BATCH;
 $path
-#Starting ATHENa
 cd bin
-perl main.pl \$1
-if [ "\$1" = "nopause" ] ; then #Req. for ATHENa Spooler
-	echo done
-	cd ..
-else					         #ATHENa Execution Complete
-
-	pause
-
-
-	cd ..
-fi
-#EOF
-SHELL
-
+main.pl %1
+if "%1" == "nopause" goto nopause
+pause
+:nopause
+echo done.
+cd ..
+BATCH
 	
-	close (shell_file);
-	system ("chmod +x $ROOT_DIR/ATHENa.sh");
+	close (batch_file);
 	print "[DONE]\n";				
 }
 #####################################################################
@@ -648,7 +541,7 @@ sub save {
 	my %data = %{shift()};
 	#update tool_data.txt
 	&update_tool_data_file(\%data);	
-	#update start.sh
+	#update start.bin
 	&update_bat_file( \%data );	
 	&configure_library( \%data );
 }	
@@ -710,14 +603,9 @@ sub get_current_settings{
 			$str .= "      : Not detected\n";
 		}		
 	}	
-	$str .= "\n====== Logical Processors ======\n\n";
-	$str .= "Total number of Logical processors                : $data{core}{available}\n";
-	$str .= "Number of Logical Processors to be used by ATHENa : $data{core}{max_usage}\n\n";
-	$str .= "===================================\n";
-	
-	$str .= "\n====== Operating System Info ======\n\n";
-	$str .= "Operating System    = $data{'os'}\n";
-	$str .= "System Architecture = $data{'os_arch'} bit\n"; 
+	$str .= "\n======  Logical Processors ======\n\n";
+	$str .= "Total number of logical processors                : $data{core}{available}\n";
+	$str .= "Number of logical processors to be used by ATHENa : $data{core}{max_usage}\n\n";
 	$str .= "===================================\n";
 	return $str;
 }

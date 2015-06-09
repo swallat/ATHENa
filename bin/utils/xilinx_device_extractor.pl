@@ -34,7 +34,7 @@ use Cwd;
 $BIN_DIR_NAME = "bin"; $UTIL_DIR_NAME = "utils"; $CUR_DIR = cwd;
 $ROOT_DIR = cwd; $ROOT_DIR =~ s/\/$BIN_DIR_NAME\/$UTIL_DIR_NAME//;
 #$PARTGEN = "partgen";
-$PARTGEN = "/nhome/common/installations/Xilinx142/14.2/ISE_DS/ISE/bin/lin64/partgen";
+$PARTGEN = "K:\\Xilinx\\14.7\\ISE_DS\\ISE\\bin\\nt64\\partgen.exe";
 
 #####################################################################
 # get copyright text
@@ -50,7 +50,7 @@ sub get_copyright{
 # get family list
 #####################################################################
 sub get_family_list{	
-	system("$PARTGEN > run.txt");
+	system("$PARTGEN >> run.txt");
 	open(FILE, "run.txt");
 	my @INPUT = <FILE>;
 	close(FILE);
@@ -150,7 +150,7 @@ sub generate_xct_files {
 			print "\t$device..";
 			# generate xct file
 			local (*WRT, *RDR, *ERR);
-			my $pid = open3(*WRT, *RDR, *ERR, $PARTGEN.'-v '.$device.' -nopkgfile');
+			my $pid = open3(*WRT, *RDR, *ERR, $PARTGEN, '-v '.$device.' -nopkgfile');
 			waitpid( $pid, 0);
 			my $new_filename = $device . ".xct";
 			move("partlist.xct" , "$new_filename");
@@ -239,7 +239,7 @@ $version = $1;
 
 # get family list
 my @families = &get_family_list();
-print "Family List == @families\n";
+
 # get device list
 my %xilinx = %{&get_device_list(\@families)};
 
@@ -274,11 +274,9 @@ print OUTFILE "# This file was generated using xilinx_device_extractor script lo
 print OUTFILE "# $root/bin/utils folder. The information contain in this library come from\n";
 print OUTFILE "# Xilinx's partgen.exe tool.\n#\n";
 print OUTFILE "# Supported families for this library file are :\n# ";
-print "Family List == @families\n";
 my $count = 0;
 foreach $family (@families ) {
 	if ( $selected_families !~ m/$family/i ) { next; }
-	print "Family == $family \n";
 	print OUTFILE "$family, ";
 	$count++;
 	if ( $count == 6 ) {
@@ -297,7 +295,7 @@ close(OUTFILE);
 # final clean up
 map(unlink($_), grep(/\.pkg$|\.xct$|\.xml$/,<*>));
 
-
+system( pause );
 
 
 

@@ -178,6 +178,7 @@ DB_QUERY_MODE = overall
 
 DB_CRITERIA = throughput_area
 
+
 # =============================================================
 # the list of all FPGA devices targeted by a given application
 # for a given vendor
@@ -202,8 +203,9 @@ DB_CRITERIA = throughput_area
 # commenting the next line removes all families of Xilinx
 FPGA_VENDOR = xilinx
 
+	
         #commenting the next line removes a given family
-	FPGA_FAMILY = spartan3
+	#FPGA_FAMILY = spartan3
 		FPGA_DEVICES = best_match
 		SYN_CONSTRAINT_FILE = default
 		IMP_CONSTRAINT_FILE = default
@@ -217,6 +219,7 @@ FPGA_VENDOR = xilinx
 
         #commenting the next line removes a given family
 	FPGA_FAMILY = virtex5
+	
 		FPGA_DEVICES = best_match
 		SYN_CONSTRAINT_FILE = default
 		IMP_CONSTRAINT_FILE = default
@@ -232,7 +235,7 @@ FPGA_VENDOR = xilinx
 END VENDOR
 
 # commenting the next line removes all families of Altera
-FPGA_VENDOR = altera
+#FPGA_VENDOR = altera
 
         #commenting the next line removes a given family
 	FPGA_FAMILY = Cyclone III

@@ -28,7 +28,7 @@
 # spartan3 ,spartan3a , spartan3adsp  , spartan3e  , spartan6   , spartan6l
 # qvirtex4 ,qrvirtex4 , qspartan6     ,qspartan6l  , qvirtex5   , qvirtex6
 # virtex4  ,virtex5   , virtex6	      , virtex6l
-# Xilinx Design Suite 12.4
+# Xilinx Design Suite 12.3
 #####################################################################################
 
 VENDOR = Xilinx

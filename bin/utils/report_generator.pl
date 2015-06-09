@@ -1,6 +1,6 @@
 # =============================================
 # ATHENA - Automated Tool for Hardware EvaluatioN.
-# Copyright ï¿½ 2009 - 2014 CERG at George Mason University <cryptography.gmu.edu>.
+# Copyright © 2009 - 2014 CERG at George Mason University <cryptography.gmu.edu>.
 # 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -41,8 +41,8 @@ $ROOT_DIR = cwd;
 $ROOT_DIR =~ s/\/$BIN_DIR_NAME\/$UTILS_DIR_NAME//;
 
 $report_dir = "$ROOT_DIR\/$BIN_DIR_NAME";
-#$report_dir =~ s/\//\\/g; Uncomment for windows
-$report_script = "$report_dir/$REPORT_SCRIPT_NAME";
+$report_dir =~ s/\//\\/g;
+$report_script = "$report_dir\\$REPORT_SCRIPT_NAME";
 if ( not -e $report_script ) { print "Error!!! Missing report.pl\n"; exit; }
 
 
@@ -53,7 +53,7 @@ if ( not -e $report_script ) { print "Error!!! Missing report.pl\n"; exit; }
 sub getdirs{
   my $dir = shift;
   my $curdir = getcwd;
-  $dir =~ s/\\/\//gi; #comment for windows
+  
   opendir(DIR,$dir) or die "Can't open the current directory: $!\n";
   my @names = readdir(DIR);
   closedir(DIR);
@@ -94,12 +94,15 @@ sub app_choice {
 		$choice = <STDIN>; chop($choice);
 		if ( $choice >= 1 and $choice <= $last_option  ) {
 			my $call_path = "$data{$app}{$option[$choice]}";
-			chdir( $report_dir ) or die "$!";
+			chdir( $report_dir ) or die "$!";            
 			system( "perl \"$report_script\" \"$call_path\" display" );
+            
 			while (1) {
 				print "\n\nWould you like to overwrite previously generated result files (y/n)?: ";
 				my $result = <STDIN>; chop($result);
 				if ($result =~ m/y/i) {
+                    print "$report_script\n";
+                    print "$call_path\n";
 					system( "perl \"$report_script\" \"$call_path\" print" );
 					last;
 				} elsif ($result =~ m/n/i) {					
@@ -148,41 +151,40 @@ my $exit;
 my $last_option;
 
 system( cls );
-#___ removed!
-#print "==========================\n";
-#print "==== REPORT GENERATOR ====\n";
-#print "==========================";
+print "==========================\n";
+print "==== REPORT GENERATOR ====\n";
+print "==========================";
 
-#while(1) {
-#	# populating data
-#	my %data;
-#	foreach my $app ( &getdirs($workspace)  ) {
-#		my $app_path = $workspace . "/" . $app;
-#		foreach $proj ( &getdirs($app_path)  ) {
-#			$proj_path = $app_path . "/". $proj;
-#			$data{$app}{$proj} = $proj_path;
-#		}
-#	}
-#
-#	my $i = 0;
-#	print "\n\n";
-#	print "Please select one of the following applications :\n\n";
-#	foreach my $app (keys %data) {
-#		$i++;
-#		print "$i.\t$app\n";
-#		$option[$i] = $app;
-#		$last_option = $i;
-#	}
-#	$exit = $i + 1;
-#	print "$exit.\tExit the program\n\n";
-#
-#	print "Please select one of the above options [1-$exit]: ";
-#	$choice = <STDIN>; chop($choice);
-#	if ( $choice >= 1 and $choice <= $last_option  ) {
-#		&app_choice(\%data, $option[$choice]);
-#	} elsif ( $choice == $exit ) {
-#		exit;
-#	} else {
-#		print "Invalid choice. Please select between [1-$exit].\n";
-#	}
-#}
+while(1) {
+	# populating data
+	my %data;
+	foreach my $app ( &getdirs($workspace)  ) {
+		my $app_path = $workspace . "\\" . $app;
+		foreach $proj ( &getdirs($app_path)  ) {	
+			$proj_path = $app_path . "\\". $proj;
+			$data{$app}{$proj} = $proj_path;
+		}
+	}
+
+	my $i = 0;
+	print "\n\n";
+	print "Please select one of the following applications :\n\n";
+	foreach my $app (keys %data) {
+		$i++;
+		print "$i.\t$app\n";
+		$option[$i] = $app;
+		$last_option = $i;
+	}
+	$exit = $i + 1;
+	print "$exit.\tExit the program\n\n";
+
+	print "Please select one of the above options [1-$exit]: ";
+	$choice = <STDIN>; chop($choice);
+	if ( $choice >= 1 and $choice <= $last_option  ) {
+		&app_choice(\%data, $option[$choice]);
+	} elsif ( $choice == $exit ) {
+		exit;
+	} else {
+		print "Invalid choice. Please select between [1-$exit].\n";
+	}
+}

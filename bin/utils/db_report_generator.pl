@@ -1,6 +1,6 @@
 # =============================================
 # ATHENA - Automated Tool for Hardware EvaluatioN.
-# Copyright ï¿½ 2009 - 2014 CERG at George Mason University <cryptography.gmu.edu>.
+# Copyright © 2009 - 2014 CERG at George Mason University <cryptography.gmu.edu>.
 # 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -35,15 +35,13 @@ use Cwd;
 use File::Path;
 use Archive::Zip qw( :ERROR_CODES :CONSTANTS );	
 
-$CONSTANT_FILE_NAME = "constants.pl"; $BIN_DIR_NAME = "bin"; $REGEX_FILE_NAME = "regex.pl";
+$CONSTANT_FILE_NAME = "constants.pl"; $BIN_DIR_NAME = "bin";		$REGEX_FILE_NAME = "regex.pl";
 $UTILS_DIR_NAME = "utils"; 		$CONFIG_DIR = "config"; 
 $ROOT_DIR = cwd; $ROOT_DIR =~ s/\/$BIN_DIR_NAME\/$UTILS_DIR_NAME//;
 
 $report_dir = "$ROOT_DIR\/$BIN_DIR_NAME";
-$report_dir =~ s/\\/\//g;
+$report_dir =~ s/\//\\/g;
 $pause = "on";
-$ROOT_DIR =~ s/\\/\//g;
-$pausefun = "$ROOT_DIR/$BIN_DIR_NAME/$UTILS_DIR_NAME/pause.sh";
 
 require "$ROOT_DIR/$BIN_DIR_NAME/regex.pl";
 require "$ROOT_DIR/$BIN_DIR_NAME/extract_old.pl";
@@ -84,7 +82,7 @@ sub pa {
 		$i = $i + 1;
 	}
 	print "======\n\n";
-	system( "$pausefun" );
+	system( pause );
 }
 
 #########################
@@ -104,7 +102,7 @@ sub get_csv {
 	# print "family - $family\n";
 	# print "device - $device\n";
 	# print "run - $run\n";
-	# system( "$pausefun" );
+	# system( pause );
 
 	my (@list, @temp_list);
 	@temp_list = sort {$a cmp $b} keys %{$project{$vendor}{$family}{$gid}{$device}{$run}};
@@ -137,7 +135,7 @@ sub get_csv {
 		$str .= "\n";
 		return $str;
 	} else {
-		print "Invalid mode for get_csv()\n"; system( "$pausefun" ); return;
+		print "Invalid mode for get_csv()\n"; system( pause ); return;
 	}
 }
 
@@ -153,38 +151,34 @@ sub generate_run_zip {
 	my $dest = shift();
 	my $syntoolname = shift();
 	my $imptoolname = shift();
-
-
 	
 	### create vendor folder if not exist
-	unless (-d "$dest/$vendor") {
-		mkdir ("$dest/$vendor");
+	unless (-d "$dest\\$vendor") {
+		mkdir ("$dest\\$vendor");
 	}	
 	### Create the src directory for inserting the sources
-	unless (-d "$dest/$vendor/src") {
-		mkdir ("$dest/$vendor/src");
+	unless (-d "$dest\\$vendor\\src") {
+		mkdir ("$dest\\$vendor\\src");
 	}
 	### Create metadata file
-	open(METADATA,">$dest/metadata.txt");
+	open(METADATA,">$dest\\metadata.txt");
 		print METADATA "athena_version: $ATHENA_VERSION";
 	close(METADATA);
 #print"Finished creating metadata.txt\n";
-#system( "$pausefun" );
+#system( pause );
 	### 
-
-	open(LOG,"$src/athena_log.txt");
+	
+	open(LOG,"$src\\athena_log.txt");
 		my @log_data = <LOG>;
 	close(LOG);
 	my $cmd = "";
 
-	open(BAT_SCRIPT,">$dest/$vendor/run.bat");
-	open(SH_SCRIPT,">$dest/$vendor/run.sh");
+	open(BAT_SCRIPT,">$dest\\$vendor\\run.bat");
+	open(SH_SCRIPT,">$dest\\$vendor\\run.sh");
 	binmode( SH_SCRIPT );
 	my $shell_script = "";
-
 	foreach $line (@log_data) {	
 		if ($line =~ m/Executing: (.*)/i) { 					
-
 			my $cmdline = $1;
 			$cmdline =~ s{.*/}{}; $cmdline =~ s{.*\\}{};
 			if ( $cmdline =~ m/([\w.\d]+) (.*)/i ) {
@@ -203,33 +197,22 @@ sub generate_run_zip {
 					#$shell_script .= "echo \"Executing $opt ...\"\n";
 					#$shell_script .= "$prog $opt\n";
 				}
-
-
-
-
-
-
-
-
-
 			}		
 		}
 	}
-
+	
 	close(BAT_SCRIPT);
 	close(SH_SCRIPT);
-
-
 	
-
-
-
+	
+	
+	my @files = ();
 	#####################################################################
 	### Create the .bat and .sh script from the athena_log.txt
 	### NOTE : This method is easier to recreate the exact command line 
 	###        used to create the design than populate it from the hash.
 	#####################################################################	
-
+	
 
 	my @files = ();
 	
@@ -243,8 +226,8 @@ sub generate_run_zip {
 		
 		### Does not find any project file, try to extract from a zip
 		if ( $file[0] eq "" ) {		
-			if ( -e "$src/zipped.zip" ) {
-				my $zip = Archive::Zip->new("$src/zipped.zip");
+			if ( -e "$src\\zipped.zip" ) {
+				my $zip = Archive::Zip->new("$src\\zipped.zip");
 				foreach my $member ($zip->members)
 				{
 					next if $member->isDirectory;
@@ -261,22 +244,22 @@ sub generate_run_zip {
 				closedir(DIR);
 			}
 		}
-			
-
+				
+		
 		my $prjfile = "";
-		foreach $file (@files) {
-			&copy("$src/$file","$dest/$vendor/$file") or die "Copy failed: $!";
+		foreach $file (@files) {			
+			&copy("$src\\$file","$dest\\$vendor\\$file") or die "Copy failed: $!";
 			if ( $file =~ m/(.*\.prj)/i) {
 				$prjfile = $1;
 			}
 		}
 		
 		### Modifying the .prj file to alter the source location to /src
-		open(PRJFILE,"$dest/$vendor/$prjfile");
+		open(PRJFILE,"$dest\\$vendor\\$prjfile");
 			my @original_data = <PRJFILE>;		
 		close(PRJFILE);
-		unlink( "$dest/$vendor/$prjfile" );	
-		open(PRJFILE,">$dest/$vendor/$prjfile");
+		unlink( "$dest\\$vendor\\$prjfile" );	
+		open(PRJFILE,">$dest\\$vendor\\$prjfile");
 			foreach $line ( @original_data ) {				
 				if ( $line =~ m/(.*)\".*[\/\\]([\w-]+.v[hdl]*)\"/i) {
 					print PRJFILE "$1\"src\/$2\"\n";
@@ -284,11 +267,10 @@ sub generate_run_zip {
 					print PRJFILE "$line"; 
 				}
 			}
-		close(PRJFILE);
-		
+		close(PRJFILE);		
 		
 		### Create Readme file		
-open(README_TEMP,">$dest/$vendor/readme_temp.txt");	
+open(README_TEMP,">$dest\\$vendor\\readme_temp.txt");	
 		
 print README_TEMP << 'END_OF_MESSAGE';
 readme.txt
@@ -299,8 +281,8 @@ results stored in the file results.html,
 under the assumption that
  1. source files are available to the user,
  2. synthesis and implementation tools and their versions
-   installed on the user's machine are identical to those 
-   used to generate results.
+    installed on the user's machine are identical to those 
+    used to generate results.
 END_OF_MESSAGE
 
 print README_TEMP "
@@ -404,15 +386,15 @@ close(README_TEMP);
 		
 		### Does not find any project file, try to extract from a zip
 		if ( $file[0] eq "" ) {
-			if ( -e "$src/zipped.zip" ) {
-				my $zip = Archive::Zip->new("$src/zipped.zip");
+			if ( -e "$src\\zipped.zip" ) {
+				my $zip = Archive::Zip->new("$src\\zipped.zip");
 				foreach my $member ($zip->members)
 				{
 					next if $member->isDirectory;
 					my $extractName;
 					$extractName = $member->fileName;
 					$extractName =~ s{.*/}{}; $extractName =~ s{.*\\}{};
-					$member->extractToFileNamed("$src/$extractName");
+					$member->extractToFileNamed("$src\\$extractName");
 				}
 				### Try to grep the file again
 				opendir(DIR, $src) || die("Cannot open directory");
@@ -420,19 +402,14 @@ close(README_TEMP);
 				@files = grep(/\.qsf$/,@files);					
 				closedir(DIR);
 			}
-
-
-
-
 		}
-
+		
 		### Modifying the .qsf file to alter the source location to /src
 		my $prjfile = $files[0];
-		open(PRJFILE,"$src/$prjfile");
+		open(PRJFILE,"$src\\$prjfile");
 			my @original_data = <PRJFILE>;		
 		close(PRJFILE);
-		#unlink( "$dest/$vendor/$prjfile" );	
-		open(PRJFILE,">$dest/$vendor/$prjfile");
+		open(PRJFILE,">$dest\\$vendor\\$prjfile");
 			foreach $line ( @original_data ) {				
 				if ( $line =~ m/(.*)\".*[\/\\]([\w-]+.v[hdl]*)\"/i) {
 					print PRJFILE "$1\"src\/$2\"\n";
@@ -443,7 +420,7 @@ close(README_TEMP);
 		close(PRJFILE);
 		
 ### Create Readme file		
-open(README_TEMP,">$dest/$vendor/readme_temp.txt");	
+open(README_TEMP,">$dest\\$vendor\\readme_temp.txt");	
 		
 print README_TEMP << 'END_OF_MESSAGE';
 readme.txt
@@ -541,33 +518,25 @@ For information about ATHENa please see:
 END_OF_MESSAGE
 close(README_TEMP);		
 	}
-
-
-
-
-
-
-
-
-	open(README_TEMP,"$dest/$vendor/readme_temp.txt");
-	open(README,">$dest/$vendor/readme.txt");
-	while(<README_TEMP>){
-		s/\n/\r\n/;   
-		print README $_;}
-
-
-
+	
+	### 
+	### Convert README file to windows format
+	
+	open(README_TEMP,"$dest\\$vendor\\readme_temp.txt");
+	open(README,">$dest\\$vendor\\readme.txt");
+	while(<README_TEMP>) {
+		s/\n/\r\n/;
+		print README $_;
+	}
 	close(README_TEMP);
 	close(README);
-
-	
-	unlink("$dest/$vendor/readme_temp.txt");
+	unlink("$dest\\$vendor\\readme_temp.txt");
 	
 	#####################################################################
 	### Zip the files according to UID
 	#####################################################################	
 	my $current_dir = cwd;	
-	chdir("$dest/$vendor");	
+	chdir("$dest\\$vendor");	
 	my $zip = Archive::Zip->new();
 	### Add script files and src directory to list of file to be zipped
 	push(@files,"src","run.sh","run.bat","readme.txt");
@@ -603,10 +572,10 @@ sub gen_db_csv {
 	my $db_zip = shift();
 	my $path = shift();
 	
-    $result_dir = "$path/db";
+    $result_dir = "$path\\db";
 	mkdir($result_dir);
 	chdir($result_dir);
-
+    
 	## change query_mode name
 	if ( $query_mode =~ /overall/i ) {
 		$query_mode = "best_overall";
@@ -622,31 +591,22 @@ sub gen_db_csv {
 	foreach $crit ( keys %criterian ) {		
 		if ( $criterian{$crit} =~ /y/i ) { push(@critarr, $crit); }
 	}
-	
-
-		if ( scalar@critarr < 1 ) { 
+		
+	if ( scalar@critarr < 1 ) { 
 		print "\n\nWarning!!! No criterian(s) selected. Please select a criteria or change query mode to NONE first.\n\n";
 		if ( $pause =~ m/on/i ) {
-            system( "$pausefun" );
+            system( pause );
         }
 		return;
 	}
-	
+
     if ( $query_mode =~ /none/i ) {
         print "\n\nWarning!!! No query mode selected. Please select a query mode.\n\n";
         if ( $pause =~ m/on/i ) {
-            system( "$pausefun" );
+            system( pause );
         }
 		return;
     }
-
-
-
-
-
-
-
-
 	############################
 	### ask for verification ###
 	############################
@@ -665,20 +625,20 @@ sub gen_db_csv {
 			print "$best_result{$crit}\n";
 		}
 	}	
-
+    
     if ( $pause =~ m/on/i ) {
-	while(1) {
-		print "\nWould you like to proceed [y/n]? ";
-		$choice = <STDIN>; chop($choice);
-		if ( $choice =~ m/^y$/i ) {
-			last;
-		} elsif ( $choice =~ m/^n$/i ) {
-			return;
-		} else {
-			print "Invalid choice. Please try again.\n\n";				
-		}
-	}
-}
+        while(1) {
+            print "\nWould you like to proceed [y/n]? ";
+            $choice = <STDIN>; chop($choice);
+            if ( $choice =~ m/^y$/i ) {
+                last;
+            } elsif ( $choice =~ m/^n$/i ) {
+                return;
+            } else {
+                print "Invalid choice. Please try again.\n\n";				
+            }
+        }
+    }
 
 	####################
 	### query = none ###
@@ -695,10 +655,10 @@ sub gen_db_csv {
 			if ( not -e "$dest" ) {	mkdir( "$dest" ); }		
 			
 			# checking for existing file		
-			if ( -e "$dest/${vendor}_athena_result.csv" ) {
+			if ( -e "$dest\\${vendor}_athena_result.csv" ) {
 				my $skip;
 				while(1) {
-					print "\n\nWarning! : File \"$dest/athena_result.csv\" already exists.\nWould you like to overwrite [y/n]?\n";
+					print "\n\nWarning! : File \"$dest\\athena_result.csv\" already exists.\nWould you like to overwrite [y/n]?\n";
 					print "Note: Selecting 'n' will skip the population of CSV file with query '$query_mode' mode for $vendor.\n::";
 					$choice = <STDIN>; chop($choice);
 					if ( $choice =~ /y/i ) {
@@ -711,7 +671,7 @@ sub gen_db_csv {
 				}
 			}
 			if ( $skip == 1 ) { next; }
-			open(CSV, ">$dest/${vendor}_athena_result.csv") || die("Could not create file!");
+			open(CSV, ">$dest\\${vendor}_athena_result.csv") || die("Could not create file!");
 			#########################
 			my $header = 1;
 			foreach my $family ( keys %{$project{$vendor}} ) {
@@ -766,9 +726,8 @@ sub gen_db_csv {
 			my $uid = 1;
 			#########################
 			if ( not -e "$dest" ) {	mkdir( "$dest" ); }					
-
-			#print ("destination when u  press g = $dest\n");
-			open(CSV, ">$dest/${vendor}_athena_result.csv") || die("Could not create file!");
+			
+			open(CSV, ">$dest\\${vendor}_athena_result.csv") || die("Could not create file!");
 			#########################
 			my $header = 1;
 			foreach  $family ( keys %{$best{$crit}{$vendor}} ) {				
@@ -840,12 +799,12 @@ sub gen_db_csv {
 				### Read csv file into a hash with UID for each hash field
 				### --> $hash{$UID}{$field} = $data
 				my %new_data; my @csv_data = ();	
-				if ( -e "$folder/$csv" ) {					
-					open(CSVFILE, "$folder/$csv"); @csv_data = <CSVFILE>;				
+				if ( -e "$folder\\$csv" ) {					
+					open(CSVFILE, "$folder\\$csv"); @csv_data = <CSVFILE>;				
 				} else { #skip a vendor if no csv file was generated
-					print "Opening CSV file failed, skipping --> $folder/$csv\n";
+					print "Opening CSV file failed, skipping --> $folder\\$csv\n"; 
                     if ( $pause =~ m/on/i ) {
-						system( "$pausefun" );
+                        system( pause );
                     }
 					next;
 				}
@@ -868,20 +827,20 @@ sub gen_db_csv {
 					my $family = $new_data{$uid}{FAMILY};					
 					### determine generic folder
 					my $generic_value = $new_data{$uid}{GENERIC};
-					my @families = &getdirs("$path/$vendor");
+					my @families = &getdirs("$path//$vendor");
 					my $generic;		
 					foreach $fam ( @families ) {
 						my @fam_name = split("_",$fam);
 						if ( $family eq "$fam_name[0]" ) {
-							#print "opening file --> $path\\$vendor\\$fam\\generics.txt\n"; system( "$pausefun" );
+							#print "opening file --> $path\\$vendor\\$fam\\generics.txt\n"; system( pause );
 							my $value;
-							if ( -e "$path/$vendor/$fam/generics.txt" ) {
-								open(GENERIC_FILE,"$path/$vendor/$fam/generics.txt");
+							if ( -e "$path\\$vendor\\$fam\\generics.txt" ) {
+								open(GENERIC_FILE,"$path\\$vendor\\$fam\\generics.txt");
 								$value = join("",<GENERIC_FILE>); close(GENERIC_FILE);
 							} else {
-								print "Error!! Cannot find generic file in --> $path/$vendor/$fam/generics.txt.\n"; 
+								print "Error!! Cannot find generic file in --> $path\\$vendor\\$fam\\generics.txt.\n"; 
                                 if ( $pause =~ m/on/i ) {
-                                    system( "$pausefun" );
+                                    system( pause );
                                 }
 							}													
 							
@@ -894,28 +853,28 @@ sub gen_db_csv {
 					}
 					my $device = $new_data{$uid}{DEVICE};
 					my $run = $new_data{$uid}{RUN_NO};			
-					my $src = "$path/$vendor/${family}_${generic}/$device/run_${run}";
+					my $src = "$path\\$vendor\\${family}_${generic}\\$device\\run_${run}";
 					my $syntoolname = "$new_data{$uid}{SYN_TOOL} - $new_data{$uid}{SYN_TOOL_VERSION}";
 					my $imptoolname = "$new_data{$uid}{IMP_TOOL} - $new_data{$uid}{IMP_TOOL_VERSION}";										
 					
 					### At this point, we have source folder
 					if ( -d $src ) {						
-						#print "Genering run zip -->\nUID:\t$uid\nVendor:\t$vendor\nSrcLocation:\t$src\nCriterian:\t$folder\n\n"; system( "$pause" ) ;						
+						#print "Genering run zip -->\nUID:\t$uid\nVendor:\t$vendor\nSrcLocation:\t$src\nCriterian:\t$folder\n\n"; system( pause ) ;						
 						&generate_run_zip($uid,$vendor,$src,$folder, $syntoolname, $imptoolname);
 					} else {
 						push(@warning_msg, "Warning!!! Cannot find destination path at $src.");
 					}															
 				}
 				if ( $#warning_msg > -1 ) {						
-					print join("\n",@warning_msg); system( "$pausefun" );
+					print join("\n",@warning_msg); system( pause );
 				}
 			}
 		
 			### Zip the whole thing and remove them		
 			
 			my $current_dir = cwd;
-			chdir ("$current_dir/$folder");
-			opendir ( DIR, "$current_dir/$folder" ) or die "Can't open the current directory: $current_dir/$folder\n"; 
+			chdir ("$current_dir\\$folder");
+			opendir ( DIR, "$current_dir\\$folder" ) or die "Can't open the current directory: $current_dir\\$folder\n"; 
 				my @files = readdir(DIR);
 			closedir(DIR);	
 			my $zip = Archive::Zip->new();
@@ -928,16 +887,16 @@ sub gen_db_csv {
 					}
 				}
 			}
-			die 'write error.' if ( $zip->writeToFileNamed("$current_dir/${folder}.ATHENa.zip") != AZ_OK );			
+			die 'write error.' if ( $zip->writeToFileNamed("$current_dir\\${folder}.ATHENa.zip") != AZ_OK );			
 			chdir ($current_dir);			
 			### remove the created folder
-			&rmtree("$current_dir/$folder");
+			&rmtree("$current_dir\\$folder");
 		}
 	}
 	print "\nATHENa DB entry file generated. You can locate the file(s) at -->\n";
 	print cwd . "\n\n";
 	if ( $pause =~ m/on/i ) {
-        system( "$pausefun" );
+        system( pause );
     }
 }
 
@@ -958,7 +917,7 @@ sub view_result {
 	} elsif ( $query_mode =~ /device/i ) {
 		$query_mode = "best_per_device";
 	} else {
-		print "Invalid query mode <$query_mode>.\n"; system( "$pausefun" );
+		print "Invalid query mode <$query_mode>.\n"; system( pause );
 		return;
 	}
 
@@ -977,7 +936,7 @@ sub view_result {
 	foreach $crit ( keys %best_result ) {
 		print "$best_result{$crit}\n";
 	}
-	system ( "$pausefun" );
+	system ( pause );
 }
 
 ##############################
@@ -1062,7 +1021,7 @@ sub view_data_selection {
 		print "\tTo remove data from being queried, press 'q' to modify data in query.\n";
 	}
 	if ( $nopause !~ /off/i) {
-		system( "$pausefun" );
+		system( pause );
 	}
 }
 
@@ -1131,7 +1090,7 @@ sub set_path_display_value {
 	# print "family - $family\n";
 	# print "device - $device\n";
 	# print "run - $run\n";
-	# system( "$pausefun" );
+	# system( pause );
 	
 
 	if ( $argc == 1 ) { #vendor provided
@@ -1274,7 +1233,7 @@ sub modify_selection {
 	my $device = $argv[3];
 	
 	while(1) {
-		system( clear );
+		system( cls );
 		my ( @choices, %temp );
 		
 		# Get choice list
@@ -1332,7 +1291,7 @@ sub modify_selection {
 			for ( $i = 0; $i <= $#choices; $i++ ) {
 				$choices[$i] = "run_${choices[$i]}";				
 			}		
-			@display_list = @choices;		
+			@display_list = @choices;
 		} else {
 			@display_list = @choices;
 		}		
@@ -1377,8 +1336,7 @@ sub modify_selection {
 				} else { 
 					# enable all data below this hierarchy
 					%project = %{ &set_path_display_value( \%project, "y", @temparr )};
-					#enable all associated data above this hierachy
-					
+					#enable all associated data above this hierachy					
 				}
 			}
 			%project = %{ &check_display_value( \%project ) };
@@ -1403,8 +1361,6 @@ sub modify_selection {
 			}
 		} elsif ( $choice =~ m/^g$/i ) {
 			&gen_db_csv( \%project, \%criterian, $query, "zip", $project_path );
-		# } elsif ( $choice =~ m/^gz$/i ) {
-			# &gen_db_csv( \%project, \%criterian, $query, "zip", $project_path );
 		} elsif ( $choice =~ m/^va$/i ) {
 			&view_data_selection( \%project, "all" );
 		} elsif ( $choice =~ m/^vb$/i ) {
@@ -1419,7 +1375,7 @@ sub modify_selection {
 			exit;
 		} else {
 			print "Invalid choice. Please try again.\n\n";
-			system( "$pausefun" );
+			system( pause );
 		}
 	}
 }
@@ -1433,12 +1389,7 @@ sub db_selection {
 	
 	print "Please hold, extracting project data ...\n";
 	my %project = %{&extract_project_data( $project_path )};
-
-
 	
-	#$result_dir = "$project_path/db";
-	#mkdir($result_dir);
-	#chdir($result_dir);
 	my $query = "overall";
 	
 	my %criterian = (
@@ -1455,7 +1406,7 @@ sub db_selection {
 	%project = %{ &check_display_value( \%project ) };
 	
 	while(1) {
-		system( clear );
+		system( cls );
 		print "\n\n\n\n";		
 		if ( $query =~ /overall/i ) {
 			print "\n\nQuery Mode     : Best overall (This will query within the same family but across all generics and devices)\n";
@@ -1520,8 +1471,6 @@ sub db_selection {
 			}
 		} elsif ( $choice =~ m/^g$/i ) {
 			&gen_db_csv( \%project, \%criterian, $query, "zip", $project_path );
-		#} elsif ( $choice =~ m/^gz$/i ) {
-		#	&gen_db_csv( \%project, \%criterian, $query, "zip", $project_path );
 		} elsif ( $choice =~ m/^va$/i ) {
 			&view_data_selection( \%project, "all" );
 		} elsif ( $choice =~ m/^vb$/i ) {
@@ -1536,7 +1485,7 @@ sub db_selection {
 			exit;
 		} else {
 			print "Invalid choice. Please try again.\n\n";
-			system( "$pausefun" );
+			system( pause );
 		}
 	}
 	
@@ -1590,7 +1539,7 @@ my $workspace;
 
 %project;
 
-if ( $#ARGV == 0 ) {
+if ( $#ARGV == 0 ) { # ONLY WORKSPACE IS SPECIFIED
 	$workspace = shift();
 } elsif ( $#ARGV == -1) {
 	require "$ROOT_DIR\/$BIN_DIR_NAME\/$CONSTANT_FILE_NAME";
@@ -1629,10 +1578,10 @@ if ( $#ARGV == 0 ) {
         $criterian{LATENCY_AREA} = "y";
     }       
     
-    print "prj=\"$project_path\"\nquery=\"$query_mode\"\ncrit=\"$criteria\"\n";
+    #print "prj=\"$project_path\"\nquery=\"$query_mode\"\ncrit=\"$criteria\"\n";
     my %project = %{&extract_project_data( $project_path )};
     
-    $result_dir = "$project_path/db";
+    $result_dir = "$project_path\\db";
 	mkdir($result_dir);
 	chdir($result_dir);
     
@@ -1640,7 +1589,7 @@ if ( $#ARGV == 0 ) {
     
     exit;
 } else {
-	print "Invalid number of input parameters. Program terminating ...\n";
+	print "Invalid number of inputs parameters. Program terminating ...\n";
 }
 
 
@@ -1649,9 +1598,9 @@ if ( not (-e "$workspace") ) { print "No workspace found!\n\n"; exit; }
 # populating data
 my %data;
 foreach my $app ( &getdirs($workspace)  ) {
-	my $app_path = $workspace . "/" . $app;
+	my $app_path = $workspace . "\\" . $app;
 	foreach $proj ( &getdirs($app_path)  ) {	
-		$proj_path = $app_path . "/". $proj;
+		$proj_path = $app_path . "\\". $proj;
 		$data{$app}{$proj} = $proj_path;
 	}
 }
@@ -1665,32 +1614,31 @@ my $choice;
 my $exit;
 my $last_option;
 
-system( clear );
-#___ removed!
-#print "==========================\n";
-#print "==== REPORT GENERATOR ====\n";
-#print "==========================";
+system( cls );
+print "==========================\n";
+print "==== REPORT GENERATOR ====\n";
+print "==========================";
 
-#while(1) {
-#	my $i = 0;
-#	print "\n\n";
-#	print "Please select one of the following applications :\n\n";
-#	foreach my $app (keys %data) {
-#		$i++;s``````
-#		print "$i.\t$app\n";
-#		$option[$i] = $app;
-#		$last_option = $i;
-#	}
-#
-#	print "\n(e)\tExit\n\n";
-#
-#	print "Please select one of the above options [1-$last_option]: ";
-#	$choice = <STDIN>; chop($choice);
-#	if ( $choice >= 1 and $choice <= $last_option  ) {
-#		&project_selection(\%data, $option[$choice]);
-#	} elsif ( $choice =~ m/e/i ) {
-#		exit;
-#	} else {
-#		print "Invalid choice. Please select between [1-$last_option].\n";
-#	}
-#}
+while(1) {
+	my $i = 0;
+	print "\n\n";
+	print "Please select one of the following applications :\n\n";
+	foreach my $app (keys %data) {
+		$i++;
+		print "$i.\t$app\n";
+		$option[$i] = $app;
+		$last_option = $i;
+	}
+
+	print "\n(e)\tExit\n\n";
+
+	print "Please select one of the above options [1-$last_option]: ";
+	$choice = <STDIN>; chop($choice);
+	if ( $choice >= 1 and $choice <= $last_option  ) {
+		&project_selection(\%data, $option[$choice]);
+	} elsif ( $choice =~ m/e/i ) {
+		exit;
+	} else {
+		print "Invalid choice. Please select between [1-$last_option].\n";
+	}
+}

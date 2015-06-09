@@ -1,7 +1,7 @@
 # =============================================
 # ATHENA - Automated Tool for Hardware EvaluatioN.
 # Copyright © 2009 - 2014 CERG at George Mason University <cryptography.gmu.edu>.
-# 
+#
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3 of the License, or
@@ -50,7 +50,7 @@ sub getdirs{
 #####################################################################
 sub get_file_type{
   my $dir = shift; my $filetype = shift;
-  opendir(DIR, $dir) || die("Cannot open directory -> $dir\n");
+  opendir(DIR, $dir) || die("Cannot open directory");
   my @files = readdir(DIR);
   closedir(DIR);
   my @file = grep(/\.$filetype$/,@files);
@@ -82,7 +82,7 @@ sub sort_device {
 		$sortParam = "T_LE";
 	}
 
-	
+
 	# create a new hash table with only data specific to that device based on the randomly picked run
 	my %h;
 	foreach $device (keys %hash) {
@@ -92,9 +92,9 @@ sub sort_device {
 			last;
 		}
 	}
-	
+
 	my @sorted_devices = sort{ $h{$a}{value} <=> $h{$b}{value} } ( keys %h );
-	
+
 	return @sorted_devices;
 }
 
@@ -121,10 +121,10 @@ sub print_dashes {
 sub toolInfoGen {
 	my %proj = %{shift()};
 	my $toolInfo = "::: Tools Info :::\n\n";
-	
+
 	$toolInfo .= "ATHENa Version :: ${ATHENA_VERSION}\n\n";
-	
-	my @data_name = ("Synthesis      ", "Implementation");	
+
+	my @data_name = ("Synthesis      ", "Implementation");
 	foreach $vendor ( keys %proj ) {
 		#randomly pick family and device of a vendor, then choose the first run
 		my ($device, $family, $random_run);
@@ -133,21 +133,21 @@ sub toolInfoGen {
 				$family = $fam; last;
 			}
 		}
-		
+
 		#randomly pick a device of the first generic
 		foreach $dev ( keys %{$proj{$vendor}{$family}{1}} ) {
 			if ( $dev !~ /generic|best_match/i ) {
-				$device = $dev; 
+				$device = $dev;
 				last;
 			}
-		}		
+		}
 
-		
+
 		foreach $r ( keys %{$proj{$vendor}{$family}{1}{$device}} ) {
 			$random_run = $r;
 			last;
-		}	
-		
+		}
+
 		$data[0] =   $proj{$vendor}{$family}{1}{$device}{$random_run}{SYN_TOOL};
 		$data[1] =   $proj{$vendor}{$family}{1}{$device}{$random_run}{SYN_TOOL_VERSION};
 		$data[2] =  $proj{$vendor}{$family}{1}{$device}{$random_run}{IMP_TOOL};
@@ -158,7 +158,7 @@ sub toolInfoGen {
 		}
 		print "\n";
 	}
-	
+
 	return $toolInfo;
 }
 
@@ -187,8 +187,8 @@ sub gen_report_table {
 		my @sorted_gids = ();
 		foreach $i (0..$#gids) {
 			push(@generic_names , $vendor{$family}{$gids[$i]}{generic});
-		}		
-		foreach $name ( sort @generic_names ) {	
+		}
+		foreach $name ( sort @generic_names ) {
 			foreach $i (0..$#gids) {
 				if ( $vendor{$family}{$gids[$i]}{generic} =~ m/^$name$/i ) {
 					push(@sorted_gids,$gids[$i]);
@@ -196,36 +196,36 @@ sub gen_report_table {
 				}
 			}
 		}
-		
 
-		################################### 
+
+		###################################
 		# finding appropriate table size
 		###################################
 		my %legendinfo;
-		
+
 		$legendinfo{generic}{len} = length("GENERIC");
 		$legendinfo{generic}{order} = 0;
 		$legendinfo{generic}{header_name} = "GENERIC";
-		
+
 		$legendinfo{device}{len} = length("DEVICE");
 		$legendinfo{device}{order} = 1;
 		$legendinfo{device}{header_name} = "DEVICE";
-		
-		
+
+
 		my $track = 1;
 		#looping through each generic id to find the biggest field
 		foreach $gid ( @sorted_gids ) {
 			# finding the biggest generic field
 			if ( $legendinfo{generic}{len} < length($vendor{$family}{$gid}{generic}) ) { $legendinfo{generic}{len} = length($vendor{$family}{$gid}{generic}); }
-			
+
 			#Remove generic tag from the sorted list
 			my @sorted_devices; my $i = 0;
-			foreach $device (&sort_device( $vendor_name, \%{$vendor{$family}{$gid}})) { 
+			foreach $device (&sort_device( $vendor_name, \%{$vendor{$family}{$gid}})) {
 				if ( $device !~ /generic|best_match/i ) { $sorted_devices[$i] = $device; $i++;  }
 			}
-			
+
 			foreach $device (@sorted_devices) {
-				my $size = length($device);  
+				my $size = length($device);
 				if ( $vendor{$family}{$gid}{best_match} eq $device ) { $size++;}
 				if($legendinfo{device}{len} < $size){ $legendinfo{device}{len} = $size; }
 
@@ -235,23 +235,23 @@ sub gen_report_table {
 					$valid_run = $r;
 					last;
 				}
-				
-				foreach $legend (keys %{$vendor{$family}{$gid}{$device}{$valid_run}} ) {	#for each field							
-					foreach my $col ( @col_order ) {	
+
+				foreach $legend (keys %{$vendor{$family}{$gid}{$device}{$valid_run}} ) {	#for each field
+					foreach my $col ( @col_order ) {
 						# ignore the legend that isn't listed in the sort field
-						if (($legend =~ m/^$col$/i ) or (( $legend =~ m/$col/i ) and ($legend =~ m/IMP_FREQ|IMP_TCLK/i)))   {		
-							$legendinfo{$legend}{header_name} = $REPORT_NAME_FORMAT{$vendor_name}{$col};							
+						if (($legend =~ m/^$col$/i ) or (( $legend =~ m/$col/i ) and ($legend =~ m/IMP_FREQ|IMP_TCLK/i)))   {
+							$legendinfo{$legend}{header_name} = $REPORT_NAME_FORMAT{$vendor_name}{$col};
 							# for more than one clock, the header name must be different
-							foreach $timing_key ( @{$CLK_KEY{$vendor_name}} ) { 
-								if ( $legend =~ m/${timing_key}_(.*)/i ) {						
+							foreach $timing_key ( @{$CLK_KEY{$vendor_name}} ) {
+								if ( $legend =~ m/${timing_key}_(.*)/i ) {
 									$legendinfo{$legend}{header_name} = $legendinfo{$legend}{header_name}." '${1}'";
 								}
 							}
-							
+
 							if ( $legendinfo{$legend}{len} < length($legendinfo{$legend}{header_name})) {
 								$legendinfo{$legend}{len} = length($legendinfo{$legend}{header_name});
 							}
-							
+
 							# looping through the data to find the biggest run field
 							foreach $run (keys %{$vendor{$family}{$gid}{$device}} ) {
 								if( $legendinfo{$legend}{len} < length($vendor{$family}{$gid}{$device}{$run}{$legend} )) {
@@ -262,7 +262,7 @@ sub gen_report_table {
 						}
 					}
 				}
-								
+
 				$track++;
 			}
 		}
@@ -271,46 +271,31 @@ sub gen_report_table {
 
 		my @sorted_legend_len, @sorted_legend_name; my $i = 2;
 		my @sorted_legend_order_id = ("generic", "device");
-		$sorted_legend_len[0] = $legendinfo{generic}{len};	
-		$sorted_legend_name[0] = $legendinfo{generic}{header_name};	
-		$sorted_legend_len[1] = $legendinfo{device}{len};	
-		$sorted_legend_name[1] = $legendinfo{device}{header_name};	
+		$sorted_legend_len[0] = $legendinfo{generic}{len};
+		$sorted_legend_name[0] = $legendinfo{generic}{header_name};
+		$sorted_legend_len[1] = $legendinfo{device}{len};
+		$sorted_legend_name[1] = $legendinfo{device}{header_name};
 		my $i = 2; #starting at 2 since GENERIC and DEVICE are fix fields
 
-		foreach $col (@col_order) {			
-			foreach my $legend (keys %legendinfo ) {				
+		foreach $col (@col_order) {
+			foreach my $legend (keys %legendinfo ) {
 
 				if ($legend =~ m/^$col/i) {
 					my $unique = 0;
-					foreach $sorted_legend_id (@sorted_legend_order_id) {				
-						if ( $sorted_legend_id =~ m/^$legend$/i ) { $unique = 1; last;	}				
+					foreach $sorted_legend_id (@sorted_legend_order_id) {
+						if ( $sorted_legend_id =~ m/^$legend$/i ) { $unique = 1; last;	}
 					}
-					if ( $unique == 0 ) {						
+					if ( $unique == 0 ) {
 						#print "$col -> $legend -> order ($i)\n";
 						$legendinfo{$legend}{order} = $i;
 						$sorted_legend_len[$i] = $legendinfo{$legend}{len};
-						$sorted_legend_name[$i] = $legendinfo{$legend}{header_name};	
-						push(@sorted_legend_order_id, $legend);	
-
-
-
-
+						$sorted_legend_name[$i] = $legendinfo{$legend}{header_name};
+						push(@sorted_legend_order_id, $legend);
 						$i++;
 					}
 				}
-
-
 			}
-
-
-
-
-
-
-
-
-
-		}		
+		}
 
 		#################
 		#printing header
@@ -320,25 +305,25 @@ sub gen_report_table {
 		foreach $header (@sorted_legend_order_id) {
 			#print "$header\n";
 			$report .= sprintf("| %-${sorted_legend_len[$i]}s ", $sorted_legend_name[$i]); $i++;
-		}		
+		}
 		$report .= sprintf("|\n");
 		$report .= &print_dashes(\@sorted_legend_len);
 		#print "========\n";
 		#################
 		# printing data #
 		#################
-		
-		
-		foreach $gid ( @sorted_gids ) {			
-			#$report .= sprintf("| %- ${size}s%s ",$vendor{$family}{$gid}{generic});	
+
+
+		foreach $gid ( @sorted_gids ) {
+			#$report .= sprintf("| %- ${size}s%s ",$vendor{$family}{$gid}{generic});
 			foreach $device (&sort_device( $vendor_name, \%{$vendor{$family}{$gid}})) {
-				
+
 				if ( $device =~ /generic|best_match/i ) { next;  }
 				# get field size for generic and device
-				my $star = ""; 
+				my $star = "";
 				my $device_field_size = $legendinfo{device}{len};  if ( $vendor{$family}{$gid}{best_match} eq $device ) { $star = "*"; $device_field_size--; }
 				my $generic_field_size = $legendinfo{generic}{len};
-				
+
 				# get run number in ascending order
 				my @sorted_param;
 				if ( $SORTSTYLE eq "ASCENDING" ) {
@@ -349,8 +334,8 @@ sub gen_report_table {
 
 				foreach my $run (@sorted_param) {
 					if ( $run eq "" ) { next; }
-					$report .= sprintf("| %- ${generic_field_size}s ",$vendor{$family}{$gid}{generic});	
-					$report .= sprintf("| %- ${device_field_size}s%s ",$device, $star);		           
+					$report .= sprintf("| %- ${generic_field_size}s ",$vendor{$family}{$gid}{generic});
+					$report .= sprintf("| %- ${device_field_size}s%s ",$device, $star);
 					for ( my $i = 0; $i <= $#sorted_legend_order_id; $i++ ) {
 						$legend = $sorted_legend_order_id[$i];
 						next if ($legend =~ /^device|^generic/i);
@@ -360,9 +345,9 @@ sub gen_report_table {
 						} else {
 						$report .= sprintf("| %- ${len}s ", "N/A" );
 						}
-						if ( $i == $#sorted_legend_order_id ) { $report .= sprintf("|\n"); }          
+						if ( $i == $#sorted_legend_order_id ) { $report .= sprintf("|\n"); }
 					}
-				}		
+				}
 			}
 		}
 
@@ -380,21 +365,21 @@ sub gen_report_table {
 # output =>    Generated CSV file for that vendor
 ######################################################################
 sub gen_vendor_csv {
-	# GET HEADER FOR CSV DATA	
+	# GET HEADER FOR CSV DATA
 	my $vendor = shift();
 	my %project = %{shift()};
-	
+
 	my @list = "";
-	my $vendor_header = "GENERIC,VENDOR,FAMILY,DEVICE,RUN_NO,";	
+	my $vendor_header = "GENERIC,VENDOR,FAMILY,DEVICE,RUN_NO,";
 	foreach my $family (keys %{$project{$vendor}} ) {
 		foreach my $gid (keys %{$project{$vendor}{$family}} ) {
-			foreach my $device (keys %{$project{$vendor}{$family}{$gid}} ) {	
+			foreach my $device (keys %{$project{$vendor}{$family}{$gid}} ) {
 				next if ($device =~ m/generic|best_match/i);
 
 				foreach my $run (keys %{$project{$vendor}{$family}{$gid}{$device}} ) {
 					my $run_name = "run_${run}";
 					@list = keys %{$project{$vendor}{$family}{$gid}{$device}{$run_name}};
-					#remove RUN_NO from list				
+					#remove RUN_NO from list
 
 					my $temp = join ( ',',@list) ;
 					$temp =~ s/RUN_NO,//;
@@ -406,12 +391,12 @@ sub gen_vendor_csv {
 			last;
 		}
 	}
-	
+
 	# WRITING DATA
 	my $str = "";
 	$str .= "$vendor_header\n";
 	foreach my $family (keys %{$project{$vendor}} ) {
-		foreach my $gid (keys %{$project{$vendor}{$family}} ) {			
+		foreach my $gid (keys %{$project{$vendor}{$family}} ) {
 			my @sorted_devices = &sort_device( $vendor, \%{$project{$vendor}{$family}{$gid}});
 			foreach my $device (@sorted_devices) {
 				next if ($device =~ m/generic|best_match/i);
@@ -444,106 +429,106 @@ sub extract_best_result {
 	my %project = %{shift()};
 	my $mode = shift();
 	my %best;
-	
+
 	my $inf = 9**9**9;
-	foreach my $vendor (keys %project ) {  
+	foreach my $vendor (keys %project ) {
 		if ($mode =~ /db/i) {
-			if ( $vendor =~ /disp/i) { next; } 
-			if ( $project{$vendor}{disp} =~ /n/i ) { next; }			
-		}	
-		foreach my $family ( keys %{$project{$vendor}} ) {			
+			if ( $vendor =~ /disp/i) { next; }
+			if ( $project{$vendor}{disp} =~ /n/i ) { next; }
+		}
+		foreach my $family ( keys %{$project{$vendor}} ) {
 			if ($mode =~ /db/i) {
-				if ($family =~ /disp/i) { next; } 
-				if ( $project{$vendor}{$family}{disp} =~ /n/i ) { next; }			
-			}	
+				if ($family =~ /disp/i) { next; }
+				if ( $project{$vendor}{$family}{disp} =~ /n/i ) { next; }
+			}
 			$best{AREA}{$vendor}{$family}{all}{value} = $inf;
 			$best{AREA}{$vendor}{$family}{all}{device} = "N/A";
 			$best{AREA}{$vendor}{$family}{all}{run} = "N/A";
 			$best{AREA}{$vendor}{$family}{all}{unit} = "N/A";
-			
+
 			$best{THROUGHPUT}{$vendor}{$family}{all}{value} = -1;
 			$best{THROUGHPUT}{$vendor}{$family}{all}{device} = "N/A";
 			$best{THROUGHPUT}{$vendor}{$family}{all}{run} = "N/A";
 			$best{THROUGHPUT}{$vendor}{$family}{all}{unit} = "Mbit/s";
-			
+
 			$best{THROUGHPUT_AREA}{$vendor}{$family}{all}{value} = -1;
 			$best{THROUGHPUT_AREA}{$vendor}{$family}{all}{device} = "N/A";
 			$best{THROUGHPUT_AREA}{$vendor}{$family}{all}{run} = "N/A";
 			$best{THROUGHPUT_AREA}{$vendor}{$family}{all}{unit} = "";
-			
+
 			$best{LATENCY}{$vendor}{$family}{all}{value} = $inf;
 			$best{LATENCY}{$vendor}{$family}{all}{device} = "N/A";
 			$best{LATENCY}{$vendor}{$family}{all}{run} = "N/A";
 			$best{LATENCY}{$vendor}{$family}{all}{unit} = "ns";
-			
+
 			$best{LATENCY_AREA}{$vendor}{$family}{all}{value} = $inf;
 			$best{LATENCY_AREA}{$vendor}{$family}{all}{device} = "N/A";
 			$best{LATENCY_AREA}{$vendor}{$family}{all}{run} = "N/A";
 			$best{LATENCY_AREA}{$vendor}{$family}{all}{unit} = "";
-			foreach my $gid ( keys %{$project{$vendor}{$family}} ) { 
+			foreach my $gid ( keys %{$project{$vendor}{$family}} ) {
 				if ($mode =~ /db/i) {
-					if ($gid =~ /disp/i) { next; } 
-					if ( $project{$vendor}{$family}{$gid}{disp} =~ /n/i ) { next; }			
+					if ($gid =~ /disp/i) { next; }
+					if ( $project{$vendor}{$family}{$gid}{disp} =~ /n/i ) { next; }
 				}
 				$best{AREA}{$vendor}{$family}{$gid}{all}{value} = $inf;
 				$best{AREA}{$vendor}{$family}{$gid}{all}{device} = "N/A";
 				$best{AREA}{$vendor}{$family}{$gid}{all}{run} = "N/A";
 				$best{AREA}{$vendor}{$family}{$gid}{all}{unit} = "N/A";
-				
+
 				$best{THROUGHPUT}{$vendor}{$family}{$gid}{all}{value} = -1;
 				$best{THROUGHPUT}{$vendor}{$family}{$gid}{all}{device} = "N/A";
 				$best{THROUGHPUT}{$vendor}{$family}{$gid}{all}{run} = "N/A";
 				$best{THROUGHPUT}{$vendor}{$family}{$gid}{all}{unit} = "Mbit/s";
-				
+
 				$best{THROUGHPUT_AREA}{$vendor}{$family}{$gid}{all}{value} = -1;
 				$best{THROUGHPUT_AREA}{$vendor}{$family}{$gid}{all}{device} = "N/A";
 				$best{THROUGHPUT_AREA}{$vendor}{$family}{$gid}{all}{run} = "N/A";
 				$best{THROUGHPUT_AREA}{$vendor}{$family}{$gid}{all}{unit} = "";
-				
+
 				$best{LATENCY}{$vendor}{$family}{$gid}{all}{value} = $inf;
 				$best{LATENCY}{$vendor}{$family}{$gid}{all}{device} = "N/A";
 				$best{LATENCY}{$vendor}{$family}{$gid}{all}{run} = "N/A";
 				$best{LATENCY}{$vendor}{$family}{$gid}{all}{unit} = "ns";
-				
+
 				$best{LATENCY_AREA}{$vendor}{$family}{$gid}{all}{value} = $inf;
 				$best{LATENCY_AREA}{$vendor}{$family}{$gid}{all}{device} = "N/A";
 				$best{LATENCY_AREA}{$vendor}{$family}{$gid}{all}{run} = "N/A";
 				$best{LATENCY_AREA}{$vendor}{$family}{$gid}{all}{unit} = "";
-			
+
 				foreach my $device ( keys %{$project{$vendor}{$family}{$gid}} ) {
 					if ($device =~ /generic|all/i ) { next; }
 					if ($mode =~ /db/i) {
-						if ( $device =~ /disp/i) { next; } 
-						if ( $project{$vendor}{$family}{$gid}{$device}{disp} =~ /n/i ) { next; }			
-					}					
-					
+						if ( $device =~ /disp/i) { next; }
+						if ( $project{$vendor}{$family}{$gid}{$device}{disp} =~ /n/i ) { next; }
+					}
+
 					$best{AREA}{$vendor}{$family}{$gid}{$device}{value} = $inf;
 					$best{AREA}{$vendor}{$family}{$gid}{$device}{run} = "N/A";
 					$best{AREA}{$vendor}{$family}{$gid}{$device}{unit} = "N/A";
-					
+
 					$best{THROUGHPUT}{$vendor}{$family}{$gid}{$device}{value} = -1;
 					$best{THROUGHPUT}{$vendor}{$family}{$gid}{$device}{run} = "N/A";
 					$best{THROUGHPUT}{$vendor}{$family}{$gid}{$device}{unit} = "Mbit/s";
-					
+
 					$best{THROUGHPUT_AREA}{$vendor}{$family}{$gid}{$device}{value} = -1;
 					$best{THROUGHPUT_AREA}{$vendor}{$family}{$gid}{$device}{run} = "N/A";
 					$best{THROUGHPUT_AREA}{$vendor}{$family}{$gid}{$device}{unit} = "";
-					
+
 					$best{LATENCY}{$vendor}{$family}{$gid}{$device}{value} = $inf;
 					$best{LATENCY}{$vendor}{$family}{$gid}{$device}{run} = "N/A";
 					$best{LATENCY}{$vendor}{$family}{$gid}{$device}{unit} = "ns";
-					
+
 					$best{LATENCY_AREA}{$vendor}{$family}{$gid}{$device}{value} = $inf;
 					$best{LATENCY_AREA}{$vendor}{$family}{$gid}{$device}{run} = "N/A";
 					$best{LATENCY_AREA}{$vendor}{$family}{$gid}{$device}{unit} = "";
-					
-					
+
+
 					foreach my $run ( keys %{$project{$vendor}{$family}{$gid}{$device}} ) {
 						if ($mode =~ /db/i) {
-							if ( $run =~ /disp/i) { next; } 
-							if ( $project{$vendor}{$family}{$gid}{$device}{$run}{disp} =~ /n/i ) { next; }			
+							if ( $run =~ /disp/i) { next; }
+							if ( $project{$vendor}{$family}{$gid}{$device}{$run}{disp} =~ /n/i ) { next; }
 						}
-						
+
 						##### Best result within the same generic, family and device
 						# Area (Lower is better)
 						if ( $vendor =~ /xilinx/i ) {
@@ -555,7 +540,7 @@ sub extract_best_result {
 								$best{AREA}{$vendor}{$family}{$gid}{$device}{run} = $run;
 								$best{AREA}{$vendor}{$family}{$gid}{$device}{unit} = $unit;
 							}
-							
+
 						} elsif ( $vendor =~ /altera/i ) {
 							my $area, $unit;
 							if ( $project{$vendor}{$family}{$gid}{$device}{$run}{U_LE} > 0 ) {
@@ -572,32 +557,32 @@ sub extract_best_result {
 								$best{AREA}{$vendor}{$family}{$gid}{$device}{value} = $area;
 								$best{AREA}{$vendor}{$family}{$gid}{$device}{run} = $run;
 								$best{AREA}{$vendor}{$family}{$gid}{$device}{unit} = $unit;
-							}											
+							}
 						}
-						# Throughput	(Higher is better)						
+						# Throughput	(Higher is better)
 						if ( $project{$vendor}{$family}{$gid}{$device}{$run}{THROUGHPUT} > $best{THROUGHPUT}{$vendor}{$family}{$gid}{$device}{value} ) {
 							$best{THROUGHPUT}{$vendor}{$family}{$gid}{$device}{value} = $project{$vendor}{$family}{$gid}{$device}{$run}{THROUGHPUT};
 							$best{THROUGHPUT}{$vendor}{$family}{$gid}{$device}{run} = $run;
-						}						
-						# TP/Area	(Higher is better)						
+						}
+						# TP/Area	(Higher is better)
 						if ( $project{$vendor}{$family}{$gid}{$device}{$run}{THROUGHPUT_AREA} > $best{THROUGHPUT_AREA}{$vendor}{$family}{$gid}{$device}{value} ) {
 							$best{THROUGHPUT_AREA}{$vendor}{$family}{$gid}{$device}{value} = $project{$vendor}{$family}{$gid}{$device}{$run}{THROUGHPUT_AREA};
 							$best{THROUGHPUT_AREA}{$vendor}{$family}{$gid}{$device}{run} = $run;
-						}							
-						# LATENCY	(Lower is better)						
+						}
+						# LATENCY	(Lower is better)
 						if ( $project{$vendor}{$family}{$gid}{$device}{$run}{LATENCY} < $best{LATENCY}{$vendor}{$family}{$gid}{$device}{value} ) {
 							$best{LATENCY}{$vendor}{$family}{$gid}{$device}{value} = $project{$vendor}{$family}{$gid}{$device}{$run}{LATENCY};
 							$best{LATENCY}{$vendor}{$family}{$gid}{$device}{run} = $run;
-						}	
-						# LATENCY * AREA	(Lower is better)						
+						}
+						# LATENCY * AREA	(Lower is better)
 						if ( $project{$vendor}{$family}{$gid}{$device}{$run}{LATENCY_AREA} < $best{LATENCY_AREA}{$vendor}{$family}{$gid}{$device}{value} ) {
 							$best{LATENCY_AREA}{$vendor}{$family}{$gid}{$device}{value} = $project{$vendor}{$family}{$gid}{$device}{$run}{LATENCY_AREA};
 							$best{LATENCY_AREA}{$vendor}{$family}{$gid}{$device}{run} = $run;
 						}
 					}
-										
+
 					##### Best result within the same
-					# AREA 
+					# AREA
 					if ( $best{AREA}{$vendor}{$family}{$gid}{$device}{value} < $best{AREA}{$vendor}{$family}{$gid}{all}{value} ) {
 						$best{AREA}{$vendor}{$family}{$gid}{all}{value} = $best{AREA}{$vendor}{$family}{$gid}{$device}{value};;
 						$best{AREA}{$vendor}{$family}{$gid}{all}{device} = $device;
@@ -615,22 +600,22 @@ sub extract_best_result {
 						$best{THROUGHPUT_AREA}{$vendor}{$family}{$gid}{all}{value} = $best{THROUGHPUT_AREA}{$vendor}{$family}{$gid}{$device}{value};;
 						$best{THROUGHPUT_AREA}{$vendor}{$family}{$gid}{all}{device} = $device;
 						$best{THROUGHPUT_AREA}{$vendor}{$family}{$gid}{all}{run} = $best{THROUGHPUT_AREA}{$vendor}{$family}{$gid}{$device}{run};
-					}	
+					}
 					# LATENCY
 					if ( $best{LATENCY}{$vendor}{$family}{$gid}{$device}{value} < $best{LATENCY}{$vendor}{$family}{$gid}{all}{value} ) {
 						$best{LATENCY}{$vendor}{$family}{$gid}{all}{value} = $best{LATENCY}{$vendor}{$family}{$gid}{$device}{value};;
 						$best{LATENCY}{$vendor}{$family}{$gid}{all}{device} = $device;
 						$best{LATENCY}{$vendor}{$family}{$gid}{all}{run} = $best{LATENCY}{$vendor}{$family}{$gid}{$device}{run};
-					}	
+					}
 					# LATENCY * AREA
 					if ( $best{LATENCY_AREA}{$vendor}{$family}{$gid}{$device}{value} < $best{LATENCY_AREA}{$vendor}{$family}{$gid}{all}{value} ) {
 						$best{LATENCY_AREA}{$vendor}{$family}{$gid}{all}{value} = $best{LATENCY_AREA}{$vendor}{$family}{$gid}{$device}{value};;
 						$best{LATENCY_AREA}{$vendor}{$family}{$gid}{all}{device} = $device;
 						$best{LATENCY_AREA}{$vendor}{$family}{$gid}{all}{run} = $best{LATENCY_AREA}{$vendor}{$family}{$gid}{$device}{run};
-					}	
+					}
 				}
-				##### Best result within the same generic 
-				# AREA 
+				##### Best result within the same generic
+				# AREA
 				if ( $best{AREA}{$vendor}{$family}{$gid}{all}{value} < $best{AREA}{$vendor}{$family}{all}{value} ) {
 					$best{AREA}{$vendor}{$family}{all}{value} = $best{AREA}{$vendor}{$family}{$gid}{all}{value};
 					$best{AREA}{$vendor}{$family}{all}{device} = $best{AREA}{$vendor}{$family}{$gid}{all}{device};
@@ -661,7 +646,7 @@ sub extract_best_result {
 					$best{LATENCY}{$vendor}{$family}{all}{run} = $best{LATENCY}{$vendor}{$family}{$gid}{all}{run};
 					$best{LATENCY}{$vendor}{$family}{all}{gid} = $gid;
 					$best{LATENCY}{$vendor}{$family}{all}{unit} = $best{LATENCY}{$vendor}{$family}{$gid}{all}{unit};
-				}	
+				}
 				# LATENCY * AREA
 				if ( $best{LATENCY_AREA}{$vendor}{$family}{$gid}{all}{value} < $best{LATENCY_AREA}{$vendor}{$family}{all}{value} ) {
 					$best{LATENCY_AREA}{$vendor}{$family}{all}{value} = $best{LATENCY_AREA}{$vendor}{$family}{$gid}{all}{value};
@@ -669,7 +654,7 @@ sub extract_best_result {
 					$best{LATENCY_AREA}{$vendor}{$family}{all}{run} = $best{LATENCY_AREA}{$vendor}{$family}{$gid}{all}{run};
 					$best{LATENCY_AREA}{$vendor}{$family}{all}{gid} = $gid;
 					$best{LATENCY_AREA}{$vendor}{$family}{all}{unit} = $best{LATENCY_AREA}{$vendor}{$family}{$gid}{all}{unit};
-				}	
+				}
 			}
 		}
 	}
@@ -684,7 +669,7 @@ sub printProject {
 	my %project = %{shift()};
 	foreach $vendor ( keys %project ) {
 		print "$vendor\n";
-		foreach $family ( keys %{$project{$vendor}} ) {			
+		foreach $family ( keys %{$project{$vendor}} ) {
 			foreach $gid ( keys %{$project{$vendor}{$family}} ) {
 				print "-> $family - $project{$vendor}{$family}{$gid}{generic}\n";
 				foreach $device ( keys %{$project{$vendor}{$family}{$gid}} ) {
@@ -693,7 +678,7 @@ sub printProject {
 			}
 		}
 	}
-	system ( pause );	
+	system ( pause );
 }
 
 ######################################################################
@@ -709,14 +694,14 @@ sub print_best_result {
 	my @criterian = @{shift()};
 	my $query_mode = shift(); #best_overall, best_per_device, best_per_generic
 	my $mode = shift();
-	
+
 	my %best_result;
 	my $MAXLEN_VENDOR = 6;
 	my $MAXLEN_FAMILY = 15;
 	my $MAXLEN_GENERIC = 25;
 	my $MAXLEN_DEVICE = 25;
 	my $MAXLEN_RUN = 7;
-	
+
 	if ( $query_mode !~ /best_overall|best_per_device|best_per_generic/i ) {
 		print "Invalid query_mode for print_best_result().\n";
 		system( pause );
@@ -732,7 +717,7 @@ sub print_best_result {
 	}
 	foreach $crit ( @criterian ) {
 		foreach $vendor ( keys %{$best{$crit}} ) {
-			foreach  $family ( keys %{$best{$crit}{$vendor}} ) {
+			foreach  $family ( sort keys %{$best{$crit}{$vendor}} ) {
 				#print "$crit -> $vendor -> $family\n";
 				if ( $query_mode =~ /best_overall/i ) {
 					my $device_name = $best{$crit}{$vendor}{$family}{all}{device};
@@ -801,16 +786,16 @@ sub print_best_result {
                                                                 $project{$vendor}{$family}{$gid}{$dev}{$run_name}{U_FF},
 																$project{$vendor}{$family}{$gid}{$dev}{$run_name}{U_MEM} );
 
-							}
+						}
 						$best_result{$crit}  .= sprintf(" DSP=%s Ratio=%s\n",
 															$project{$vendor}{$family}{$gid}{$dev}{$run_name}{U_DSP},															
 															$project{$vendor}{$family}{$gid}{$dev}{$run_name}{THROUGHPUT_AREA} );
 						next;
-					}						
+					}
 					my @devices = sort {$a cmp $b}   keys %{$best{$crit}{$vendor}{$family}{$gid}};
 					foreach $device ( @devices ) {
 						if ( $device =~ /^disp$|^generic$|^best_match$|^all$/i ){ next; }
-						my $run_name =  "best ($best{$crit}{$vendor}{$family}{$gid}{$device}{run})";						
+						my $run_name =  "best ($best{$crit}{$vendor}{$family}{$gid}{$device}{run})";
 						my $run_no = $best{$crit}{$vendor}{$family}{$gid}{$device}{run};
 						$best_result{$crit}  .= sprintf("\t%+${MAXLEN_VENDOR}s/%+${MAXLEN_FAMILY}s/%+${MAXLEN_GENERIC}s/%+${MAXLEN_DEVICE}s\t=>\t%-${MAXLEN_RUN}s :    %s %s\n", $vendor, $family,  $gid_value, $device, $run_name, $best{$crit}{$vendor}{$family}{$gid}{$device}{value}, $best{$crit}{$vendor}{$family}{$gid}{$device}{unit});
                         $best_result{$crit}  .= sprintf("\t\tImpFreq=%s MHz Latency=%s ns", $project{$vendor}{$family}{$gid}{$dev}{$run_name}{IMP_FREQ},$project{$vendor}{$family}{$gid}{$dev}{$run_name}{LATENCY});
@@ -830,7 +815,7 @@ sub print_best_result {
                                                                 $project{$vendor}{$family}{$gid}{$device}{$run_no}{U_FF},
 																$project{$vendor}{$family}{$gid}{$device}{$run_no}{U_MEM} );
 
-             						}
+						}
 						$best_result{$crit}  .= sprintf(" DSP=%s Ratio=%s\n",
 															$project{$vendor}{$family}{$gid}{$device}{$run_no}{U_DSP},
 															$project{$vendor}{$family}{$gid}{$device}{$run_no}{THROUGHPUT_AREA} );
@@ -846,7 +831,7 @@ sub print_best_result {
 ######################################################################
 # Extract project data
 # Input =>
-#        0  : project path 
+#        0  : project path
 # output =>  hash data containing project results
 #
 # Note :::
@@ -856,41 +841,40 @@ sub extract_project_data {
 
 	my $project_path = shift();	chdir($project_path);
 	my $config_file = "$project_path/config/$DESIGN_CONFIGURATION_FILE_NAME"; $config_file =~ s/\\/\//gi;
-	open(LOG, "$config_file");    
-		my $config_data = join(" ", <LOG>);    
+	open(LOG, "$config_file");
+		my $config_data = join(" ", <LOG>);
 	close(LOG);
 
 	my @vendor = getdirs($project_path);
-	
+
 	my %project;
 	$project_path = cwd;
-
 	foreach $vendor (@vendor) {
 		next if (( $vendor =~ /config/i ) or ( $vendor =~ /temp/i ) or ($vendor =~ /sim/i));
 		@families = getdirs("$project_path/$vendor");
-		chdir("$project_path/$vendor");		
+		chdir("$project_path/$vendor");
 		foreach $family_folder (@families){
 			my $gid = 1;
 			#my $family = $family_folder;
-			my ($family) = ( $family_folder =~ m/([\w\d-\s]+)_\d+/i );		
-			open( READFILE, "$project_path/$vendor/$family_folder/generics.txt" ); my $generic = join(" ", <READFILE>);	close( READFILE );				
-			# get generic id				
+			my ($family) = ( $family_folder =~ m/([\w\d-\s]+)_\d+/i );
+			open( READFILE, "$project_path/$vendor/$family_folder/generics.txt" ); my $generic = join(" ", <READFILE>);	close( READFILE );
+			# get generic id
 			if ( exists $project{$vendor} ) {
 				if ( exists $project{$vendor}{$family} ) {
 					# get max id number
-					my @array = sort { $a <=> $b } keys %{$project{$vendor}{$family}};  
-					$gid = $array[-1] + 1;				
+					my @array = sort { $a <=> $b } keys %{$project{$vendor}{$family}};
+					$gid = $array[-1] + 1;
 				}
 			}
-			
-			my @devices = getdirs($family_folder);					
-			
+
+			my @devices = getdirs($family_folder);
+
 			foreach $device (@devices) {
-				next if ($device eq "all"); 								
+				next if ($device eq "all");
 				############
 				## XILINX ##
 				############
-				if ( $vendor =~ m/xilinx/i ) {						
+				if ( $vendor =~ m/xilinx/i ) {
 					if ( $device =~ /best_match/i ) {    # Determining best_match device
 						my $option_report = "$project_path\/$vendor\/$family_folder\/$device\/$XILINX_OPTION_REPORT";
 						open(LOG, "$option_report");  my $option_data = join(" ", <LOG>);    close(LOG);
@@ -898,12 +882,12 @@ sub extract_project_data {
 						if ( $option_data =~ /$REGEX_BEST_MATCH_EXTRACT/ ) { $project{$vendor}{$family}{$gid}{best_match} = $1; }
 						next;
 					}
-					my @devicesRunNumber = getdirs("$family_folder/$device");					
-					foreach $run (@devicesRunNumber){						
+					my @devicesRunNumber = getdirs("$family_folder/$device");
+					foreach $run (@devicesRunNumber){
 						next if ($run eq "xst");
 						my $rundir = "$family_folder/$device/$run";
 						my $no; if ( $run =~ m/(\d+)/ ) { $no = $1; } else { print "Cannot find run number {$run}!\n"; exit; }
-						
+
 						my $synthesis_report = "$rundir/$XILINX_SYNTHESIS_REPORT";
 						my $map_report = "$rundir/$XILINX_MAP_REPORT";
 						my $timing_report = "$rundir/$XILINX_TRACE_REPORT";
@@ -913,15 +897,15 @@ sub extract_project_data {
 						open(LOG, "$map_report");     my $map_data = join(" ", <LOG>);     close(LOG);
 						open(LOG, "$timing_report");  my $timing_data = join(" ", <LOG>);    close(LOG);
 						open(LOG, "$option_report");  my $option_data = join(" ", <LOG>);    close(LOG);
-						
+
 						my $emptydata = 0;
 						if ( $synthesis_data eq "" ) { $emptydata = 1; if ($DEBUG_ON == 1) { print "\nWARNING!!! $device\/$run || synthesis_report is missing, this device will be skipped"; }}
 						if ( $map_data eq "" )       { $emptydata = 1; if ($DEBUG_ON == 1) { print "\nWARNING!!! $device\/$run || map_report is missing, this device will be skipped"; }}
 						if ( $timing_data eq "" )    { $emptydata = 1; if ($DEBUG_ON == 1) { print "\nWARNING!!! $device\/$run || timing_report is missing, this device will be skipped"; }}
 						if ( $option_data eq "" )    { $emptydata = 1; if ($DEBUG_ON == 1) { print "\nWARNING!!! $device\/$run || option_report is missing, this device will be skipped"; }}
 						next if( $emptydata == 1 );
-						
-						$project{$vendor}{$family}{$gid}{$device}{$run} = &extract_xilinx_report(\$family, \$no, \$synthesis_data, \$map_data, \$timing_data, \$option_data, \$config_data);						
+
+						$project{$vendor}{$family}{$gid}{$device}{$run} = &extract_xilinx_report(\$family, \$no, \$synthesis_data, \$map_data, \$timing_data, \$option_data, \$config_data);
 					}
 				############
 				## ALTERA ##
@@ -933,20 +917,19 @@ sub extract_project_data {
 						if ( $option_data =~ /$REGEX_BEST_MATCH_EXTRACT/ ) {  $project{$vendor}{$family}{$gid}{best_match} = $1; }
 						next;
 					}
-					my @devicesRunNumber = getdirs("$family_folder/$device");
+                    my @devicesRunNumber = getdirs("$family_folder/$device");
 
 					foreach $run (@devicesRunNumber){
 						next if (($run eq "db") or ($run eq "incremental_db"));
 						my $rundir = "$family_folder/$device/$run";
 						my $no; if ( $run =~ m/(\d+)/ ) { $no = $1; } else { print "Cannot find run number {$run}!\n"; exit; }
 
-						my @file = get_file_type($rundir, "$ALTERA_SYNTHESIS_REPORT_SUFFIX");             my $synthesis_report = "$rundir/$file[0]";
-						@file = get_file_type($rundir, "$ALTERA_POWER_REPORT_SUFFIX");                 my $power_report = "$rundir/$file[0]";
+						my @file = get_file_type($rundir, "$ALTERA_SYNTHESIS_REPORT_SUFFIX");                       my $synthesis_report = "$rundir/$file[0]";
+						@file = get_file_type($rundir, "$ALTERA_POWER_REPORT_SUFFIX");                              my $power_report = "$rundir/$file[0]";
 						@file = get_file_type($rundir, "$ALTERA_TIMING_REPORT_1_SUFFIX");
-						if ( $file[0] eq "" ) { @file = get_file_type($rundir, "$ALTERA_TIMING_REPORT_2_SUFFIX"); }  my $timing_report = "$rundir/$file[0]";
-						@file = get_file_type($rundir, "$ALTERA_IMPLEMENTATION_REPORT_SUFFIX");             my $implementation_report = "$rundir/$file[0]";
+						if ( $file[0] eq "" ) { @file = get_file_type($rundir, "$ALTERA_TIMING_REPORT_2_SUFFIX"); } my $timing_report = "$rundir/$file[0]";
+						@file = get_file_type($rundir, "$ALTERA_IMPLEMENTATION_REPORT_SUFFIX");                     my $implementation_report = "$rundir/$file[0]";
 						my $option_report = "$rundir/$ALTERA_OPTION_REPORT";
-
 						open(LOG, "$synthesis_report");     	my $synthesis_data = join(" ", <LOG>);    		close(LOG);
 						#open(LOG, "$power_report");       		my $power_data = join(" ", <LOG>);       		close(LOG);		#unsupported
 						open(LOG, "$timing_report");      		my $timing_data = join(" ", <LOG>);      		close(LOG);
@@ -955,14 +938,16 @@ sub extract_project_data {
 
 						#print "$timing_report\n"; exit;
 
+
 						my $emptydata = 0;
 						if ( $synthesis_data eq "" ) 		{ $emptydata = 1; if ($DEBUG_ON == 1) { print "\nWARNING!!! $device\t||\tsynthesis_report is missing, this device will be skipped"; }}
 						#if ( $power_data eq "" )       	{ $emptydata = 1; if ($DEBUG_ON == 1) { print "\nWARNING!!! $device\t||\tpower_data is missing, this device will be skipped"; }}
 						if ( $timing_data eq "" )    		{ $emptydata = 1; if ($DEBUG_ON == 1) { print "\nWARNING!!! $device\t||\ttiming_report is missing, this device will be skipped"; }}
 						if ( $implementation_data eq "" ) { $emptydata = 1; if ($DEBUG_ON == 1) { print "\nWARNING!!! $device\t||\timplementation_data is missing, this device will be skipped"; }}
 						if ( $option_report eq "" ) 		{ $emptydata = 1; if ($DEBUG_ON == 1) { print "\nWARNING!!! $device\t||\toption_report is missing, this device will be skipped"; }}
-						next if( $emptydata == 1 );
 
+
+						next if( $emptydata == 1 );
 						$project{$vendor}{$family}{$gid}{$device}{$run} = &extract_report_altera(\$no, \$synthesis_data, \$power_data, \$timing_data, \$implementation_data, \$config_data, \$option_data);
 					}
 				} else {
@@ -970,8 +955,8 @@ sub extract_project_data {
 				}
 			}
 			# check if there's any result. If there is , write a generic value.
-			if ( exists $project{$vendor} ) { 
-				if ( exists $project{$vendor}{$family} ) {							
+			if ( exists $project{$vendor} ) {
+				if ( exists $project{$vendor}{$family} ) {
 					$project{$vendor}{$family}{$gid}{generic} = $generic;
 				}
 			}

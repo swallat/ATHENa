@@ -55,7 +55,7 @@ sub xilinx_synthesis{
 		&create_scr($SCRIPT_FILE, $DEVICE_NAME);
 		&create_prj($PROJECT_FILE);
 		&copy_non_compilation_files();
-
+		
 		my $SYNTHESIS_FLAGS = prepare_SynthesisFlags();
 		printOut("Executing: $XST $SYNTHESIS_FLAGS\n");
 		my $xs = system("\"$XST\" $SYNTHESIS_FLAGS");
@@ -117,7 +117,7 @@ sub set_SynthesisFilenames{
 # create script file
 # if there is an xcf or ucf file it will add it to the script
 #####################################################################
-sub create_scr{
+sub create_scr {
 	my $FILENAME = $_[0];
 	my $DEVICE = $_[1];
 	my $output = "";
@@ -168,25 +168,35 @@ sub create_prj{
 	
 	my $output = "";
 	
-	my $vhdl_syntax = "vhdl ";
-
-
-
-	if($DEV_OBJ->getFamily() =~ m/virtex6|spartan6|artix7|kintex7|virtex7/i) {	$vhdl_syntax = ""; }
+    # Check if the project is a mixed type
+    my $is_verilog = 0;
+    my $is_vhdl = 0;
+    my $vhdl_syntax = "vhdl";
+    my $verilog_syntax = "verilog";
+    
+    foreach my $file (@SOURCE_FILES) {
+        if ($file =~ m/.v$/i)
+        {
+            $is_verilog = 1;
+        }
+        elsif ($file =~ m/.vhdl$|.vhd$/i) 
+        {
+            $is_vhdl = 1;
+        }       
+    }	
+	if (($DEV_OBJ->getFamily() =~  m/virtex6||artix7|kintex7|virtex7/i) and 
+        ((($is_verilog == 0) and ($is_vhdl == 1)) or  (($is_verilog == 1) and ($is_vhdl == 0))))
+    {	
+        $verilog_syntax = "";
+        $vhdl_syntax = ""; 
+    }
 	
-
-
-
-
-
-
-
 	foreach my $file (@SOURCE_FILES) {
 		if ($file =~ m/.v$/i ) {
-			my $dest_dir_text = "verilog work \"$SOURCE_DIR/";
+			my $dest_dir_text = "${verilog_syntax} work \"$SOURCE_DIR/";
 			$output .= "$dest_dir_text$file\"\n";	
 		} elsif ($file =~ m/.vhdl$|.vhd$/i ) {
-			my $dest_dir_text = "${vhdl_syntax}work \"$SOURCE_DIR/";
+			my $dest_dir_text = "${vhdl_syntax} work \"$SOURCE_DIR/";
 			$output .= "$dest_dir_text$file\"\n";
 		}
 	}

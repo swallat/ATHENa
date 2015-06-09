@@ -1,6 +1,6 @@
 # =============================================
 # ATHENA - Automated Tool for Hardware EvaluatioN.
-# Copyright ï¿½ 2009 - 2014 CERG at George Mason University <cryptography.gmu.edu>.
+# Copyright © 2009 - 2014 CERG at George Mason University <cryptography.gmu.edu>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@ sub read_DesignConfig {
 	
     $DB_CRITERIA = "throughput_area";
     $DB_QUERY_MODE = "off";
-
+        
 	my %generics;
 	my $size = @tooldata;
 	my $i = 0;
@@ -147,20 +147,19 @@ sub read_DesignConfig {
         if($tooldata[$i] =~ m/DB_CRITERIA\s*=\s*${REGEX_CONFIG_ITEM_IDENTIFIER}/gi){
 			$DB_CRITERIA = $1;			
 		}
-
-
+        
+        
 		if($tooldata[$i] =~ m/GLOBAL_GENERICS_BEGIN/i) {
 			$i++;		
 			my $count = 1;
 			while(1) {
 				$tooldata[$i] =~ s/ //gi; # remove spaces for easier processing
-				
 				if ( $tooldata[$i] =~ m/([\w\d]+)\s*=\s*([\d\w,\s]+)/gi) {				# a = 1,2,3
 					$generics{global}{$count}{name} = $1;
 					my @values = split(/,/,join('',split(/ /,$2)));
 					$generics{global}{$count}{values} = \@values;				
 					$count++;
-				} elsif ($tooldata[$i] =~ m/\(([\w,\s\d]+)\)\s*=\s*([\(\)\d\w,\s]+)/gi) {	# (a,b,c) = (1,2,3) , (4,5,6);															
+				} elsif ( $tooldata[$i] =~ m/\(([\w,\s\d]+)\)\s*=\s*([\(\)\d\w,\s]+)/gi) {	# (a,b,c) = (1,2,3) , (4,5,6);															
 					my $name = $1;					
 					my @array = ($2 =~ m/([\w\d,]+)/gi);
 					my @values = ();
@@ -182,8 +181,8 @@ sub read_DesignConfig {
 		
 					
 		while($tooldata[$i] =~ m/FPGA_VENDOR\s*=\s*(\w+)/gi){
-
-
+            
+            
 			my $vendor = &trim_spaces($1);
 			$done = 0; #0 = false, 1=true
 			while ($done == 0){
@@ -192,10 +191,8 @@ sub read_DesignConfig {
 				if(($tooldata[$i] =~ /END[\s^\w]*VENDOR/i)){
 					$done = 1;
 				}
-
-
 				elsif( $tooldata[$i] =~ m/FPGA_FAMILY\s*=\s*([\w_ -]+)/gi) { 
-
+                    
 						my $family = &trim_spaces(lc($1));
 						my $device_string;
 						
@@ -315,7 +312,7 @@ sub read_DesignConfig {
 							$Device->setUtilizationFactors(\%UTIL_FACTORS);							
 							push(@{$requested_devices{lc($vendor)}}, $Device);							
 						}
-					}
+                }
 				
 			}
 		}
@@ -441,16 +438,12 @@ sub configureISE{
 	
 	$ISE_INSTALL_FOLDER =~ s/\\/\//gi;
 	$ISE_INSTALL_FOLDER .= "\/" unless($ISE_INSTALL_FOLDER =~ m/\/$/gi);
-	$XST = $ISE_INSTALL_FOLDER."xst";
-	$XNGDBUILD = $ISE_INSTALL_FOLDER."ngdbuild";
-	$XMAP = $ISE_INSTALL_FOLDER."map";
-	$XPAR = $ISE_INSTALL_FOLDER."par";
-	$XTRACE = $ISE_INSTALL_FOLDER."trce";
-	$XPARTGEN = $ISE_INSTALL_FOLDER."partgen";
-    
-    $XXDL = $ISE_INSTALL_FOLDER."xdl"; #___ add xdl support
-    $XNETGEN = $ISE_INSTALL_FOLDER."netgen"; #___ add netgen support
-    $XBITGEN = $ISE_INSTALL_FOLDER."bitgen"; #__ add bitgen support
+	$XST = $ISE_INSTALL_FOLDER."xst.exe";
+	$XNGDBUILD = $ISE_INSTALL_FOLDER."ngdbuild.exe";
+	$XMAP = $ISE_INSTALL_FOLDER."map.exe";
+	$XPAR = $ISE_INSTALL_FOLDER."par.exe";
+	$XTRACE = $ISE_INSTALL_FOLDER."trce.exe";
+	$XPARTGEN = $ISE_INSTALL_FOLDER."partgen.exe";
 	
 	return 0;
 }
@@ -469,12 +462,12 @@ sub configureQuartus{
 	
 	$ALTERA_INSTALL_FOLDER =~ s/\\/\//gi;
 	$ALTERA_INSTALL_FOLDER .= "\/" unless($ALTERA_INSTALL_FOLDER =~ m/\/$/gi);
-	$QMAP = $ALTERA_INSTALL_FOLDER."quartus_map";
-	$QFIT = $ALTERA_INSTALL_FOLDER."quartus_fit";
-	$QASM = $ALTERA_INSTALL_FOLDER."quartus_asm";
-	$QTAN = $ALTERA_INSTALL_FOLDER."quartus_tan";
-	$QSTA = $ALTERA_INSTALL_FOLDER."quartus_sta";
-	$QPOW = $ALTERA_INSTALL_FOLDER."quartus_pow";
+	$QMAP = $ALTERA_INSTALL_FOLDER."quartus_map.exe";
+	$QFIT = $ALTERA_INSTALL_FOLDER."quartus_fit.exe";
+	$QASM = $ALTERA_INSTALL_FOLDER."quartus_asm.exe";
+	$QTAN = $ALTERA_INSTALL_FOLDER."quartus_tan.exe";
+	$QSTA = $ALTERA_INSTALL_FOLDER."quartus_sta.exe";
+	$QPOW = $ALTERA_INSTALL_FOLDER."quartus_pow.exe";
 	
 	return 0;
 }
@@ -571,7 +564,7 @@ sub formCombinations {
 			#check for errors
 			my $combo_count = ($#temp_values+1)/($#temp_names+1); 
 			if ( $combo_count =~ m/[.]+/i ) { 					
-				print "Error! invalid combination between values and names in generic($combo_count)\n";
+				print "Error! invalid combination between values and names in generic ($combo_count)\n";
 				print "Please check your design configuration.\n";
 				system( pause ); exit;
 			}
@@ -589,7 +582,7 @@ sub formCombinations {
 	}
 	
 	#combine strings to each combination
-	foreach $str ( @strings ) {
+	foreach $str ( @strings ) {	
 		$str =~ s/,/ /gi;
 		if ( $#combinations >= 0 ) {
 			foreach $combo (@combinations) {
@@ -601,7 +594,7 @@ sub formCombinations {
 		}
 	}
 	
-
+	
 	return \@combo_array;
 }
 

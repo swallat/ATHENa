@@ -1,6 +1,6 @@
 # =============================================
 # ATHENA - Automated Tool for Hardware EvaluatioN.
-# Copyright ï¿½ 2009 - 2014 CERG at George Mason University <cryptography.gmu.edu>.
+# Copyright © 2009 - 2014 CERG at George Mason University <cryptography.gmu.edu>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -146,17 +146,11 @@ sub run{
 			my @DEST_FILES = ();
 			if ( $TEST_VECTORS_LIST_FILE ne "" ) {		
 				for ( my $i = 0; $i < scalar@TEST_VECTORS_FILES; $i++ ) {
-					my $destfile = $SIM_DIR."/".$TEST_VECTORS_FILES[$i]; 
-					my $file = $VERIFICATION_DIR."/".$TEST_VECTORS_FILES[$i]; 				
+					my $destfile = $SIM_DIR."\/".$TEST_VECTORS_FILES[$i]; 
+					my $file = $VERIFICATION_DIR."\/".$TEST_VECTORS_FILES[$i]; 				
 					if ( $^O =~ m/$REGEX_OS_WINDOWS/i ) { #windows
-						$destfile =~ s/\\/\//g; $file =~ s/\\/\//g; 					
+						$destfile =~ s/\//\\/g; $file =~ s/\//\\/g; 					
 						system( "copy \"$file\" \"$destfile\"");
-					}
-					else{
-						
-						$destfile =~ s/\\/\//g; $file =~ s/\\/\//g; 					
-						system( "cp \"$file\" \"$destfile\"");
-						
 					}
 					push(@DEST_FILES, $destfile);
 				}			
@@ -169,9 +163,6 @@ sub run{
 				if ( $^O =~ m/$REGEX_OS_WINDOWS/i ) { #windows
 					$file =~ s/\//\\/g; 
 					system( "del \"$file\"" );
-				}
-				else{
-					system( "rm \"$file\"" );
 				}
 			}
 		# move back to original dir
@@ -286,11 +277,11 @@ sub run{
 	REPORT_GEN:
 	printOut ("\n\nGENERATING REPORT ...\n");
 	#printOut ("\"$REPORT_SCRIPT\" \"$WORKSPACE\" display\n");
-	system("perl \"$REPORT_SCRIPT\" \"$WORKSPACE\" both");
-
+	system("\"$REPORT_SCRIPT\" \"$WORKSPACE\" both");
+    
     if ( $DB_QUERY_MODE !~ /^off$/i ) {
         chdir ( $ROOT_DIR );
-        system("perl \"$DB_REPORT_GENERATOR\" \"$WORKSPACE\" $DB_QUERY_MODE $DB_CRITERIA");
+        system("\"$DB_REPORT_GENERATOR\" \"$WORKSPACE\" $DB_QUERY_MODE $DB_CRITERIA");
     }
 }
 
@@ -298,10 +289,10 @@ sub run{
 # Execution starts here
 #####################################################################
 $start_time = time();
-#$NOPAUSE = "off";
-#if (@ARGV[0] =~ /nopause/i ) {
-#	$NOPAUSE = "on";
-#}
+$NOPAUSE = "off";
+if (@ARGV[0] =~ /nopause/i ) {
+	$NOPAUSE = "on";
+}
 
 # Initialize 
 &init();
@@ -314,6 +305,6 @@ $start_time = time();
 my $elapsed_time = elapsed_time($start_time);
 printOut("Elapsed time: $elapsed_time\n");
 
-#if ( $NOPAUSE =~ /off/i ) {
-#	system( pause );
-#}
+if ( $NOPAUSE =~ /off/i ) {
+	system( pause );
+}

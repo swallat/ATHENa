@@ -99,7 +99,6 @@ sub extract_xilinx_slice{
 #####################################################################
 sub extract_xilinx_bram{
 	my ($REPORT_NAME, $FAMILY, $DATA_REF) = @_;
-
     my ($TOTAL, $USED, $PERCENTAGE, $TOTAL2, $USED2, $PERCENTAGE2) = (0, 0, 0, 0, 0, 0);
 
     if ($FAMILY =~ m/spartan3/i) {
@@ -107,17 +106,10 @@ sub extract_xilinx_bram{
         ($TOTAL, $USED, $PERCENTAGE) = extract(\@tempRegex, $REPORT_NAME, $DATA_REF);
     } elsif ($FAMILY =~ m/virtex4|virtex5/i) {   # if not spartan3, virtex4 or virtex5, assumes two block ram exists
         ($TOTAL, $USED, $PERCENTAGE) = extract(\@REGEX_XILINX_BRAM_EXTRACT, $REPORT_NAME, $DATA_REF);
-
-
-
-
-
-
     } else {
         ($TOTAL, $USED, $PERCENTAGE) = extract(\@REGEX_XILINX_BRAM_EXTRACT, $REPORT_NAME, $DATA_REF);
         ($TOTAL2, $USED2, $PERCENTAGE2) = extract(\@REGEX_XILINX_DUAL_BRAM_EXTRACT, $REPORT_NAME, $DATA_REF);
     }
-
 
     # print "\n$FAMILY\n";
 	# print "$TOTAL, $USED, $PERCENTAGE\n";
@@ -127,9 +119,6 @@ sub extract_xilinx_bram{
 		$USED = $USED + $USED2*2;	
         $TOTAL = $TOTAL + $TOTAL2*2;
 		$PERCENTAGE = sprintf ( "%d", ($USED*100)/$TOTAL );	
-
-
-
 	}
     # print "$TOTAL, $USED, $PERCENTAGE\n";
 
@@ -182,7 +171,6 @@ sub extract_xilinx_lut{
 sub extract_xilinx_util{
 	my ($FAMILY, $REPORT_NAME, $DATA_REF) = @_;
 		
-
 	my ($TOTAL_SLICES, $USED_SLICES, $P_SLICES) = extract_xilinx_slice($REPORT_NAME, $DATA_REF);
 	my ($TOTAL_BRAM, $USED_BRAM, $P_BRAM) = extract_xilinx_bram($REPORT_NAME, $FAMILY, $DATA_REF);
 	my ($TOTAL_DSP, $USED_DSP, $P_DSP) = extract_xilinx_dsp($REPORT_NAME, $DATA_REF);
@@ -257,58 +245,6 @@ sub extract_altera_util{
         $U_MULT, $T_MULT, $PU_MULT, #multiplier
         $U_PIN, $T_PIN, $PU_PIN );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 1; # need to end with a true value

@@ -52,7 +52,7 @@ sub verify {
 	my ($res, $path) = &get_selected_tool_info(\%data, $vendor, "sim", "root_dir");
 	if ( $res > 0 ) { print "Error in function `verify` in `verification.pl`!!!\n No verification tool installed for $vendor.\n\n"; return 1; }	
 	my ($res, $toolname) = &get_selected_tool_info(\%data, $vendor, "sim", "version_name");
-	$path .= "/vsim";
+	$path .= "\\vsim.exe";
 	
 	system( cls );
 	# ========== get list of source files (in full path)	
@@ -64,7 +64,7 @@ sub verify {
 		@files = @tfiles;	
 		my @tfiles = @{ dclone(\@VERIFICATION_FILES) };
 		for (my $i = 0; $i < scalar@tfiles; $i++ ) {
-			$tfiles[$i] = $VERIFICATION_DIR."/".$tfiles[$i];
+			$tfiles[$i] = $VERIFICATION_DIR."\/".$tfiles[$i];
 		}	
 		@files = (@files, @tfiles);
 	} elsif ( $mode eq "postsynthesis" ) {
@@ -77,8 +77,8 @@ sub verify {
 	# ========== Copy test vectors to sim folder
 	my ( @tv, @dest_tv );
 	for (my $i = 0; $i < scalar@TEST_VECTORS_FILES; $i++ ) {
-		$tv[$i] = $VERIFICATION_DIR."/".$TEST_VECTORS_FILES[$i];
-		$dest_tv[$i] = $SIM_DIR."/".$TEST_VECTORS_FILES[$i];
+		$tv[$i] = $VERIFICATION_DIR."\/".$TEST_VECTORS_FILES[$i];
+		$dest_tv[$i] = $SIM_DIR."\/".$TEST_VECTORS_FILES[$i];
 		copy($tv[$i], $dest_tv[$i]); #or printError("verification - Cannoy copy file $tv[$i] to $dest_tv[$]", 1 );
 	}	
 	
@@ -101,14 +101,14 @@ sub verify {
 		if ( $^O =~ m/$REGEX_OS_WINDOWS/i ) { #windows
 			system ( "ren athena_test_result.txt athena_${mode}_result.txt" );
 		} else {
-			system ( "mv athena_test_result.txt athena_${mode}_result.txt" );
+			print "Unsupported OS a\n";
 		}
 	} else {
 		print "Error : No athena_test_result.txt found after verification\n";
 		return 3;
 	}	
 	if ( -e "athena_test_log.txt" ) {
-		system ( "mv athena_test_log.txt athena_${mode}_log.txt" );
+		system ( "ren athena_test_log.txt athena_${mode}_log.txt" );
 	}
 	# ========== Delete test vectors and work folder if TRIM, currently unsupported
 	# if ( $TRIM =~ m/on/i ) {

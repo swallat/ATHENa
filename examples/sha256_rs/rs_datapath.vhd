@@ -1,6 +1,6 @@
 -- =============================================
 -- SHA2 source code
--- Copyright © 2008-2010 CERG at George Mason University <cryptography.gmu.edu>.
+-- Copyright © 2009 - 2014 CERG at George Mason University <cryptography.gmu.edu>.
 --
 -- This source code is free; you can redistribute it and/or modify
 -- it under the terms of the GNU General Public License as published by

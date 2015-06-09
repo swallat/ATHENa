@@ -16,7 +16,7 @@ entity mult is
 generic 
 		(
           vendor : integer := XILINX;							-- vendor 			: XILINX=0, ALTERA=1
-          multiplier_type : integer:= MUL_DEDICATED;   -- multiplier_type 	: MUL_LOGIC_BASED=0, MUL_DEDICATED=1 
+          multiplier_type : integer:= MUL_DEDICATED;   -- multiplier_type 	: MUL_LOGIC_BASED=0, MUL_DSP_BASED=1 
 		    WIDTH : integer := 8									-- width 			: width (fixed width for input and output)
       );
 port 

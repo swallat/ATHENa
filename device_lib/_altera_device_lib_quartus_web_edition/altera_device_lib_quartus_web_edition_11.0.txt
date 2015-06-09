@@ -27,7 +27,7 @@
 # Source of data:   <http://www.altera.com/products/devices/dev-index.jsp>
 #<http://www.altera.com/products/devices/stratix-fpgas/about/dsp/stx-dsp-block.html>
 #
-# Altera Quartus II Web Edition v.10.1
+# Altera Quartus II Web Edition v.11.0
 #####################################################################################
 
 VENDOR = Altera

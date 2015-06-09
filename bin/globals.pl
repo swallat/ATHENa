@@ -1,6 +1,6 @@
 # =============================================
 # ATHENA - Automated Tool for Hardware EvaluatioN.
-# Copyright ï¿½ 2009 - 2014 CERG at George Mason University <cryptography.gmu.edu>.
+# Copyright © 2009 - 2014 CERG at George Mason University <cryptography.gmu.edu>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -25,7 +25,7 @@
 # Global Directories
 #####################################################################
 # This is the workspace folder 
-#<work_dir>kl
+#<work_dir>
 # |_ Application   
 #   |_ Date_ProjectName_RunNo  <== workspace
 $WORKSPACE = "" unless defined $WORKSPACE;
@@ -36,7 +36,7 @@ $TEMP_DIR = "" unless defined $TEMP_DIR;
 #####################################################################
 # constants are pre declared
 # Xilinx
-$XST, $XNGDBUILD, $XMAP, $XPAR, $XTRACE, $XPARTGEN, $XXDL, $XNETGEN, $XBITGEN; #___ add xdl,netgen support
+$XST, $XNGDBUILD, $XMAP , $XPAR, $XTRACE, $XPARTGEN;
 $ISE_VERSION, $ISE_TYPE;
 # Altera
 $QMAP, $QFIT, $QASM, $QTAN, $QSTA, $QPOW;

@@ -21,52 +21,41 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
+-- Uncomment the following library declaration if using
+-- arithmetic functions with Signed or Unsigned values
+--use IEEE.NUMERIC_STD.ALL;
+
+-- Uncomment the following library declaration if instantiating
+-- any Xilinx primitives in this code.
+--library UNISIM;
+--use UNISIM.VComponents.all;
+
 entity coregen_example is
-    Port ( a, b : in  STD_LOGIC_VECTOR (31 downto 0);
+    Port ( i : in  STD_LOGIC_VECTOR (2 downto 0);
 		   clk : in std_logic;
-           y : out  STD_LOGIC_VECTOR (31 downto 0));
+           o : out  STD_LOGIC_VECTOR (6 downto 0));
 end coregen_example;
 
-architecture mixed of coregen_example is
-
-	component DSP_Adder32
+architecture Behavioral of coregen_example is
+	component dsp48_macro IS
 		port (
-		a: IN std_logic_VECTOR(31 downto 0);
-		b: IN std_logic_VECTOR(31 downto 0);
-		s: OUT std_logic_VECTOR(31 downto 0));
-	end component;
+		clk: IN std_logic;
+		a: IN std_logic_VECTOR(2 downto 0);
+		b: IN std_logic_VECTOR(2 downto 0);
+		c: IN std_logic_VECTOR(2 downto 0);
+		p: OUT std_logic_VECTOR(6 downto 0));
+	END component;
 
-
-	signal ap, bp, yp : std_logic_vector(31 downto 0);
+	signal i1, i2 : std_logic_vector(2 downto 0);
 begin
-	process  (clk) 
+	process  ( clk ) 
 	begin
-		if rising_edge(clk) then
-			ap <= a;
+		if rising_edge( clk ) then
+			i1 <= i;
+			i2 <= i1;
 		end if;
 	end process;
 
-	process  (clk) 
-	begin
-		if rising_edge(clk) then
-			bp <= b;
-		end if;
-	end process;
-
-
-        dsp_adder : DSP_Adder32
-		port map (
-			a => ap,
-			b => bp,
-			s => yp);
-
-	process  (clk) 
-	begin
-		if rising_edge(clk) then
-			y <= yp;
-		end if;
-	end process;
-
-
-end mixed;
+	dsp_gen : dsp48_macro port map ( clk => clk, a => i, b => i1, c => i2, p => o );
+end Behavioral;
 

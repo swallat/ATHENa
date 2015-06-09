@@ -66,7 +66,7 @@ $XILINX_SYNTHESIS_CONSTRAINTS_FILE_NAME = "synth.xcf";
 $XILINX_IMPLEMENTATION_CONSTRAINTS_FILE_NAME = "impl.ucf";
 
 $OPTION_LOG_FILE_NAME = "option_log.txt";
-$LOCAL_CMD_LOG_FILE_NAME = "athena_log.txt.call";
+$LOCAL_CMD_LOG_FILE_NAME = "athena_log.txt";
 $LOCAL_TEMP_PROGRESS_LOG_FILE_NAME = "local_run_progress.txt";
 $LOCAL_PROGRESS_LOG_FILE_NAME = "run_progress.txt";
 
@@ -137,8 +137,8 @@ $ACTEL_IMPLEMENTATION_SCRIPT = "$VENDOR_FUNCTIONS_DIR/actel/actel_implementation
 $SINGLE_RUN_SCRIPT_NAME = "single_run.pl";
 $SINGLE_RUN_SCRIPT = "$APPLICATION_DIR/$SINGLE_RUN_SCRIPT_NAME";
 
-$DEVICE_MODULE = "$BIN_DIR/Device.pm";
-$STRUCT_MODULE = "$BIN_DIR/Structs.pm";
+$DEVICE_MODULE = "$BIN_DIR/device.pm";
+$STRUCT_MODULE = "$BIN_DIR/structs.pm";
 
 #####################################################################
 # Dispatch Lists
@@ -219,7 +219,6 @@ $VENDOR_ZERO_UTIL_OPTS{lc(XILINX)}{lc(VIRTEX5)}{XST}{BRAM} = \@OPTS;
 $VENDOR_ZERO_UTIL_OPTS{lc(XILINX)}{lc(VIRTEX6)}{XST}{BRAM} = \@OPTS;
 
 my @OPTS = qw(dsp_utilization_ratio);
-
 $VENDOR_ZERO_UTIL_OPTS{lc(XILINX)}{lc(SPARTAN6)}{XST}{DSP} = \@OPTS;
 $VENDOR_ZERO_UTIL_OPTS{lc(XILINX)}{lc(VIRTEX4)}{XST}{DSP} = \@OPTS;
 $VENDOR_ZERO_UTIL_OPTS{lc(XILINX)}{lc(VIRTEX5)}{XST}{DSP} = \@OPTS;
@@ -252,8 +251,6 @@ $VENDOR_ZERO_UTIL_OPTS{lc(ALTERA)}{lc("Stratix III")}{QUARTUS_MAP}{DSP} = \@OPTS
 #####################################################################
 # reports/logs
 #####################################################################
-# all
-#$NAME_FIRSTRUN = "run_1";
 
 # XILINX
 $XILINX_SYNTHESIS_REPORT = "synthesis_report.log";
@@ -301,8 +298,6 @@ $DEFAULT_FUNCTIONAL_VERFICATION_MODE = "off";
 $DEFAULT_SIM_VENDOR = "modelsim";
 
 
-
-
 #####################################################################
 # ATHENa Report parameters
 #####################################################################
@@ -310,7 +305,6 @@ $DEFAULT_SIM_VENDOR = "modelsim";
 	altera => ["IMP_TCLK", "IMP_FREQ"],
 	xilinx => ["SYN_FREQ", "SYN_TCLK", "IMP_FREQ", "IMP_TCLK"],	
 );
-
 
 
 

@@ -1,6 +1,6 @@
 # =============================================
 # ATHENA - Automated Tool for Hardware EvaluatioN.
-# Copyright ï¿½ 2009 - 2014 CERG at George Mason University <cryptography.gmu.edu>.
+# Copyright © 2009 - 2014 CERG at George Mason University <cryptography.gmu.edu>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -43,7 +43,7 @@ my $PrintCosttableToLog = "yes";
 sub xilinx_implementation{
 	#$DEV_OBJ is a global object
 	my $DEVICE_NAME = $DEV_OBJ->getDevice();
-
+	
 	printOut("pre Performing implementation...");
 	read_ImplementationOptions();
 	set_ImplementationFilenames();
@@ -85,34 +85,6 @@ sub xilinx_implementation{
 		$tr = system("\"$XTRACE\" $TRACE_FLAGS");
 		if ($tr == 0){ printOut("[ok]\n");}
 		else {return $tr;}
-        
-        #___ added xdl generation support
-        printOut("Performing xdl extraction...");
-        my $XDL_FLAGS = prepare_XdlFlags();
-        #printOut("Generating xdl file\n");
-        printOut("Executing: $XXDL $XDL_FLAGS\n");
-        $tr = system("\"$XXDL\" $XDL_FLAGS");
-        if ($tr == 0){ printOut("[ok]\n");}
-        else {return $tr;}
-        
-        #___ added netgen generation support
-        printOut("Performing vhd macro generation...");
-        my $VHD_FLAGS = prepare_NetgenFlags();
-        #printOut("Generating vhdl macro file\n");
-        printOut("Executing: $XNETGEN $VHD_FLAGS\n");
-        $tr = system("\"$XNETGEN\" $VHD_FLAGS");
-        if ($tr == 0){ printOut("[ok]\n");}
-        else {return $tr;}
-
-        #___ added bitgen generation support
-        printOut("Performing bitgen generation...");
-        my $BITGEN_FLAGS = prepare_BitgenFlags();
-        #printOut("Generating bitstream\n");
-        printOut("Executing: $XBITGEN $BITGEN_FLAGS\n");
-        $tr = system("\"$XBITGEN\" $BITGEN_FLAGS");
-        if ($tr == 0){ printOut("[ok]\n");}
-        else {return $tr;}
-        
 	}
 	else{ #sinplify pro
 		printOut("Xilinx Implementation - tool support error!\n");
@@ -152,11 +124,7 @@ sub set_ImplementationFilenames{
 	$NGD_FILE = "$TOP_LEVEL_ENTITY.ngd";
 	$PCF_FILE = "$TOP_LEVEL_ENTITY.pcf";
 	$NCD_FILE = "${TOP_LEVEL_ENTITY}_map.ncd";
-    $PAR_FILE = "${PROJECT_NAME}_${FAMILY}_${DEVICE}_${OPTIMIZATION_TARGET}.ncd"; #___
-    $XDL_FILE = "${PROJECT_NAME}_${FAMILY}_${DEVICE}_${OPTIMIZATION_TARGET}.xdl"; #___
-    $VHD_FILE = "${PROJECT_NAME}_${FAMILY}_${DEVICE}_${OPTIMIZATION_TARGET}.vhd"; #___
-    $BIT_FILE = "${PROJECT_NAME}_${FAMILY}_${DEVICE}_${OPTIMIZATION_TARGET}.bit"; #___
-    
+	$PAR_FILE = "${TOP_LEVEL_ENTITY}_par.ncd";
 	$TWR_FILE = $XILINX_TRACE_REPORT;
 
 }
@@ -221,35 +189,6 @@ sub prepare_ParFlags{
 	}
 	
 	$FLAGS = "$OPTIONS_FILE_FLAGS $NCD_FILE $PAR_FILE $PCF_FILE > $XILINX_PAR_REPORT";
-    return $FLAGS;
-}
-
-#___
-#####################################################################
-# Prepare xdl flags
-#####################################################################
-sub prepare_XdlFlags{
-    my $FLAGS = "-ncd2xdl $PAR_FILE $XDL_FILE";
-    return $FLAGS;
-}
-
-#___
-#####################################################################
-# Prepare netgen flags
-#####################################################################
-sub prepare_NetgenFlags{
-    my $FLAGS = "-ofmt vhdl $PAR_FILE $VHD_FILE";
-    
-	return $FLAGS;
-}
-
-#___
-#####################################################################
-# Prepare bitgen flags
-#####################################################################
-sub prepare_BitgenFlags{
-    my $FLAGS = "-intstyle ise $PAR_FILE";
-    
 	return $FLAGS;
 }
 

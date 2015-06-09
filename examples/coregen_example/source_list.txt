@@ -18,11 +18,13 @@
 # Fifth Floor, Boston, MA 02110-1301  USA.
 # =============================================
 
-# Binary Xilinx implementation netlist file containing the information
-# required to implement the module in a Xilinx (R) FPGA.
-DSP_Adder32.ngc
 
+# Macro template
+dsp48_macro.vhd
 # top level
 coregen_example.vhd
 
-	
+# Macro file will be ignored as part of the compilation list.
+# It will instead be copied into the project workspace which Xilinx will automatically detects.
+# Macro file can be insert in any order.
+dsp48_macro.ngc	

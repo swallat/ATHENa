@@ -1,6 +1,6 @@
 # =============================================
 # ATHENA - Automated Tool for Hardware EvaluatioN.
-# Copyright © 2009 CERG at George Mason University <cryptography.gmu.edu>.
+# Copyright © 2009 - 2014 CERG at George Mason University <cryptography.gmu.edu>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -35,7 +35,6 @@
 use Cwd;
 use Storable qw(dclone);
 use List::Util qw[min max];
-use Config;
 
 # Data structure of hashes use as a basic building block of this script ::
 # $VENDOR { sim\imp } { choice_list } 		{ $NUMBER } { root_dir } 	{ $DIR }
@@ -55,12 +54,12 @@ $ROOT_DIR =~ s/\/$BIN_DIR_NAME//;
 $XILINX_ENV = $ENV{'XILINX'};
 $ALTERA_ENV = $ENV{'QUARTUS_ROOTDIR'};
 $PATH_ENV = $ENV{'PATH'};
-@PATH_LIST = split(":", $PATH_ENV);
+@PATH_LIST = split(";", $PATH_ENV);
 
 	# XILINX SPECIFIC CONSTANTS
-$STR_ISE_PROG_NAME = "ise";
+$STR_ISE_PROG_NAME = "ISE.exe";
     # ALTERA SPECIFIC CONSTANTS
-$STR_QUARTUS_PROG_NAME = "quartus";
+$STR_QUARTUS_PROG_NAME = "quartus.exe";
 	# MODELSIM
 $STR_MODELSIM = "modelsim";	
 	# ALDEC
@@ -82,7 +81,7 @@ sub change_selected_tools_license {
 	my %data = %{shift()};
 	
 	while(1) {
-		system( clear );
+		system( cls );
 		print get_current_settings(\%data);
 		
 		print "\n\tSelect below choices to switch license.\n\n";
@@ -114,7 +113,7 @@ sub set_version_type {
 	my $last_choice = scalar(keys %{$data{$vendor}{imp}{choice_list}});	
 
 	while (1) {
-		system ( clear );
+		system ( cls );
 		print "$location\n\n\n\n";
 		print "\n\tSelect below choices to switch between license type\n\n";
 		## Printing choice list
@@ -140,31 +139,7 @@ sub set_version_type {
 	}
 }
 
-#####################################################################
-# ROUTINE TO GET SYSTEM ARCHITECTURE -returns a hash
-#####################################################################
-sub get_os_info {
 
-#####################################################################
-# OS Hash-- Contains OS info-> {os-- os name; os_arch-- arch(32/64)}
-#####################################################################
-		my  %os_hash =(os => "",os_arch => "",);
-#####################################################################
-		$os_hash{'os'} = $Config{osname};
-		$os_hash{'os_arch'} = $Config{archname};
-
-		my @var = split("-", $os_hash{'os_arch'});
-		my $len = scalar(@var);
-		while($i < $len)
-			{		
-				if ($var[$i] =~ /86_64/ ){
-				$os_hash{'os_arch'} = 64;} elsif ($var[$i] =~ /86/ ){
-				$os_hash{'os_arch'} = 32;}
-				$i++;
-			}
-
-		return %os_hash;
-}
 #####################################################################
 # LVL 3 
 # Manual => Synthesis and Implementation Tools Setup -> $Vendor
@@ -176,8 +151,7 @@ sub set_vendor_tools {
 	my $vendor = shift();
 	my %data = %{shift()};
 	my $type = shift();
-
-	#print "Vendor :: $vendor\n";
+	
 	$location .= "\n\t=> $vendor";
 	my $last_choice;
 	my $updatetype, $ot, $del;
@@ -185,7 +159,7 @@ sub set_vendor_tools {
 	$last_choice = scalar(keys %{$data{$vendor}{$type}{choice_list}});	
 	
 	while (1) {		
-		system( clear );
+		system( cls );
 		print "$location\n\n\n\n";
 		
 		if ( $last_choice > 0 ) {
@@ -208,13 +182,11 @@ sub set_vendor_tools {
 			print "\tNo tool found for $vendor\n";
 			print "\tPlease make sure that you have installed a tool correctly.\n\n";
 			print "\tTo do this, check whether your tool is recognized by operating\n";
-			print "\tsystem by typing \"echo \%PATH\%\" in Konsole. If your tool is\n";
+			print "\tsystem by typing \"echo \%PATH\%\" in command prompt. If your tool is\n";
 			print "\tinstalled correctly, you should be able to see your installed path\n";
 			print "\tthere. Otherwise, you can manually add the path to the list used by\n";
 			print "\tATHENa, using option 1 below.\n";
 		}
-		
-		print "\n";
 		
 		if ( $type =~ m/imp/i ) {
 			$updatetype = $last_choice + 1;		print "\t$updatetype. Update listed version\\library\n";
@@ -242,10 +214,10 @@ sub set_vendor_tools {
 				#ask for root directory
 				while ( 1 ) {			
 					print "\n\tPlease enter the path to the program's executable.\n";
-					print "\t\tFor Xilinx, locate 'ise'\n";
-					print "\t\tFor Altera, locate 'quartus'\n";
-					print "\tFor instance, if you're trying to insert \"opt/altera/91/quartus/bin/quartus\"\n";
-					print "\tYou'll need to type \"opt/altera/91/quartus/bin\"\n\n"; 
+					print "\t\tFor Xilinx, locate 'ise.exe'\n";
+					print "\t\tFor Altera, locate 'quartus.exe'\n";
+					print "\tFor instance, if you're trying to insert \"D:\\altera\\91\\quartus\\bin\\quartus.exe\"\n";
+					print "\tYou'll need to type \"D:\\altera\\91\\quartus\\bin\"\n\n"; 
 					
 					print "To return to menu, type \"ret\" or \"return\".\n=>";
 					my $directory = <STDIN>; chop($directory);
@@ -327,15 +299,15 @@ sub set_core_usage {
 	$location .= "\n\t=>  Logical Processor(s) Usage Setup";
 	
 	if ( $data{core}{available} == 1 ) {
-		print "You cannot modify this value as you only have a single Logical Processor.\n";
+		print "You cannot modify this value as you have only a single logical processor.\n";
 		system( pause );
 		return;
 	}
 	while (1) {	
-		system( clear );
+		system( cls );
 		print "$location\n\n\n\n";
-		print "You have $data{core}{available} Logical Processor(s) available.\n";
-		print "Please select the maximum number of Logical Processors to be used by ATHENa.\n";
+		print "You have $data{core}{available} logical processor(s) available.\n";
+		print "Please select the maximum number of logical processors to be used by ATHENa.\n";
 		print "Your Choice [1-$data{core}{available}] :: "; 
 		my $choice = <STDIN>; chop($choice);
 		if ( $choice < 1 || $choice > $data{core}{available} ) {
@@ -372,7 +344,7 @@ sub set_tools_type {
 			}
 		}
 		
-		system( clear );	
+		system( cls );	
 		print "$location\n\n\n\n";
 		print "Please select the following choices\n\n";
 		
@@ -440,7 +412,7 @@ sub set_default {
 		$str .= $a;
 			$str .= "\n\n$b\n\n";
 		$str .= "\n\n";
-		system ( clear );
+		system ( cls );
 		print $str;
 		system( pause );
 		return ( \%data );
@@ -452,7 +424,7 @@ sub set_default {
 	$str .= "Would you like to accept these changes [y/n]? ";
 	
 	while ( 1 ) {
-		system( clear );
+		system( cls );
 		print $str;
 		my $choice = <STDIN>; chop($choice);
 		if ( $choice =~ m/y/i ) {					
@@ -477,7 +449,7 @@ sub set_manual {
 	
 	$location .= "\n\t=> Manual Setup";
 	while(1) {
-		system( clear );
+		system( cls );
 		print "$location\n\n\n\n";
 			
 		my $str = get_current_settings(\%data); print "$str";
@@ -515,15 +487,13 @@ sub set_athena {
 	$location = "ATHENa Setup";
 
 	while(1) {
-		system( clear );
+		system( cls );
 		print "$location\n\n\n\n";			
 
 		my $str = "   Welcome to ATHENa - Automated Tool for Hardware EvaluatioN!\n";
 		$str .= "   ATHENa has detected the following FPGA tools and features\n   of your computer system:\n\n\n";
 
 		$str .= get_current_settings(\%data); print "$str";
-		
-		#my %os_hash =  &get_os_info();
 		
 		print "\n\nPlease select from the following choices :\n\n";		
 		print "\t1) Manual Setup\n";

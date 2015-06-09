@@ -1,7 +1,7 @@
 # =============================================
 # ATHENA - Automated Tool for Hardware EvaluatioN.
 # Copyright © 2009 - 2014 CERG at George Mason University <cryptography.gmu.edu>.
-# 
+#
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 3 of the License, or
@@ -40,7 +40,7 @@
 $NONE = "default";
 
 sub extract_xilinx_report {
-	#keep the refs and the data seperate..... 
+	#keep the refs and the data seperate.....
 	my ($family_ref, $run_ref, $synthesis_ref, $map_ref, $timing_ref, $option_ref, $config_ref) = @_;
 
     my $family = ${$family_ref};
@@ -54,25 +54,25 @@ sub extract_xilinx_report {
 		$T_MULT, $U_MULT, $PU_MULT,         #mult
 		$T_IO, $U_IO, $PU_IO,				#pins
 		$T_FF, $U_FF, $PU_FF,				#flip flops
-		$T_LUT, $U_LUT, $PU_LUT				#luts		
-		)              
+		$T_LUT, $U_LUT, $PU_LUT				#luts
+		)
 		= &extract_xilinx_util($family, "", $map_ref);
-  
-	
+
+
 	my ($IMP_TOOL, $IMP_TOOL_VERSION) = &extract_xilinx_tool($map_data);
 	my ($RSYN_FREQ, $RSYN_TCLK, $RIMP_FREQ, $RIMP_TCLK, $COST_TABLE, $SYN_OPT, $MAP_OPT, $IMP_OPT, @syn_time, @imp_time, @tot_time) = &extract_xilinx_option($option_data);
 	my ($clkname_ref, $syntclk_ref, $synfreq_ref, $imptclk_ref, $impfreq_ref, $delay_logic_ref, $delay_route_ref) = &extract_xilinx_timing($synthesis_data, $timing_data); #return values are references
 	if ($synthesis_data =~ /$REGEX_XILINX_TOOL_EXTRACT/)   {  $SYN_TOOL_VERSION = $1; $SYN_TOOL = $2;    } else {  $SYN_TOOL = "N/A";  $SYN_TOOL_VERSION = "N/A";  }
-	
-	### Change tools' names to the correct ones ... 
+
+	### Change tools' names to the correct ones ...
 	if ( $SYN_TOOL =~ m/xst/ ) { $SYN_TOOL = "Xilinx XST"; }
 	if ( $IMP_TOOL =~ m/xst/ ) { $IMP_TOOL = "Xilinx ISE"; }
-	
+
 
 	my @area_in = $U_SLICE;
     my @area_in = $U_LUT;
 	my ( $LATENCY, $THROUGHPUT, $THROUGHPUT_AREA, $LATENCY_AREA ) = &calculate_timing_data(\$config_data, $clkname_ref, $imptclk_ref, \@area_in);
-	 
+
 	my %hash = (
 		RUN_NO => $run,
 		# resource utilization
@@ -97,22 +97,22 @@ sub extract_xilinx_report {
 		SYN_TOOL => $SYN_TOOL,      SYN_TOOL_VERSION => $SYN_TOOL_VERSION,
 		IMP_TOOL => $IMP_TOOL,       IMP_TOOL_VERSION => $IMP_TOOL_VERSION,
 		# execution time
-		SYN_TIME => $syn_time,		IMP_TIME => $imp_time, 	
+		SYN_TIME => $syn_time,		IMP_TIME => $imp_time,
 		TOT_TIME => $tot_time,
 	);
-	  
+
 	#timing 2
 	for ( my $i = 0; $i < scalar@{$clkname_ref}; $i++) {
-		foreach my $key ( @{$CLK_KEY{xilinx}} ) {		
+		foreach my $key ( @{$CLK_KEY{xilinx}} ) {
 			my $primary_clock, $legend;
-			
+
 			# Keeps primary clock legend the same as original
 			if ( $config_data =~ /$REGEX_CLOCK_NET_EXTRACT/ ) { $primary_clock = $1; }
 			if ( @{$clkname_ref}[$i] eq $primary_clock ) {
 				$legend = ${key};
 			} else {
-				$legend = "${key}_@{$clkname_ref}[$i]";	
-			}		
+				$legend = "${key}_@{$clkname_ref}[$i]";
+			}
 			if ( $key =~ m/SYN_FREQ/i) { $hash{$legend} = @{$synfreq_ref}[$i]; }
 			if ( $key =~ m/SYN_TCLK/i) { $hash{$legend} = @{$syntclk_ref}[$i]; }
 			if ( $key =~ m/IMP_FREQ/i) { $hash{$legend} = @{$impfreq_ref}[$i]; }
@@ -120,8 +120,8 @@ sub extract_xilinx_report {
             # if ( $key =~ m/DELAY_LOGIC/i) { $hash{$legend} = @{$delay_logic_ref}[$i];}
             # if ( $key =~ m/DELAY_ROUTE/i) { $hash{$legend} = @{$delay_route_ref}[$i];}
 		}
-	}  
-	
+	}
+
   return \%hash;
 }
 
@@ -141,29 +141,44 @@ sub extract_xilinx_tool{
 #  Function will return the Maximum Frequency
 ##########################################################
 sub extract_xilinx_timing {
-	my $synthesis_report = shift; 
+	my $synthesis_report = shift;
 	my $timing_report = shift;
-  
-  
-	my (@clock_name, @SYN_TCLK, @SYN_FREQ, @IMP_TCLK, @IMP_FREQ);
+
+
+	my (@clock_name, @SYN_TCLK, @SYN_FREQ, @IMP_TCLK, @IMP_FREQ, @delay_logic, @delay_route);
 	my @list;
 	foreach my $regex ( @REGEX_XILINX_SYNTCLK_EXTRACT ) {
 		@list = ( $synthesis_report =~ /$regex/g );
 		if ( scalar@list > 0 ) { last; }
 	}
-	
-	for (my $i = 0; $i < eval(($#list+1)/2); $i++) {	
+
+	for (my $i = 0; $i < eval(($#list+1)/2); $i++) {
 		$clock_name[$i] = $list[2*$i];
 		($SYN_TCLK[$i],$SYN_FREQ[$i])  = ($list[2*$i+1] =~ m/$REGEX_XILINX_SYNTCLK_SEQUENCE/  );
-		 
-		
+
+
 		my $REGEX_TEMP = qr/$clock_name[$i]${REGEX_XILINX_IMPTCLK_EXTRACT}/i;
 		if ($timing_report =~ /$REGEX_TEMP/) {	$IMP_TCLK[$i] = $1;	} else { $IMP_TCLK[$i] = "N/A"; $IMP_FREQ[$i] = "N/A"; }
 		if ( $IMP_TCLK[$i] > 0 ) {	my $temp = 1/($IMP_TCLK[$i]*(10**(-3))); $IMP_FREQ[$i] = sprintf("%.3f", $temp); }
-		#print "$clock_name[$i] | $SYN_TCLK[$i] | $SYN_FREQ[$i] | $IMP_TCLK[$i] | $IMP_FREQ[$i]\n";		
-	}	
-	
-	return (\@clock_name, \@SYN_TCLK, \@SYN_FREQ, \@IMP_TCLK, \@IMP_FREQ);
+		#print "$clock_name[$i] | $SYN_TCLK[$i] | $SYN_FREQ[$i] | $IMP_TCLK[$i] | $IMP_FREQ[$i]\n";
+
+
+        # print $timing_report;
+        my $temp;
+        $REGEX_XILINX_DELAY_EXTRACT = qr/([\[\],\^\+:=.<>\/\(\)\s\d\w\-]+)Total\s*[\d.]+ns\s*\(([\d.]+)ns\s*logic,\s*([\d.]+)ns\s*route\)/i;
+        $REGEX_TEMP = qr/Default period analysis for net \"$clock_name[$i]_BUF\w+\"${REGEX_XILINX_DELAY_EXTRACT}/i;
+        if ($timing_report =~ $REGEX_TEMP) {
+            $temp            = $1;
+            $delay_logic[$i] = $2;
+            $delay_route[$i] = $3;
+        } else {
+            print "not matched\n";
+            $delay_logic[$i] = "N/A";
+            $delay_route[$i] = "N/A";
+        }
+	}
+
+	return (\@clock_name, \@SYN_TCLK, \@SYN_FREQ, \@IMP_TCLK, \@IMP_FREQ, \@delay_logic, \@delay_route);
 }
 
 ##############################################################################################################################################################################
@@ -189,16 +204,16 @@ sub extract_xilinx_option{
   if($option_report =~ /$REGEX_XILINX_SYN_OPT_EXTRACT/)       {  $SYN_OPT = $1;    } else {  $SYN_OPT = "";    }
   if($option_report =~ /$REGEX_XILINX_MAP_OPT_EXTRACT/)       {  $MAP_OPT = $1;    } else {  $MAP_OPT = "";    }
   if($option_report =~ /$REGEX_XILINX_PAR_OPT_EXTRACT/)       {  $IMP_OPT = $1;    } else {  $IMP_OPT = "";    }
-  
+
   # execution time
   ($syn_time, $imp_time, $tot_time) = &extract_exec_time($option_report);
-   
+
   return $RSYN_FREQ, $RSYN_TCLK, $RIMP_FREQ, $RIMP_TCLK, $COST_TABLE, $SYN_OPT, $MAP_OPT, $IMP_OPT, $syn_time, $imp_time, $tot_time;
 }
 
 ######################################################################
 # Extract Altera's report data.
-# Input =>    
+# Input =>
 #		 0  : run number
 #        1  : synthesis data
 #        2  : map data
@@ -216,6 +231,7 @@ sub extract_report_altera {
 			$U_ALUTS, $T_ALUTS, $PU_ALUTS, #ALUTs
 			$U_LU_CA, $T_LU_CA, $PU_LU_CA, #COMB ALUT
 			$U_LU_MA, $T_LU_MA, $PU_LU_MA, #MEMS ALUT
+            $U_ALMS, $T_ALMS, $PU_ALMS, #ALMS (For Virtex 5)
 			$U_LU_LR, $T_LU_LR, $PU_LU_LR, #LUT REGs
 			$U_FF, $T_FF, $PU_FF, #DEDICATED LREG (Flip Flops)
 			$U_LU, $T_LU, $PU_LU, #Logic Utilization percentage
@@ -224,13 +240,13 @@ sub extract_report_altera {
 			$U_MULT, $T_MULT, $PU_MULT, #multiplier
 			$U_PIN, $T_PIN, $PU_PIN ) #pin
 			= &extract_altera_util("", $implementation_data);
-	
+
 	if ( $U_ALUTS == 0 ) {
 		$U_ALUTS = $U_LU_CA;
 		$T_ALUTS = $T_LU_CA;
 		$PU_ALUTS = $PU_LU_CA;
 	}
-	
+
 	#============= Option (Incompleted) =============
 	if ( $option_data =~ /$REGEX_ALTERA_SYNOPTS_EXTRACT/ ) { $SYN_OPT = $1; } else { $SYN_OPT = "N/A"; }
 	if ( $option_data =~ /$REGEX_ALTERA_IMPOPTS_EXTRACT/ ) { $IMP_OPT = $1; } else { $IMP_OPT = "N/A"; }
@@ -241,7 +257,7 @@ sub extract_report_altera {
 	#============ Timing =============
 	my @freq, @tclk;
 	my @timing_match = ( $timing_data =~ /$REGEX_ALTERA_TIMING/g);
-	if ($#timing_match > 0 ) { #TAN RPT	
+	if ($#timing_match > 0 ) { #TAN RPT
 		for (my $i = 0; $i < eval(($#timing_match+1)/3); $i++) {
 			$clock_name[$i] = $timing_match[3*$i];
 			my $obtained_timing_data = $timing_match[3*$i+2];
@@ -251,29 +267,29 @@ sub extract_report_altera {
 			} else {
 				$freq[$i] = "N/A"; $tclk[$i] = "N/A";
 			}
-		}	
+		}
 	} else {  #STA RPT
 		my @sta_lines = split(/\n/, $timing_data);
 		foreach $line_no (0..$#sta_lines) {
 			if ($sta_lines[$line_no] =~ m/;[\s\w\d]+Model Fmax Summary/i) {
 				# skip nondata lines
 				$line_no = $line_no + 4;
-				# should be in data section by now				
-				my $i = 0; 
+				# should be in data section by now
+				my $i = 0;
 				while (1) {
 					if( $sta_lines[$line_no] =~ m/;\s*([\d.]+)\s*[\w]*\s*;\s*([\d.]+)\s*[\w]*[\t\s]*;\s*([\w]+)/i ){
 						$clock_name[$i] = $3;
-						$freq[$i] = $2; #restricted Fmax	
+						$freq[$i] = $2; #restricted Fmax
 						if ( $freq[$i] < 1 ) { $freq[$i] = $1; }	# Fmax
-						
+
 						if ( $freq[$i] < 1 ) {
 							$tclk[$i] = "N/A";	$freq[$i] = "N/A";
 						} else {
-							my $period = 1/$freq[$i]*1000; 
+							my $period = 1/$freq[$i]*1000;
 							$tclk[$i]  = sprintf("%.${PRECISION}f", $period);
 						}
-						
-					} else {						
+
+					} else {
 						last;
 					}
 					$i++; $line_no++;
@@ -284,17 +300,17 @@ sub extract_report_altera {
 		}
 	}
 
-	if($option_data =~ /$REGEX_ALTERA_REQ_FREQ_EXTRACT/ ) {   
+	if($option_data =~ /$REGEX_ALTERA_REQ_FREQ_EXTRACT/ ) {
 		$RIMP_FREQ = $1; if ( $RIMP_FREQ == 0 ) { $RIMP_FREQ = $NONE; } else { $RIMP_FREQ = sprintf("%.${PRECISION}f", $RIMP_FREQ); }
 	} else {  $RIMP_FREQ = $NONE;    }
-	if($option_data =~ /$REGEX_ALTERA_REQ_TCLK_EXTRACT/ ) {   
+	if($option_data =~ /$REGEX_ALTERA_REQ_TCLK_EXTRACT/ ) {
 		$RIMP_TCLK = $1; if ( $RIMP_TCLK == 0 ) { $RIMP_TCLK = $NONE; } else { $RIMP_TCLK = sprintf("%.${PRECISION}f", $RIMP_TCLK); }
 	} else {  $RIMP_TCLK = $NONE;    }
-		
 
-	my @area_in = ($U_LE, $U_ALUTS);
+
+	my @area_in = ($U_LE, $U_ALUTS, $U_ALMS);
 	my ( $LATENCY, $THROUGHPUT, $THROUGHPUT_AREA, $LATENCY_AREA ) = &calculate_timing_data(\$config_data, \@clock_name, \@tclk, \@area_in);
-	
+
 	#============= Tool =============
 	if ( $implementation_data =~ /$REGEX_ALTERA_TOOL_EXTRACT/ ) {  $IMP_TOOL = $1; $IMP_TOOL_VERSION = "$2 $3";  } else { $IMP_TOOL = "N/A"; $IMP_TOOL_VERSION = "N/A"; }
 	if ( $synthesis_data =~ /$REGEX_ALTERA_TOOL_EXTRACT/ )     {  $SYN_TOOL = $1; $SYN_TOOL_VERSION = "$2 $3";  } else { $SYN_TOOL = "N/A"; $SYN_TOOL_VERSION = "N/A"; }
@@ -310,18 +326,19 @@ sub extract_report_altera {
 		} else { $SYN_TOOL_VERSION = "N/A"; }
 	}
 
-	
+
 
 	my %hash = (
 		RUN_NO => $run,
 		# resource utilization
 		T_LE  => $T_LE,      U_LE => $U_LE,    PU_LE => $PU_LE,
 		T_MULT   => $T_MULT,    U_MULT   => $U_MULT,  PU_MULT => $PU_MULT,
-		T_DSP  => $T_DSP,    U_DSP   => $U_DSP,   PU_DSP  => $PU_DSP,		
+		T_DSP  => $T_DSP,    U_DSP   => $U_DSP,   PU_DSP  => $PU_DSP,
 		T_MEM => $T_MEM,    U_MEM => $U_MEM,  PU_MEM => $PU_MEM,
 		T_PIN => $T_PIN,    U_PIN => $U_PIN,  PU_PIN => $PU_PIN,
-		T_LU => $T_LU,		U_LU => $U_LU, 		PU_LU => $PU_LU,	
+		T_LU => $T_LU,		U_LU => $U_LU, 		PU_LU => $PU_LU,
 		T_ALUTS => $T_ALUTS, U_ALUTS => $U_ALUTS, PU_ALUTS => $PU_ALUTS, #ALUTs
+        T_ALMS => $T_ALMS, U_ALMS => $U_ALMS, PU_ALMS => $PU_ALMS, #ALMS (For Virtex 5)
 		T_LU_CA => $T_LU_CA,  U_LU_CA => $U_LU_CA,   PU_LU_CA => $PU_LU_CA,
 		T_LU_MA => $T_LU_MA,  U_LU_MA => $U_LU_MA,   PU_LU_MA => $PU_LU_MA,
 		T_FF => $T_FF,  U_FF => $U_FF,   PU_FF => $PU_FF,
@@ -338,36 +355,36 @@ sub extract_report_altera {
 		SYN_TOOL => $SYN_TOOL,  SYN_TOOL_VERSION => $SYN_TOOL_VERSION,
 		IMP_TOOL => $IMP_TOOL,   IMP_TOOL_VERSION => $IMP_TOOL_VERSION,
 		# execution time
-		SYN_TIME => $syn_time,		IMP_TIME => $imp_time, 	
+		SYN_TIME => $syn_time,		IMP_TIME => $imp_time,
 		TOT_TIME => $tot_time,
 	);
 
 	### OLD
 	# for ( my $i = 0; $i < scalar@clock_name; $i++) {
 		# foreach my $key ( @{$CLK_KEY{altera}} ) {
-			# my $legend = "${key}_$clock_name[$i]";	
+			# my $legend = "${key}_$clock_name[$i]";
 			# if ( $key =~ m/IMP_TCLK/i) { $hash{$legend} = $tclk[$i]; }
-			# if ( $key =~ m/IMP_FREQ/i) { $hash{$legend} = $freq[$i]; }	
+			# if ( $key =~ m/IMP_FREQ/i) { $hash{$legend} = $freq[$i]; }
 		# }
-	# }  
-	
+	# }
+
 	### NEW
 	for ( my $i = 0; $i < scalar@clock_name; $i++) {
-		foreach my $key ( @{$CLK_KEY{altera}} ) {		
+		foreach my $key ( @{$CLK_KEY{altera}} ) {
 			my $primary_clock, $legend;
-			
+
 			# Keeps primary clock legend the same as original
 			if ( $config_data =~ /$REGEX_CLOCK_NET_EXTRACT/ ) { $primary_clock = $1; }
 			if ( $clock_name[$i] eq $primary_clock ) {
 				$legend = ${key};
 			} else {
-				$legend = "${key}_$clock_name[$i]";	
-			}					
+				$legend = "${key}_$clock_name[$i]";
+			}
 			if ( $key =~ m/IMP_TCLK/i) { $hash{$legend} = $tclk[$i];	}
 			if ( $key =~ m/IMP_FREQ/i) { $hash{$legend} = $freq[$i]; }
 		}
-	}  
- 
+	}
+
 	return \%hash;
 }
 
@@ -382,11 +399,11 @@ sub extract_report_altera {
 #####################################################################
 sub extract_exec_time {
 	my $option_report = shift();
-	
-	if($option_report =~ /$REGEX_SYN_TIME_EXTRACT/)       {  $syn_time = $1;    } else {  $syn_time = "N/A";    }	
+
+	if($option_report =~ /$REGEX_SYN_TIME_EXTRACT/)       {  $syn_time = $1;    } else {  $syn_time = "N/A";    }
 	if($option_report =~ /$REGEX_SYN_TIME_EXTRACT/)       {  $syn_time = $1;    } else {  $syn_time = "N/A";    }
 	if($option_report =~ /$REGEX_IMP_TIME_EXTRACT/)       {  $imp_time = $1;    } else {  $imp_time = "N/A";    }
-	if (( $syn_time ne "N/A" ) and ( $imp_time ne "N/A" )) { 
+	if (( $syn_time ne "N/A" ) and ( $imp_time ne "N/A" )) {
 	if ( $syn_time =~ /$REGEX_TIME_EXTRACT/ ) {@syn_time_temp = ($1, $2, $3, $4); }
 	if ( $imp_time =~ /$REGEX_TIME_EXTRACT/ ) {@imp_time_temp = ($1, $2, $3, $4); }
 		for (my $i = 0; $i < 4; $i++ ) {
@@ -400,10 +417,10 @@ sub extract_exec_time {
 		}
 		while ( $tot_time_temp[1] >= 24 ) { ## Hours
 			$tot_time_temp[0]++;	$tot_time_temp[1] = $tot_time_temp[1] - 24;
-		}		
+		}
 		$tot_time = $tot_time_temp[0] . "d " . $tot_time_temp[1] . "h:" .  $tot_time_temp[2] . "m:" . $tot_time_temp[3] . "s";
 	} else { $tot_time = "N/A";    }
-	 
+
 	return ( $syn_time, $imp_time, $tot_time );
 }
 
@@ -415,18 +432,18 @@ sub calculate_timing_data {
 	my @clock_name = @{shift()};
 	my @tclk	   = @{shift()};
 	my @area_in	   = @{shift()};
-	
+
 #	foreach $a ( @clock_name ) { print "$a\n"; } exit;
 	#selecting which tclk to use based on the specified clock net
-	my $tclk_val = "N/A";	
+	my $tclk_val = "N/A";
 	if ( $config_data =~ /$REGEX_CLOCK_NET_EXTRACT/ ) {
-		for ( my $i = 0; $i < scalar@clock_name; $i++) {	
+		for ( my $i = 0; $i < scalar@clock_name; $i++) {
 			if ( $1 =~ m/$clock_name[$i]/i ) {
 				$tclk_val = $tclk[$i];
 				last;
 			}
 		}
-	} 	
+	}
 	my ( $LATENCY, $THROUGHPUT, $THROUGHPUT_AREA, $LATENCY_AREA );
 	if ( $tclk_val !~ m/N\/A/i ) {
 		if ( $config_data =~ /$REGEX_LATENCY_EXTRACT/ )   { $LATENCY = $1; }   else { $LATENCY = "N/A"; }
@@ -437,9 +454,9 @@ sub calculate_timing_data {
 	my $area = 0;
 	for ( my $i = 0; $i <= scalar@area_in; $i++ ) {
 		if ( $area_in[$i] > 0 ) { $area = $area_in[$i]; }
-	} 
+	}
 	if ( $area <= 0 ) {
-		$THROUGHPUT_AREA = "N/A"; $LATENCY_AREA = "N/A";		
+		$THROUGHPUT_AREA = "N/A"; $LATENCY_AREA = "N/A";
 	} else {
 		if ( $THROUGHPUT > 0 ) {
 			$THROUGHPUT_AREA = $THROUGHPUT/$area;

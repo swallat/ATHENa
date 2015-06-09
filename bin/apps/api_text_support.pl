@@ -64,7 +64,6 @@ sub get_CostTable{
 	}
 	
 	while($#RETURN_VALS < 0){		
-
 		print "NOTE:\n\n
 		Please enter the COST TABLE / SEED  values for the experiment.\n
 		USAGE: Seperate each set by semicolon. You can specify single numbers or sets\n

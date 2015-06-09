@@ -349,12 +349,11 @@ sub application{
 				$NEWDEV_OBJ->setDispatchType($DISPATCH_TYPE_NONE);
 				$NEWDEV_OBJ->setLocalApplication("single_run");
 				$NEWDEV_OBJ->setRequestedFreqs($ReqFreq, $ReqFreq);
-				
 				if(lc($VENDOR) eq "xilinx"){
 					$NEWDEV_OBJ->addOpt($VENDOR, "PAR", "ol", "high");
 				}
-				$NEWDEV_OBJ->setPlacementLocation( $i );		
-
+				$NEWDEV_OBJ->setPlacementLocation( $i );				
+				
 				my $deviceDir = dispatchDevice(\$NEWDEV_OBJ);
 				push(@DIRECTORY_LIST,$deviceDir);
 				

@@ -62,11 +62,11 @@ sub altera_implementation{
 	else {return $qf;}
 	
 	printOut("STA running...");
-
+	
 	my $QSTA_FLAGS = prepare_sta_flags($PROJECT_NAME);
 	printOut("Executing: $QSTA $QSTA_FLAGS\n");
-	$qf = system("\"$QSTA\" $QSTA_FLAGS");
-
+	$qf = system("\"$QSTA\" $QSTA_FLAGS");	
+	
 	if ($qf eq 0 ){ printOut("[ok]\n");}
 	else {return $qf;}
 	

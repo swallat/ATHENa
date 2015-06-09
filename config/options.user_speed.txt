@@ -104,7 +104,7 @@ XILINX_SYNTHESIS_TOOL = XST
 		-cm speed
 
 		#packing factor for slices, values range between 0 and 100
-		#if -timing option is specified 0 (only related logic packing),1,100 (maximum packing) options allowed only
+		#0 (only related logic packing),1 (maximum packing of unrelated logic),100 (minimum packing of unrelated logic)
 		-c 100
 
 	END_OPT
@@ -123,7 +123,7 @@ XILINX_SYNTHESIS_TOOL = XST
 		#advanced timing analysis  
 		-a 
 
-		#the –v option generates a verbose report. The report has the same root name as the input design and a .twr.
+		#the –v option generates a verbose report. The report has the same root name as the input design and an extension .twr.
 		-v 3
 
 	END_OPT

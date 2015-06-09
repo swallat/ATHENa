@@ -106,11 +106,11 @@ if ( not (-d "$workspace") ) {
 }
 
 foreach $app ( &getdirs($workspace)  ) {
-	my $app_path = $workspace . "/" . $app;
+	my $app_path = $workspace . "\\" . $app;
 	foreach $proj ( &getdirs($app_path)  ) {	
 		my $delete = 0;
-		$proj_path = $app_path . "/". $proj;
-		$option_report_path = $proj_path."/".$OPTION_REPORT_NAME;		
+		$proj_path = $app_path . "\\". $proj;
+		$option_report_path = $proj_path."\\".$OPTION_REPORT_NAME;		
 		if ( -e $option_report_path ) {
 			open ( FILE, "< $option_report_path" );
 			my $data = join(" ", <FILE>);

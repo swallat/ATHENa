@@ -177,6 +177,7 @@ DB_QUERY_MODE = overall
 
 DB_CRITERIA = throughput_area
 
+
 # =============================================================
 # the list of all FPGA devices targeted by a given application
 # for a given vendor
@@ -211,7 +212,7 @@ FPGA_VENDOR = xilinx
 		REQ_IMP_FREQ = 100
 		MAX_SLICE_UTILIZATION = 0.8
 		MAX_BRAM_UTILIZATION = 0.8
-		MAX_MUL_UTILIZATION = 1
+		MAX_MULT_UTILIZATION = 1
 		MAX_PIN_UTILIZATION = 0.9
 	END FAMILY
 
@@ -242,7 +243,7 @@ FPGA_VENDOR = altera
 		REQ_IMP_FREQ =  120
 		MAX_LE_UTILIZATION = 0.8
 		MAX_MEMORY_UTILIZATION = 0.8
-		MAX_MUL_UTILIZATION = 1
+		MAX_MULT_UTILIZATION = 1
 		MAX_PIN_UTILIZATION = 0.8
 	END FAMILY
 
@@ -255,7 +256,7 @@ FPGA_VENDOR = altera
 		MAX_LOGIC_UTILIZATION = 0.8
 		MAX_MEMORY_UTILIZATION = 0.8
 		MAX_DSP_UTILIZATION = 0
-		MAX_MUL_UTILIZATION = 0
+		MAX_MULT_UTILIZATION = 0
 		MAX_PIN_UTILIZATION = 0.8
 	END FAMILY
 	

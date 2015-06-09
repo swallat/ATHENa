@@ -80,10 +80,10 @@ sub modelsim {
 sub process_special_char {
 	my $file = shift();
 	$file =~ s/\\/\//gi;	# convert '\' to '/'
-	#$file =~ s/\//\\\//gi;	# append back slash with front slash (ie '/' to '\/')
-	#$file =~ s/\(/\\\(/gi;  # convert '(' to '\('
-	#$file =~ s/\)/\\\)/gi;	# convert ')' to '\)'
-	#$file =~ s/ /\\ /gi;	# convert ' ' to '\ '
+	$file =~ s/\//\\\//gi;	# append back slash with front slash (ie '/' to '\/')
+	$file =~ s/\(/\\\(/gi;  # convert '(' to '\('
+	$file =~ s/\)/\\\)/gi;	# convert ')' to '\)'
+	$file =~ s/ /\\ /gi;	# convert ' ' to '\ '
 	return ( $file );
 }
 

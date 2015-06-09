@@ -1,6 +1,6 @@
 # =============================================
 # ATHENA - Automated Tool for Hardware EvaluatioN.
-# Copyright ï¿½ 2009 - 2014 CERG at George Mason University <cryptography.gmu.edu>.
+# Copyright © 2009 - 2014 CERG at George Mason University <cryptography.gmu.edu>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -234,20 +234,20 @@ sub create_BatchScript{
 	#printOut("creating batch scripts at $directory\n");
 	
 	#damn you windows... get ur slashes right! 
-	#$directory =~ s/\//\\/gi;
+	$directory =~ s/\//\\/gi;
 	
 	my @ary = split(/:/, $directory);
 	my $driveletter = $ary[0];
 
 	#printOut("driveletter = $driveletter\n");
-	my $file = "$directory/run.sh";
+	my $file = "$directory/run.bat";
 	
 	#write script file
 	open(WRTFILE, ">$file") || printError("Support.pl: Cannot create bat file",1); 
 	print WRTFILE "echo off\n";
 	print WRTFILE "set XIL_TIMING_ALLOW_IMPOSSIBLE=1\n";	
-	print WRTFILE "cd \"$directory\"\n";
-	print WRTFILE "perl $DISPATCH_SCRIPT_NAME\n";	
+	print WRTFILE "CD \/d \"$directory\"\n";
+	print WRTFILE "$DISPATCH_SCRIPT_NAME\n";	
 	close(WRTFILE);
 }
 
@@ -357,7 +357,6 @@ print "OPTION --> \n\t$OPTIONS_FILE\n\n============\n";
 	open(DESIGNOPTS, "$OPTIONS_FILE") || printError("Could not acquire options file!", 1);
 	
 	
-
 	my @optdata = <DESIGNOPTS>;
 	close(DESIGNOPTS);
 	@optdata = @{remove_comments(\@optdata)};
@@ -391,7 +390,6 @@ print "OPTION --> \n\t$OPTIONS_FILE\n\n============\n";
 					my $toolDone = 0;
 					while ($toolDone == 0){
 						$i++;
-
 						if(($optdata[$i] =~ /END[\s^\w]*OPT/i)){
 							$toolDone = 1;																	
 						}else{
@@ -459,7 +457,7 @@ sub checkZeroUtilizationFactors{
 			if (( $ITEM =~ m/bram/i) and ($TOOL =~ m/xst/i)) {
 				$DEV_OBJ->deleteToolOpt($VENDOR, $TOOL, "ram_style"); # delete ram_style, if any
 				$DEV_OBJ->addOpt($VENDOR, $TOOL, "ram_style", "distributed");
-			}
+			}			
 		}
 	}
 	
@@ -856,7 +854,7 @@ sub ErrCheck{
 		foreach $devStruct ( @device_list ){
 			my $family = lc($devStruct->getFamily());
 			my $device = lc($devStruct->getDevice());
-								
+            								
 			#deal with best_match case
 			unless(&checkDeviceSupport($vendor, $family, $device) == 1){
 				push(@failed_devices, $devStruct);
@@ -1050,14 +1048,6 @@ sub ErrCheck{
 		$OPTIONS_FILE = "$CONFIG_DIR/GMU_Xilinx_optimization_1.txt";
 		push(@option_files, $OPTIONS_FILE);
 	}
-	elsif($APPLICATION eq "GMU_Optimization_1"){
-		$OPTIONS_FILE = "$CONFIG_DIR/GMU_Optimization_1.txt";
-		push(@option_files, $OPTIONS_FILE);
-	}
-
-
-
-
 	else{	
 		goto ErrorCheckVerification;
 	}
@@ -1197,7 +1187,7 @@ sub ErrCheck{
 		push(@ERR_LIST, "ERROR: Invalid option for DB_QUERY_MODE! ==> check design configuration!\n");
 		$STOP_SCRIPT = "yes";
 	}
-
+	
 	ErrorCheckFinal: #Report list of errors and ask user for input  
 
 	#===================================================================================================================================#
@@ -1366,10 +1356,8 @@ sub match_extension {
 sub trim {
 	my ($directory, $mode, $zipped_name) = @_;
 	### form ignore expressions
-    #my @ignore_list = qw{txt twr log rpt zip bat scr prj xcf ucf qsf ncd};
-    my @ignore_list = qw{ncd vhd xdl bit call}; #___
-    #my @exclude_list = qw{obj pm pl};
-    my @exclude_list = qw{obj pm pl txt}; #___
+	my @ignore_list = qw{txt twr log rpt zip bat scr prj xcf ucf qsf};
+	my @exclude_list = qw{obj pm pl};
 	$directory =~ s/\\\\/\//i; 
 	
 	opendir ( DIR, $directory ) or die "Can't open the current directory: $!\n"; 
@@ -1382,9 +1370,9 @@ sub trim {
 	}
 
 	if ($zipped_name eq "" ) {
-		$zipped_name = "$directory/zipped.zip";
+		$zipped_name = "$directory//zipped.zip";
 	} else {
-		$zipped_name = "$directory/$zipped_name.zip";
+		$zipped_name = "$directory//$zipped_name.zip";
 	}
 
 	### Add to zip
@@ -1400,7 +1388,7 @@ sub trim {
 			} else { 
 				if ( -d $file ) {
 					if ( $mode !~ m/tiny_zip/i ) {
-					$zip->addTree( ".\${file}", "${file}");
+						$zip->addTree( ".//${file}", "${file}");
 					}
 				} elsif (not (&match_extension($file,\@exclude_list))) {
 					$zip->addFile( $file, $file, 9 );
@@ -1410,16 +1398,13 @@ sub trim {
 		die 'write error.' if ( $zip->writeToFileNamed($zipped_name) != AZ_OK );
 	}
 	chdir($current_dir);
-
-
-
-
-
+	
+	### Remove the zip files
 	foreach $file (@files) {
 		if (($file =~ /^\.$|^\.\.$/i) or (&match_extension($file,\@ignore_list)) ) {
 			next;
 		} else { 
-			$name = "$directory/$file";		
+			$name = "$directory\\$file";		
 			if ( -d $name ) {
 				&rmtree($name);			
 			} elsif ( -f $name ) {
@@ -1427,69 +1412,6 @@ sub trim {
 			}
 		}
 	}
-    
-    #___ delete _map.ncd since we do only need {_par.ncd}
-    foreach $file (@files) {
-        if ($file =~ /.*\_map.ncd/) {
-            $name = "$directory\\$file";
-            unlink $name;
-        }
-    }
-    
-    #___ create result directory if not given
-    my $db = "$ROOT_DIR/db";
-    my $design_name = "$db/$PROJECT_NAME";
-    my $design_rtl = "$design_name/design_rtl";
-    my $fpga_family = "$design_name/$FAMILY";
-	my $fpga_device_package = "$fpga_family/$DEVICE";
-    my $fpga_opt_target = "$fpga_device_package/$OPTIMIZATION_TARGET";
-    
-    printf "$db\n";
-    printf "$design_name\n";
-    printf "$design_rtl\n";
-    printf "$fpga_family\n";
-    printf "$fpga_device_package\n";
-    printf "$fpga_opt_target\n";
-    
-    mkdir $db;
-    mkdir $design_name;
-    mkdir $design_rtl;
-    mkdir $fpga_family;
-    mkdir $fpga_device_package;
-    mkdir $fpga_opt_target;
-    
-    #${PROJECT_NAME}_${FAMILY}_${DEVICE}_${OPTIMIZATION_TARGET}.ncd"
-	   
-    #___ copy results to directory
-    foreach $file (@files) {
-        if (($file =~ /.*.ncd/) or ($file =~ /.*.xdl/) or ($file =~ /.*.vhd/) or ($file =~ /.*.bit/) or ($file =~ /.*.call/)) {
-            if (!($file =~ /.*_map.ncd/)) {
-                my $src_file_path = "$directory\/$file";
-                my $dst_file_path = "";
-                
-                if($file =~ /.*.ncd/){
-                    $dst_file_path = "$fpga_opt_target\/$file";
-                }
-                elsif($file =~ /.*.xdl/){
-                    $dst_file_path = "$fpga_opt_target\/$file";
-                }
-                elsif($file =~ /.*.vhd/){
-                    $dst_file_path = "$fpga_opt_target\/$file";	
-                }
-                elsif($file =~ /.*.bit/){
-                    $dst_file_path = "$fpga_opt_target\/$file";	
-                }
-                elsif($file =~ /.*.call/){
-                    $dst_file_path = "$fpga_opt_target\/$file";	
-                }
-                
-                
-                warn "source = $src_file_path\n";
-                warn "dest = $dst_file_path";
-                copy($src_file_path, $dst_file_path) or warn "copy failed: $!";		
-            } 
-        }
-    }
 
 }
 

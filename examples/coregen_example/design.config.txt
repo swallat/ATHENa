@@ -18,13 +18,6 @@
 # Fifth Floor, Boston, MA 02110-1301  USA.
 # =============================================
 
-
-# =============================================
-# =============================================
-# Global Settings
-# =============================================
-# =============================================
-
 # work directory, used as a root for all result directories
 WORK_DIR = <ATHENa_workspace>
 
@@ -33,43 +26,46 @@ SOURCE_DIR = <examples/coregen_example>
 
 # A file list containing list of files in the order suitable for synthesis and implementation
 # low level modules first, top level entity last
-SOURCE_LIST_FILE = source_list.txt
+SOURCE_LIST_FILE = SOURCE_LIST.txt
+
+# directory containing synthesizable source files for the project
+TESTBENCH_DIR = <>
+
+# testbench files listed in the order suitable for simulation
+# low level modules first, top level entity last
+TESTBENCH_FILES = 
 
 # project name
 # it will be used in the names of result directories
 PROJECT_NAME = coregen_example
 #altera needs the project name to be the same as top level entity.
 
-# =============================================
-# =============================================
-# Synthesis and Implementation Settings
-# =============================================
-# =============================================
-
 # name of top level entity
 TOP_LEVEL_ENTITY = coregen_example
 
 # name of top level architecture
-TOP_LEVEL_ARCH = mixed
+TOP_LEVEL_ARCH = behavioral
 
 # name of clock net
 CLOCK_NET = clk
 
 #formulas for latency
-LATENCY = TCLK
+LATENCY = TCLK*3
 
 #formulas for THROUGHPUT
-THROUGHPUT = 32/TCLK
+THROUGHPUT = 7/(3*TCLK)
 
-# The following 3 parameters: 
+
+# The following 4 parameters: 
 #  APPLICATION
 #  OPTIMIZATION_TARGET
-#  OPTIONS,
+#  OPTIONS, and
+#  EXHAUSTIVE_SEARCH_STRATEGY
 # determine which top level script is called,
 # and which options are used.
 
-# OPTIMIZATION_TARGET = speed | area | balanced
-OPTIMIZATION_TARGET = speed
+# OPTIMIZATION_TARGET = speed | area
+OPTIMIZATION_TARGET = area
 
 # OPTIONS = default | user
 OPTIONS = default
@@ -145,33 +141,34 @@ DB_QUERY_MODE = overall
 # DB_CRITERIA = throughput | throughput_area | area | latency | latency_area
 
 DB_CRITERIA = throughput_area
+
 # =============================================================
 # the list of all FPGA devices targeted by a given application
 # for a given vendor
-# FPGA_VENDOR = Xilinx | Altera
-# END VENDOR is used to denote the end of FPGA vendor parameters
+# FPGA_VENDOR = Xilinx | Altera | Actel
+# END VENDOR is used to denote the end of list of devices
 
 
 # for a given family
-# FPGA_FAMILY = $family
-# END_FAMILY is used to denote the end of family parameters
+# FPGA_VENDOR = $family
+# END FAMILY is used to denote the end of list of devices
 # $family denotes the family of given vendor
 
 # FPGA_DEVICES = <list of device names from $vendor_device_lib.txt separated by commas> | best_match | all
-# for best_match, parameters of the best match should be provided (MAX_UTILIZATION parameters)
-#
-# See $vendor_device_lib.txt located inside device_lib folder of your root directory for ATHENa supported families and devices.
-# Names of the family and device must be an exact match to $vendor_device_lib.txt to prevent any strange behavior.
+# for best match, parameters of the best match must be provided (MAX parameters)
+
+
+# See $vendor_device_lib.txt located inside device_lib folder of your root directory for ATHENa supported family and device.
+# Names of the family and device must be an exact match to $vendor_device.lib to prevent any strange behaviour.
 # Be aware that listed devices may not be supported by your tool. 
 # Please refer to your synthesis/implementation vendor's website for supported devices.
 # =============================================================
 
 # Examples:	
 
-# commenting the next line removes all families of Xilinx
 FPGA_VENDOR = xilinx
 
-        #commenting the next line removes a given family
+
 	FPGA_FAMILY = virtex5
 		FPGA_DEVICES = best_match
 		MAX_SLICE_UTILIZATION = 0.5

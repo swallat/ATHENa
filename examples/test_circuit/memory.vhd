@@ -9,18 +9,10 @@ USE ieee.std_logic_unsigned.all;
 library work;
 use work.pack.all;
 
-  -- memory block size : M512=0,M4K=1,M9K=2,M20K=3,MLAB=4,MRAM=5,M144K=6
-  -- only selected values are valid for each Altera family, as specified below:
-  -- Cyclone II:  M4K
-  -- Cyclone III and Cyclone IV: M9K
-  -- Stratix II: M512, M4K, MRAM
-  -- Stratix III and Stratix IV: MLAB, M9K, M144K
-  -- Stratix V:   MLAB, M20
-
 entity mem is
 	generic (
 				vendor   : integer:= XILINX;          -- vendor 		: XILINX=0, ALTERA=1
-            mem_type : integer:= MEM_EMBEDDED; 	 	  -- mem_type 		: MEM_DISTRIBUTED=0, MEM_EMBEDDED=1 
+            mem_type : integer:= MEM_EMBEDDED; 	  -- mem_type 		: MEM_DISTRIBUTED=0, MEM_EMBEDDED=1 
 				mem_block_size : integer:= M9K		  -- mem_block_size : M512=0,M4K=1,M9K=2,M20K=3,MLAB=4,MRAM=5,M144K=6
 		     );
 	port( 

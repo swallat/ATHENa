@@ -1,6 +1,6 @@
 # =============================================
 # ATHENA - Automated Tool for Hardware EvaluatioN.
-# Copyright © 2009 - 2014 CERG at George Mason University <cryptography.gmu.edu>.
+# Copyright © 2009 - 2011 CERG at George Mason University <cryptography.gmu.edu>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -585,11 +585,9 @@ sub setPlacementLocation{
 	if (lc($vendor) eq "xilinx"){	
 		if($family =~ /virtex5|spartan6|virtex6/i){
 			$self->deleteToolOpt($vendor, "MAP", "t");
-
 			$self->addOpt($vendor, "MAP", "t", $loc);
 		}
 		else{
-
 			$self->deleteToolOpt($vendor, "PAR", "t");
 			$self->addOpt($vendor, "PAR", "t", $loc);
 		}

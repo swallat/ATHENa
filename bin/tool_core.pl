@@ -1,6 +1,6 @@
 # =============================================
 # ATHENA - Automated Tool for Hardware EvaluatioN.
-# Copyright © 2009 CERG at George Mason University <cryptography.gmu.edu>.
+# Copyright © 2009 - 2014 CERG at George Mason University <cryptography.gmu.edu>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -20,49 +20,38 @@
 
 #! ./perl
 
-
-
-# ================ FPGA VENDOR = Xilinx
+# ======================
+# FPGA VENDOR = Xilinx
 # Xilinx
-use IPC::Open3;
-use Config;
+# use IPC::Open3;
 
 sub add_ise {
 	my %data = %{shift()};
 	my $new_path = shift();	
 	my $last_choice = ( scalar keys %{$data{xilinx}{imp}{choice_list}}  ) + 1;          
-	#print " New path ==$new_path \n";	
+	
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# $a = "C:\Xilinx\12.3\ise_ds\ISE\bin\nt";	
+# $b = "C:\Xilinx\12.3\ise_ds\ise\bin\nt";
+# if ( $a =~ m/$b/i ) {
+	# print "Matched!\n";
+# } else {
+	# print "Not match \n";
+# }
+# exit;
 
 	# Locate the version no. by initiate the xst command to figure out the version number															
 		#get message from calling xflow (Other programs might work but xflow doesn't require any input or produce any error messages)
-		$new_path =~ s/\\/\//gi;#--mod by raj #print " New path ==$new_path \n";
-		my $output = `${new_path}/xflow`;
+		my $output = `${new_path}\\xflow`;
 		#set version name
 		if ( $output =~ m/Release ([\d.]+) [-\s\w\d.]+\(([\w\d]+)/i ) {	
 			$vername = $1;
 			if ( $2 =~ /64/i ) { # check for 64 bits version
-				$vname = $vername;
-				$vername = "$vername 64-bit";
+				$vername = "$vername 64-bit";	
 			}
 		} else { $vername = "Unknown"; }
-
-#check for existing path
+	
+	#check for existing path
 		foreach $j ( keys %{$data{xilinx}{imp}{choice_list}} ) { 
 			# for some reason, normal REGEX matching doesnt work :
 				# Obsolete --> if ( $data{xilinx}{imp}{choice_list}{$j}{root_dir} =~ m/$new_path/i ) {			
@@ -81,7 +70,7 @@ sub add_ise {
 				print "Not matched!!\n";
 			}
 		}       
-
+		
 	# determine version_type
 		# >>>>>>>>>>>>>>> OBSOLETE
 		# $x_ds = "$ROOT_DIR\/$DEVICE_LIB_DIR\/_xilinx_${DEVICE_LIB_DIR}_designsuite\/xilinx_${DEVICE_LIB_DIR}_designsuite_$vername.txt";
@@ -92,24 +81,16 @@ sub add_ise {
 		# } else {
 			# use Device;
 			
-
-
 			# #get a device list for design suite
 			# my @ds_devices;								
 			# &loadDevices ( $x_ds );								
 			# foreach my $f ( keys  %{$DEVICE_LIBRARY{xilinx}} ) {
 				# foreach my $d ( @{$DEVICE_LIBRARY{xilinx}{$f}} ) {
-
-
-
-
-
 					# push(@ds_devices, $d->getDevice());
 				# }
 			# }								
 			# undef $DEVICE_LIBRARY;
 			
-
 			# #get a device list for webpack										
 			# my @wp_devices;								
 			# &loadDevices ( $x_wp );	
@@ -132,8 +113,6 @@ sub add_ise {
 		# my $pid = open3(*WRT, *RDR, *ERR, 'partgen', '-v '.$designsuite_device.' -nopkgfile');
 		# waitpid( $pid, 0);
 		# my $output = join("",<RDR>);
-
-
 			
 		# # delete temporary files
 			# map(unlink($_), grep(/\.pkg$|partlist\.xct$|partlist\.xml$|run\.txt$/,<*>)); #delete temp files
@@ -162,15 +141,13 @@ sub add_ise {
 		} else {
 			print "Invalid selection, please try again.\n";
 		}		
-	}		
-
+	}
+		
 	# Update list	
 	%{$data{xilinx}{imp}{choice_list}{$last_choice}} = ( version_name => $vername, root_dir => $new_path, version_type => $vertype );
 	ADD_XILINX_RETURN:
 	return (\%data);
 }
-
-
 
 # ================ FPGA VENDOR = Altera
 # Altera
@@ -181,11 +158,9 @@ sub add_quartus {
 	my $last_choice = ( scalar keys %{$data{altera}{imp}{choice_list}}  ) + 1;
 	print "Current choice ==> $last_choice\n";
 			
-	
 	# >>>>>>>>>> OBSOLETE
 	# Locate the version no.
-		$new_path =~ s/\\/\//gi;
-		my $output = `${new_path}/quartus_sh --version`;
+		my $output = `${new_path}\\quartus_sh.exe --version`;
 		my $vername, $vertype;
 		#set version name
 		if ( $output =~ m/Version ([\d.]+)/i ) { $vername = $1;	} else { $vername = "Unknown"; }
@@ -208,24 +183,24 @@ sub add_quartus {
 			if (  lc($data{altera}{imp}{choice_list}{$j}{root_dir}) eq  lc($new_path) ) {
 				goto DONT_ADD_ALTERA_RETURN;	
 			}
-		}                               
+		}       
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	# query user
+	# while ( 1 ) {
+		# print "What kind of license are you using for the version specified in the following Altera path?\n";
+		# print "PATH = $new_path\n";
+		# print "\t1) Web Edition\n";
+		# print "\t2) Subscription Edition\n";
+		# my $result = <STDIN>; chop($result);
+		# if ( $result == 1 ) {
+			# $vertype = "web_edition"; last;
+		# } elsif ( $result == 2 ) {
+			# $vertype = "subscription_edition"; last;
+		# } else {
+			# print "Invalid selection, please try again.\n";
+		# }		
+	# }
+	
 		%{$data{altera}{imp}{choice_list}{$last_choice}} = ( version_name => $vername, root_dir => $new_path, version_type => $vertype );
 	DONT_ADD_ALTERA_RETURN:
 	return (\%data);
@@ -249,18 +224,16 @@ sub add_vsim {
 		}
 	}
 	
-	print "\nDetecting vsim installation for $p\n";
+	print "\nDetecting vsim.exe installation for $p\n";
 	print "Please hold ...";
-#	$p =~ s/\\/\//gi;
-
-#	my $program = "${p}/vsim.exe -c help";	
-#	local (*WRT, *RDR, *ERR);
-#	my $pid = open3(*WRT, *RDR, *ERR, $program, );
-#	waitpid( $pid, 0);
-#	my $output = join("",<RDR>);
-	my $output = `${p}/vsim -c help`;	
-	#print "OUTPUT == $output\n";
-
+	
+	# my $program = "${p}/vsim.exe -c help";	
+	# local (*WRT, *RDR, *ERR);
+	# my $pid = open3(*WRT, *RDR, *ERR, $program, );
+	# waitpid( $pid, 0);
+	# my $output = join("",<RDR>);
+	my $output = `${p}/vsim.exe -c help`;
+	
 	# Aldec detected 
 	if ( $output =~ m/VSIMSA/i ) {
 		# Aldec not supported
@@ -306,19 +279,16 @@ sub check_and_add_path() {
 	my $check_result = 1;
 	
 	# Looping through other possible paths 
-	my @possible_paths = ("", "/lin", "/lin64", "/nt", "/nt64" );
+	my @possible_paths = ("", "\\bin", "\\bin64", "\\nt", "\\nt64" );
 	foreach $path_extension (@possible_paths) {
 		
 		my $p = "${path}${path_extension}"; 
 		#print "--> \t$p\n";
-		#print " $type\n";
 		# synthesis and implementation
 		if (( $type =~ m/imp/i ) or ($type =~ m/any/i)) {
 			# xilinx
-			#print "Entered if..\n";
-			if (( $vendor =~ m/Xilinx/i ) or ( $vendor =~ m/any/i )) {
-				#print "Entered Vendor if..\n $p/$STR_ISE_PROG_NAME \n";
-				if ( -e $p."/".$STR_ISE_PROG_NAME ) { 
+			if (( $vendor =~ m/xilinx/i ) or ( $vendor =~ m/any/i )) {
+				if ( -e $p."\\".$STR_ISE_PROG_NAME ) { 
 					print "\nDetecting Xilinx installation type for $p\nPlease hold ...";
 					%data = %{&add_ise( \%data, $p )};					
 					print "[DONE]\n";
@@ -328,7 +298,7 @@ sub check_and_add_path() {
 			
 			# altera		
 			if (( $vendor =~ m/altera/i ) or ( $vendor =~ m/any/i )) {		
-				if ( -e $p."/".$STR_QUARTUS_PROG_NAME ) {
+				if ( -e $p."\\".$STR_QUARTUS_PROG_NAME ) {
 					print "\nDetecting Altera installation type for $p\nPlease hold ...";
 					%data = %{&add_quartus( \%data, $p )};
 					print "[DONE]\n";
@@ -336,11 +306,11 @@ sub check_and_add_path() {
 				}	
 			}
 		}
-
-		# simulation 
+		
+		# simulation
 		if (( $type =~ m/sim/i ) or ($type =~ m/any/i)) {
-			if ( -e $p."/vsim" ) { 
-				print "\t vsim found !! => $p\n";
+			if ( -e $p."\\vsim.exe" ) { 
+				#print "\t vsim found !! => $p\n";
 				(%data) = %{&add_vsim( \%data, $p )};
 				$check_result = 0; next;
 			}	
