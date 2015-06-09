@@ -28,7 +28,7 @@
 WORK_DIR = <ATHENa_workspace>
 
 # directory containing synthesizable source files for the project
-SOURCE_DIR = <fpga_designs/RSA_textbook_shift_key_bits_32bit>
+SOURCE_DIR = <fpga_designs/RSA_textbook_shift_key_bits_16bit>
 
 # A file list containing list of files in the order suitable for synthesis and implementation
 # low level modules first, top level entity last
@@ -36,7 +36,7 @@ SOURCE_LIST_FILE = source_list.txt
 
 # project name
 # it will be used in the names of result directories
-PROJECT_NAME = RSA_textbook_shift_key_bits_32bit_3072
+PROJECT_NAME = RSA_textbook_shift_key_bits_16bit
 
 # =============================================
 # =============================================
@@ -100,8 +100,8 @@ THROUGHPUT = 512/(TCLK*65)
 # determine which top level script is called,
 # and which options are used.
 
-# OPTIMIZATION_TARGET = balanced
-OPTIMIZATION_TARGET = balanced
+# OPTIMIZATION_TARGET = area
+OPTIMIZATION_TARGET = area
 
 # OPTIONS = default | user
 OPTIONS = default

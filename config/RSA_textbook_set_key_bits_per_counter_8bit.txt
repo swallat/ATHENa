@@ -1,6 +1,6 @@
 # =============================================
 # ATHENA - Automated Tool for Hardware EvaluatioN.
-# Copyright © 2009 - 2014 CERG at George Mason University <cryptography.gmu.edu>.
+# Copyright \xA9 2009 - 2014 CERG at George Mason University <cryptography.gmu.edu>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@
 WORK_DIR = <ATHENa_workspace>
 
 # directory containing synthesizable source files for the project
-SOURCE_DIR = <examples/sha256_rs>
+SOURCE_DIR = <fpga_designs/RSA_textbook_set_key_bits_per_counter_8bit>
 
 # A file list containing list of files in the order suitable for synthesis and implementation
 # low level modules first, top level entity last
@@ -36,7 +36,7 @@ SOURCE_LIST_FILE = source_list.txt
 
 # project name
 # it will be used in the names of result directories
-PROJECT_NAME = SHA256
+PROJECT_NAME = RSA_textbook_set_key_bits_per_counter_8bit
 
 # =============================================
 # =============================================
@@ -48,7 +48,7 @@ PROJECT_NAME = SHA256
 FUNCTIONAL_VERIFICATION_MODE = <off>
 
 # directory containing compilable source files of testbench
-VERIFICATION_DIR = <examples/sha256_rs/tb>
+VERIFICATION_DIR = <fpga_designs/>
 
 # A file containing a list of testbench files in the order suitable for compilation;
 # low level modules first, top level entity last.
@@ -78,10 +78,10 @@ VERIFICATION_ONLY = <off>
 # =============================================
 
 # name of top level entity
-TOP_LEVEL_ENTITY =  sha256
+TOP_LEVEL_ENTITY = top
 
 # name of top level architecture
-TOP_LEVEL_ARCH = rs_arch
+TOP_LEVEL_ARCH = rtl
 
 # name of clock net
 CLOCK_NET = clk
@@ -100,8 +100,8 @@ THROUGHPUT = 512/(TCLK*65)
 # determine which top level script is called,
 # and which options are used.
 
-# OPTIMIZATION_TARGET = speed | area | balanced
-OPTIMIZATION_TARGET = speed
+# OPTIMIZATION_TARGET = area
+OPTIMIZATION_TARGET = area
 
 # OPTIONS = default | user
 OPTIONS = default
@@ -199,64 +199,113 @@ DB_CRITERIA = throughput_area
 # Please refer to your synthesis/implementation vendor's website for supported devices.
 # =============================================================
 		
+
 # commenting the next line removes all families of Xilinx
 FPGA_VENDOR = xilinx
 
-        #commenting the next line removes a given family
 	FPGA_FAMILY = spartan3
-		FPGA_DEVICES = best_match
+		FPGA_DEVICES = xc3s1000fg676-5
+		# xc3s1000fg676-5 :: SLICE=7680 BRAM=24 DSP=0 MULT=24 PINS=391
 		SYN_CONSTRAINT_FILE = default
 		IMP_CONSTRAINT_FILE = default
 		REQ_SYN_FREQ = 120
 		REQ_IMP_FREQ = 100
-		MAX_SLICE_UTILIZATION = 0.8
-		MAX_BRAM_UTILIZATION = 0.8
-		MAX_MUL_UTILIZATION = 1
-		MAX_PIN_UTILIZATION = 0.9
+		MAX_SLICE_UTILIZATION = 1
+		MAX_BRAM_UTILIZATION = 1
+		MAX_MULT_UTILIZATION = 1
+		MAX_PIN_UTILIZATION = 1
 	END FAMILY
-
-        #commenting the next line removes a given family
+	
+	FPGA_FAMILY = spartan3a
+		FPGA_DEVICES = xc3s1400afg676-5
+		# xc3s1400afg676-5 :: SLICE=11264 BRAM=32 DSP=0 MULT=32
+		SYN_CONSTRAINT_FILE = default
+		IMP_CONSTRAINT_FILE = default
+		REQ_SYN_FREQ = 120
+		REQ_IMP_FREQ = 100
+		MAX_SLICE_UTILIZATION = 1
+		MAX_BRAM_UTILIZATION = 1
+		MAX_MULT_UTILIZATION = 1
+		MAX_PIN_UTILIZATION = 1
+	END FAMILY
+	
+	FPGA_FAMILY = spartan3e
+		FPGA_DEVICES = xc3s1600efg484-5
+		# xc3s1600efg484-5 :: SLICE=14752 BRAM=36 DSP=0 MULT=36
+		SYN_CONSTRAINT_FILE = default
+		IMP_CONSTRAINT_FILE = default
+		REQ_SYN_FREQ = 120
+		REQ_IMP_FREQ = 100
+		MAX_SLICE_UTILIZATION = 1
+		MAX_BRAM_UTILIZATION = 1
+		MAX_MULT_UTILIZATION = 1
+		MAX_PIN_UTILIZATION = 1
+	END FAMILY
+	
+	FPGA_FAMILY = spartan6
+		FPGA_DEVICES = xc6slx16csg324-3 xc6slx75fgg676-3
+		# xc6slx16csg324-3 :: SLICE=2276 BRAM=32 DSP=32 MULT=0
+		# xc6slx75fgg676-3 :: SLICE=11660 BRAM=172 DSP=132 MULT=0
+		SYN_CONSTRAINT_FILE = default
+		IMP_CONSTRAINT_FILE = default
+		REQ_SYN_FREQ = 120
+		REQ_IMP_FREQ = 100
+		MAX_SLICE_UTILIZATION = 1
+		MAX_BRAM_UTILIZATION = 1
+		MAX_MULT_UTILIZATION = 1
+		MAX_PIN_UTILIZATION = 1
+	END FAMILY
+    
+	FPGA_FAMILY = virtex4
+		FPGA_DEVICES = xc4vlx25ff676-12
+		# xc4vlx25ff676-12 :: SLICE= BRAM= DSP= MULT=
+		SYN_CONSTRAINT_FILE = default
+		IMP_CONSTRAINT_FILE = default
+		REQ_SYN_FREQ = 120
+		REQ_IMP_FREQ = 100
+		MAX_SLICE_UTILIZATION = 1
+		MAX_BRAM_UTILIZATION = 1
+		MAX_MULT_UTILIZATION = 1
+		MAX_PIN_UTILIZATION = 1
+	END FAMILY
+	    
 	FPGA_FAMILY = virtex5
-		FPGA_DEVICES = best_match
+		FPGA_DEVICES = xc5vlx50ff1153-3
+		# xc5vlx50ff1153-3 :: SLICE=7200 BRAM=48 DSP=48 MULT=0
 		SYN_CONSTRAINT_FILE = default
 		IMP_CONSTRAINT_FILE = default
-		REQ_SYN_FREQ = 180
-		REQ_IMP_FREQ = 150
-		MAX_SLICE_UTILIZATION = 0.8
-		MAX_BRAM_UTILIZATION = 0
-		MAX_DSP_UTILIZATION = 0
-		MAX_PIN_UTILIZATION = 0.9
+		REQ_SYN_FREQ = 120
+		REQ_IMP_FREQ = 100
+		MAX_SLICE_UTILIZATION = 1
+		MAX_BRAM_UTILIZATION = 1
+		MAX_MULT_UTILIZATION = 1
+		MAX_PIN_UTILIZATION = 1
 	END FAMILY
 	
-	
-END VENDOR
-
-# commenting the next line removes all families of Altera
-FPGA_VENDOR = altera
-
-        #commenting the next line removes a given family
-	FPGA_FAMILY = Cyclone III
-		FPGA_DEVICES = best_match
+	FPGA_FAMILY = virtex6
+		FPGA_DEVICES = xc6vlx75tff784-3
+		# xc6vlx75tff784-3 :: SLICE=11640 BRAM=156 DSP=288 MULT=0 
 		SYN_CONSTRAINT_FILE = default
 		IMP_CONSTRAINT_FILE = default
-		REQ_IMP_FREQ =  120
-		MAX_LE_UTILIZATION = 0.8
-		MAX_MEMORY_UTILIZATION = 0.8
-		MAX_MUL_UTILIZATION = 1
-		MAX_PIN_UTILIZATION = 0.8
+		REQ_SYN_FREQ = 120
+		REQ_IMP_FREQ = 100
+		MAX_SLICE_UTILIZATION = 1
+		MAX_BRAM_UTILIZATION = 1
+		MAX_MULT_UTILIZATION = 1
+		MAX_PIN_UTILIZATION = 1
 	END FAMILY
-
-        #commenting the next line removes a given family
-	FPGA_FAMILY = Stratix III
-		FPGA_DEVICES = best_match
+	
+	FPGA_FAMILY = kintex7
+		FPGA_DEVICES = xc7k70tfbg676-3
+		# xc7k70tfbg676-3 :: SLICE=10250 BRAM=135 DSP=240 MULT=0
 		SYN_CONSTRAINT_FILE = default
 		IMP_CONSTRAINT_FILE = default
-		REQ_IMP_FREQ =  120
-		MAX_LOGIC_UTILIZATION = 0.8
-		MAX_MEMORY_UTILIZATION = 0.8
-		MAX_DSP_UTILIZATION = 0
-		MAX_MUL_UTILIZATION = 0
-		MAX_PIN_UTILIZATION = 0.8
+		REQ_SYN_FREQ = 120
+		REQ_IMP_FREQ = 100
+		MAX_SLICE_UTILIZATION = 1
+		MAX_BRAM_UTILIZATION = 1
+		MAX_MULT_UTILIZATION = 1
+		MAX_PIN_UTILIZATION = 1
 	END FAMILY
 	
 END VENDOR

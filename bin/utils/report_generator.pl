@@ -151,40 +151,41 @@ my $exit;
 my $last_option;
 
 system( cls );
-print "==========================\n";
-print "==== REPORT GENERATOR ====\n";
-print "==========================";
 
-while(1) {
-	# populating data
-	my %data;
-	foreach my $app ( &getdirs($workspace)  ) {
-		my $app_path = $workspace . "\\" . $app;
-		foreach $proj ( &getdirs($app_path)  ) {	
-			$proj_path = $app_path . "\\". $proj;
-			$data{$app}{$proj} = $proj_path;
-		}
-	}
-
-	my $i = 0;
-	print "\n\n";
-	print "Please select one of the following applications :\n\n";
-	foreach my $app (keys %data) {
-		$i++;
-		print "$i.\t$app\n";
-		$option[$i] = $app;
-		$last_option = $i;
-	}
-	$exit = $i + 1;
-	print "$exit.\tExit the program\n\n";
-
-	print "Please select one of the above options [1-$exit]: ";
-	$choice = <STDIN>; chop($choice);
-	if ( $choice >= 1 and $choice <= $last_option  ) {
-		&app_choice(\%data, $option[$choice]);
-	} elsif ( $choice == $exit ) {
-		exit;
-	} else {
-		print "Invalid choice. Please select between [1-$exit].\n";
-	}
-}
+#___ removed!
+#print "==========================\n";
+#print "==== 3 REPORT GENERATOR ====\n";
+#print "==========================";
+#while(1) {
+#	# populating data
+#	my %data;
+#	foreach my $app ( &getdirs($workspace)  ) {
+#		my $app_path = $workspace . "\\" . $app;
+#		foreach $proj ( &getdirs($app_path)  ) {	
+#			$proj_path = $app_path . "\\". $proj;
+#			$data{$app}{$proj} = $proj_path;
+#		}
+#	}
+#
+#	my $i = 0;
+#	print "\n\n";
+#	print "Please select one of the following applications :\n\n";
+#	foreach my $app (keys %data) {
+#		$i++;
+#		print "$i.\t$app\n";
+#		$option[$i] = $app;
+#		$last_option = $i;
+#	}
+#	$exit = $i + 1;
+#	print "$exit.\tExit the program\n\n";
+#
+#	print "Please select one of the above options [1-$exit]: ";
+#	$choice = <STDIN>; chop($choice);
+#	if ( $choice >= 1 and $choice <= $last_option  ) {
+#		&app_choice(\%data, $option[$choice]);
+#	} elsif ( $choice == $exit ) {
+#		exit;
+#	} else {
+#		print "Invalid choice. Please select between [1-$exit].\n";
+#	}
+#

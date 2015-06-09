@@ -289,15 +289,13 @@ sub run{
 # Execution starts here
 #####################################################################
 $start_time = time();
-$NOPAUSE = "off";
-if (@ARGV[0] =~ /nopause/i ) {
-	$NOPAUSE = "on";
-}
+#$NOPAUSE = "off";
+#if (@ARGV[0] =~ /nopause/i ) {
+#	$NOPAUSE = "on";
+#}
 
 # Initialize 
 &init();
-
-
 
 # Call main script
 &run();
@@ -305,6 +303,6 @@ if (@ARGV[0] =~ /nopause/i ) {
 my $elapsed_time = elapsed_time($start_time);
 printOut("Elapsed time: $elapsed_time\n");
 
-if ( $NOPAUSE =~ /off/i ) {
-	system( pause );
-}
+#if ( $NOPAUSE =~ /off/i ) {
+#	system( pause );
+#}

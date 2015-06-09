@@ -1615,30 +1615,32 @@ my $exit;
 my $last_option;
 
 system( cls );
-print "==========================\n";
-print "==== REPORT GENERATOR ====\n";
-print "==========================";
 
-while(1) {
-	my $i = 0;
-	print "\n\n";
-	print "Please select one of the following applications :\n\n";
-	foreach my $app (keys %data) {
-		$i++;
-		print "$i.\t$app\n";
-		$option[$i] = $app;
-		$last_option = $i;
-	}
+#___ removed!
+#print "==========================\n";
+#print "==== 1 REPORT GENERATOR ====\n";
+#print "==========================";
 
-	print "\n(e)\tExit\n\n";
-
-	print "Please select one of the above options [1-$last_option]: ";
-	$choice = <STDIN>; chop($choice);
-	if ( $choice >= 1 and $choice <= $last_option  ) {
-		&project_selection(\%data, $option[$choice]);
-	} elsif ( $choice =~ m/e/i ) {
-		exit;
-	} else {
-		print "Invalid choice. Please select between [1-$last_option].\n";
-	}
-}
+#while(1) {
+#	my $i = 0;
+#	print "\n\n";
+#	print "Please select one of the following applications :\n\n";
+#	foreach my $app (keys %data) {
+#		$i++;
+#		print "$i.\t$app\n";
+#		$option[$i] = $app;
+#		$last_option = $i;
+#	}
+#
+#	print "\n(e)\tExit\n\n";
+#
+#	print "Please select one of the above options [1-$last_option]: ";
+#	$choice = <STDIN>; chop($choice);
+#	if ( $choice >= 1 and $choice <= $last_option  ) {
+#		&project_selection(\%data, $option[$choice]);
+#	} elsif ( $choice =~ m/e/i ) {
+#		exit;
+#	} else {
+#		print "Invalid choice. Please select between [1-$last_option].\n";
+#	}
+#}

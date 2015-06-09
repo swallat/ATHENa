@@ -85,6 +85,23 @@ sub xilinx_implementation{
 		$tr = system("\"$XTRACE\" $TRACE_FLAGS");
 		if ($tr == 0){ printOut("[ok]\n");}
 		else {return $tr;}
+		
+		#___ added xdl generation support
+		printOut("Performing xdl extraction...");
+		my $XDL_FLAGS = prepare_XdlFlags();
+		printOut("Generating xdl file\n");
+		$tr = system("\"$XXDL\" $XDL_FLAGS");
+		if ($tr == 0){ printOut("[ok]\n");}
+		else {return $tr;}
+		
+		#___ added netgen generation support
+		printOut("Performing vhd macro generation...");
+		my $VHD_FLAGS = prepare_NetgenFlags();
+		printOut("Generating vhdl macro file\n");
+		$tr = system("\"$XNETGEN\" $VHD_FLAGS");
+		if ($tr == 0){ printOut("[ok]\n");}
+		else {return $tr;}
+			
 	}
 	else{ #sinplify pro
 		printOut("Xilinx Implementation - tool support error!\n");
@@ -124,7 +141,10 @@ sub set_ImplementationFilenames{
 	$NGD_FILE = "$TOP_LEVEL_ENTITY.ngd";
 	$PCF_FILE = "$TOP_LEVEL_ENTITY.pcf";
 	$NCD_FILE = "${TOP_LEVEL_ENTITY}_map.ncd";
-	$PAR_FILE = "${TOP_LEVEL_ENTITY}_par.ncd";
+	$PAR_FILE = "${PROJECT_NAME}_${FAMILY}_${DEVICE}_${OPTIMIZATION_TARGET}.ncd"; #___ 
+	$XDL_FILE = "${PROJECT_NAME}_${FAMILY}_${DEVICE}_${OPTIMIZATION_TARGET}.xdl"; #___
+	$VHD_FILE = "${PROJECT_NAME}_${FAMILY}_${DEVICE}_${OPTIMIZATION_TARGET}.vhd"; #___
+	
 	$TWR_FILE = $XILINX_TRACE_REPORT;
 
 }
@@ -200,6 +220,24 @@ sub prepare_TraceFlags{
 	my $OPTIONS_FILE_FLAGS = get_OptionFlags("TRACE");
 	&printToLog($OPTION_LOG_FILE_NAME, "TRACE_OPTS = $OPTIONS_FILE_FLAGS");
 	$FLAGS = "-intstyle silent $OPTIONS_FILE_FLAGS $PAR_FILE $PCF_FILE -o $TWR_FILE";
+	return $FLAGS;
+}
+
+#___ 
+#####################################################################
+# Prepare xdl flags
+#####################################################################
+sub prepare_XdlFlags{
+	my $FLAGS = "-ncd2xdl $PAR_FILE $XDL_FILE";
+	return $FLAGS;
+}
+
+#___ 
+#####################################################################
+# Prepare netgen flags
+#####################################################################
+sub prepare_NetgenFlags{
+	my $FLAGS = "-ofmt vhdl $PAR_FILE $VHD_FILE";
 	return $FLAGS;
 }
 

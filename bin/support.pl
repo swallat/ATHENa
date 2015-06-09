@@ -1356,8 +1356,10 @@ sub match_extension {
 sub trim {
 	my ($directory, $mode, $zipped_name) = @_;
 	### form ignore expressions
-	my @ignore_list = qw{txt twr log rpt zip bat scr prj xcf ucf qsf};
-	my @exclude_list = qw{obj pm pl};
+	#my @ignore_list = qw{txt twr log rpt zip bat scr prj xcf ucf qsf ncd};
+	my @ignore_list = qw{ncd vhd xdl}; #___
+	#my @exclude_list = qw{obj pm pl};
+	my @exclude_list = qw{obj pm pl txt}; #___
 	$directory =~ s/\\\\/\//i; 
 	
 	opendir ( DIR, $directory ) or die "Can't open the current directory: $!\n"; 
@@ -1399,6 +1401,7 @@ sub trim {
 	}
 	chdir($current_dir);
 	
+
 	### Remove the zip files
 	foreach $file (@files) {
 		if (($file =~ /^\.$|^\.\.$/i) or (&match_extension($file,\@ignore_list)) ) {
@@ -1413,6 +1416,62 @@ sub trim {
 		}
 	}
 
+	#___ delete _map.ncd since we do only need {_par.ncd}
+	foreach $file (@files) {
+		if ($file =~ /.*\_map.ncd/) {
+			$name = "$directory\\$file";		
+			unlink $name;
+		}
+	}
+	
+    #___ create result directory if not given
+    my $db = "$ROOT_DIR/db";
+		my $design_name = "$db/$PROJECT_NAME";
+			my $design_rtl = "$design_name/design_rtl";
+			my $fpga_family = "$design_name/$FAMILY";
+				my $fpga_device_package = "$fpga_family/$DEVICE";
+					my $fpga_opt_target = "$fpga_device_package/$OPTIMIZATION_TARGET";
+	
+	printf "$db\n";
+	printf "$design_name\n";
+	printf "$design_rtl\n";
+	printf "$fpga_family\n";
+	printf "$fpga_device_package\n";
+	printf "$fpga_opt_target\n";
+		
+    mkdir $db;
+	mkdir $design_name;
+	mkdir $design_rtl;
+	mkdir $fpga_family;
+	mkdir $fpga_device_package;
+	mkdir $fpga_opt_target;
+	
+	#${PROJECT_NAME}_${FAMILY}_${DEVICE}_${OPTIMIZATION_TARGET}.ncd"
+	
+	   
+    #___ copy results to directory
+    foreach $file (@files) {
+		if (($file =~ /.*.ncd/) or ($file =~ /.*.xdl/) or ($file =~ /.*.vhd/)) {
+			if (!($file =~ /.*_map.ncd/)) {
+				my $src_file_path = "$directory\/$file";	
+				my $dst_file_path = "";
+
+				if($file =~ /.*.ncd/){
+					$dst_file_path = "$fpga_opt_target\/$file";	
+				}
+				elsif($file =~ /.*.xdl/){
+					$dst_file_path = "$fpga_opt_target\/$file";		
+				}
+				elsif($file =~ /.*.vhd/){
+					$dst_file_path = "$fpga_opt_target\/$file";	
+				}
+				
+				warn "source = $src_file_path\n";
+				warn "dest = $dst_file_path";
+				copy($src_file_path, $dst_file_path) or warn "copy failed: $!";		
+			} 
+		}
+    }
 }
 
 sub trim_spaces {

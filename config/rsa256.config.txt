@@ -1,6 +1,6 @@
 # =============================================
 # ATHENA - Automated Tool for Hardware EvaluatioN.
-# Copyright \xA9 2009 - 2014 CERG at George Mason University <cryptography.gmu.edu>.
+# Copyright © 2009 - 2014 CERG at George Mason University <cryptography.gmu.edu>.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@
 WORK_DIR = <ATHENa_workspace>
 
 # directory containing synthesizable source files for the project
-SOURCE_DIR = <fpga_designs/RSA_textbook_shift_key_bits_32bit>
+SOURCE_DIR = <fpga_designs/rsa256>
 
 # A file list containing list of files in the order suitable for synthesis and implementation
 # low level modules first, top level entity last
@@ -36,7 +36,7 @@ SOURCE_LIST_FILE = source_list.txt
 
 # project name
 # it will be used in the names of result directories
-PROJECT_NAME = RSA_textbook_shift_key_bits_32bit_3072
+PROJECT_NAME = rsa256
 
 # =============================================
 # =============================================
@@ -78,7 +78,7 @@ VERIFICATION_ONLY = <off>
 # =============================================
 
 # name of top level entity
-TOP_LEVEL_ENTITY = top
+TOP_LEVEL_ENTITY =  top
 
 # name of top level architecture
 TOP_LEVEL_ARCH = rtl
@@ -100,8 +100,8 @@ THROUGHPUT = 512/(TCLK*65)
 # determine which top level script is called,
 # and which options are used.
 
-# OPTIMIZATION_TARGET = balanced
-OPTIMIZATION_TARGET = balanced
+# OPTIMIZATION_TARGET = speed | area | balanced
+OPTIMIZATION_TARGET = speed
 
 # OPTIONS = default | user
 OPTIONS = default
@@ -255,7 +255,7 @@ FPGA_VENDOR = xilinx
 		MAX_MULT_UTILIZATION = 1
 		MAX_PIN_UTILIZATION = 1
 	END FAMILY
-    
+
 	FPGA_FAMILY = virtex4
 		FPGA_DEVICES = xc4vlx25ff676-12
 		# xc4vlx25ff676-12 :: SLICE= BRAM= DSP= MULT=

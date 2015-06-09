@@ -445,6 +445,9 @@ sub configureISE{
 	$XTRACE = $ISE_INSTALL_FOLDER."trce.exe";
 	$XPARTGEN = $ISE_INSTALL_FOLDER."partgen.exe";
 	
+	$XXDL = $ISE_INSTALL_FOLDER."xdl.exe"; #___ add xdl support
+	$XNETGEN = $ISE_INSTALL_FOLDER."netgen.exe"; #___ add netgen support
+	
 	return 0;
 }
 
